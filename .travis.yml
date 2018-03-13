@@ -13,4 +13,5 @@ addons:
     organization: "flux-coordinator"
 
 script:
+  - yarn test-ci
   - sonar-scanner
