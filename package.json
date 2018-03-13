@@ -11,6 +11,7 @@
     "start": "cross-env NODE_PATH=src react-scripts start",
     "build": "cross-env NODE_PATH=src react-scripts build",
     "test": "cross-env NODE_PATH=src react-scripts test --env=jsdom",
+    "test-ci": "cross-env NODE_PATH=src react-scripts test --env=jsdom --coverage",
     "eject": "cross-env NODE_PATH=src react-scripts eject",
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
