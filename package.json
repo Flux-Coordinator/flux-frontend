@@ -8,6 +8,7 @@
     "react-scripts": "1.1.1"
   },
   "scripts": {
+    "start-all": "cross-env NODE_PATH=src concurrently \"react-scripts start\" \"start-storybook -p 9001 -c .storybook\"",
     "start": "cross-env NODE_PATH=src react-scripts start",
     "build": "cross-env NODE_PATH=src react-scripts build",
     "test": "cross-env NODE_PATH=src react-scripts test --env=jsdom",
@@ -19,6 +20,7 @@
     "@storybook/react": "3.3.15",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.2",
+    "concurrently": "^3.5.1",
     "cross-env": "^5.1.4",
     "eslint": "4.9.0",
     "eslint-config-airbnb": "16.1.0",
