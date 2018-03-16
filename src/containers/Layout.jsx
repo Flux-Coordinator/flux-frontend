@@ -14,7 +14,7 @@ import NavMenu from "../components/NavMenu";
 type Prop = {
 	classes: any,
 	theme: any,
-	children: React.ReactNode
+	children: React.Node
 };
 
 type State = {
