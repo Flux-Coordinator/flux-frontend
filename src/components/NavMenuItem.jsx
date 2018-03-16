@@ -1,11 +1,17 @@
+// @flow
 import * as React from "react";
 import { withStyles } from "material-ui/styles";
 import { ListItem, ListItemIcon, ListItemText } from "material-ui";
-import InboxIcon from "material-ui-icons/Inbox";
+import FolderIcon from "material-ui-icons/Folder";
+import InsertDriveFileIcon from "material-ui-icons/InsertDriveFile";
 
 type NavMenuItemProps = {
 	primaryText: string,
 	icon: React.Node
+};
+
+type SpecificMenuItemProps = {
+	primaryText: string
 };
 
 const styles = theme => ({});
@@ -20,12 +26,22 @@ function NavMenuItem(props: NavMenuItemProps) {
 	);
 }
 
-function ProjectNavMenuItem(props) {
-	return <NavMenuItem icon={<InboxIcon />} primary="test" />;
+function ProjectNavMenuItemComponent({ primaryText }: SpecificMenuItemProps) {
+	return <NavMenuItem icon={<FolderIcon />} primaryText={primaryText} />;
 }
 
-function RoomNavMenuItem(props) {
-	return <NavMenuItem />;
+function RoomNavMenuItemComponent({ primaryText }: SpecificMenuItemProps) {
+	return (
+		<NavMenuItem icon={<InsertDriveFileIcon />} primaryText={primaryText} />
+	);
 }
 
+const ProjectNavMenuItem = withStyles(styles, { withTheme: true })(
+	ProjectNavMenuItemComponent
+);
+const RoomNavMenuItem = withStyles(styles, { withTheme: true })(
+	RoomNavMenuItemComponent
+);
+
+export { ProjectNavMenuItem, RoomNavMenuItem };
 export default withStyles(styles, { withTheme: true })(NavMenuItem);

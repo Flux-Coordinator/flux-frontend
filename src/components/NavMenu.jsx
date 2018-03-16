@@ -1,10 +1,13 @@
 // @flow
 
 import * as React from "react";
-import { List, ListItem, ListItemIcon, ListItemText } from "material-ui";
+import { List } from "material-ui";
 import { withStyles } from "material-ui/styles";
 import InboxIcon from "material-ui-icons/Inbox";
-import NavMenuItem from "./NavMenuItem";
+import NavMenuItem, {
+	ProjectNavMenuItem,
+	RoomNavMenuItem
+} from "./NavMenuItem";
 
 type Props = {
 	menuItems: any[],
@@ -23,14 +26,9 @@ function NavMenu({ menuItems, classes }: Props) {
 	return (
 		<div className={classes.root}>
 			<List component="nav">
-				<NavMenuItem icon={<InboxIcon />} primary="test" />
-
-				{/*<ListItem button>*/}
-				{/*<ListItemIcon>*/}
-				{/*<InboxIcon />*/}
-				{/*</ListItemIcon>*/}
-				{/*<ListItemText primary="Inbox" />*/}
-				{/*</ListItem>*/}
+				<NavMenuItem icon={<InboxIcon />} primaryText="Default" />
+				<ProjectNavMenuItem primaryText="Project" />
+				<RoomNavMenuItem primaryText="Room" />
 			</List>
 		</div>
 	);

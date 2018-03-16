@@ -7,7 +7,8 @@ import AppBar from "material-ui/AppBar";
 import Typography from "material-ui/Typography";
 import Hidden from "material-ui/Hidden";
 import Divider from "material-ui/Divider";
-import { IconButton, Toolbar } from "material-ui";
+import IconButton from "material-ui/IconButton";
+import Toolbar from "material-ui/Toolbar";
 import MenuIcon from "material-ui-icons/Menu";
 import NavMenu from "../components/NavMenu";
 
