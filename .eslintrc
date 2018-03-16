@@ -5,6 +5,7 @@
   "parser": "babel-eslint",
   "extends": [
     "airbnb",
+    "react-app",
     "prettier",
     "prettier/flowtype",
     "prettier/react",
