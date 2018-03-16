@@ -16,5 +16,8 @@
     "jsx-a11y",
     "import",
     "prettier"
-  ]
+  ],
+  "rules": {
+    "linebreak-style": 0
+  }
 }
