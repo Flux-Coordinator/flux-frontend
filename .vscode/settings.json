@@ -1,4 +1,8 @@
 {
 	"flow.useNPMPackagedFlow": true,
-	"javascript.validate.enable": false
+	"javascript.validate.enable": false,
+	"emmet.includeLanguages": {
+		"javascript": "javascriptreact"
+	},
+	"emmet.triggerExpansionOnTab": true
 }

@@ -10,12 +10,14 @@ import Divider from "material-ui/Divider";
 import IconButton from "material-ui/IconButton";
 import Toolbar from "material-ui/Toolbar";
 import MenuIcon from "material-ui-icons/Menu";
-import NavMenu from "../components/NavMenu";
+import NavMenu from "../components/navmenu/NavMenu";
+import type { Project } from "../types/Models";
 
 type Prop = {
 	classes: any,
 	theme: any,
-	children: React.Node
+	children: React.Node,
+	projects: Project[]
 };
 
 type State = {
@@ -68,14 +70,13 @@ class Layout extends React.Component<Prop, State> {
 	};
 
 	render() {
-		const { children, classes, theme } = this.props;
+		const { children, classes, theme, projects } = this.props;
 		const drawer = (
 			<div>
 				<div className={classes.toolbar} />
 				<Divider />
-				<NavMenu />
+				<NavMenu projects={projects} />
 				<Divider />
-				<NavMenu />
 			</div>
 		);
 
