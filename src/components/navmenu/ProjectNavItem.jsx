@@ -48,13 +48,14 @@ class ProjectNavItem extends React.Component<Props, State> {
 				</NavMenuItem>
 				<Collapse in={this.state.isOpen} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding>
-						{project.rooms.map(room => (
-							<RoomNavItem
-								className={classes.nested}
-								room={room}
-								key={room.id}
-							/>
-						))}
+						{project.rooms &&
+							project.rooms.map(room => (
+								<RoomNavItem
+									className={classes.nested}
+									room={room}
+									key={room.id}
+								/>
+							))}
 					</List>
 				</Collapse>
 			</React.Fragment>

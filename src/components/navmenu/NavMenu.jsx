@@ -24,9 +24,10 @@ function NavMenu({ menuItems, classes, projects }: Props) {
 	return (
 		<div className={classes.root}>
 			<List component="nav">
-				{projects.map(project => (
-					<ProjectNavItem project={project} key={project.id} />
-				))}
+				{projects &&
+					projects.map(project => (
+						<ProjectNavItem project={project} key={project.id} />
+					))}
 			</List>
 		</div>
 	);
