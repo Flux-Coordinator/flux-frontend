@@ -12,8 +12,8 @@ import Toolbar from "material-ui/Toolbar";
 import MenuIcon from "material-ui-icons/Menu";
 import NavMenu from "../components/navmenu/NavMenu";
 
-import type { Project } from "../types/Models";
 import ErrorBoundary from "./ErrorBoundary";
+import { Project } from "../types/Models";
 
 type Prop = {
 	classes: any,

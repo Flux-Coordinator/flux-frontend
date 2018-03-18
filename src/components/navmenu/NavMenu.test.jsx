@@ -1,30 +1,44 @@
 // @flow
 
 import React from "react";
-import * as renderer from "react-test-renderer";
+import { mount } from "enzyme";
 
 import NavMenu from "./NavMenu";
-import type { Project } from "../../types/Models";
+import { Measurement, Project, Room } from "../../types/Models";
+import { createShallow } from "material-ui/test-utils";
 
-const multipleProjects: Project[] = [
-	{
-		id: "askmldas",
-		name: "MyProject1",
-		rooms: []
+function mockMeasurement() {
+	return new Measurement("asklmda", "Erste Messung", new Date());
+}
+
+function mockRoom(amountOfMeasurements: number = 1) {
+	let measurements: Measurement[] = [];
+
+	for (let i = 0; i < amountOfMeasurements; i++) {
+		measurements.push(mockMeasurement());
 	}
-];
 
-const singleProject: Project = {
-	id: "asdnaksdsw",
-	name: "MyProject",
-	rooms: []
-};
+	return new Room("askmld", "MyRoom", measurements);
+}
 
-it("renders without crashing", () => {
-	const tree = renderer
-		.create(<NavMenu projects={multipleProjects} />)
-		.toJSON();
-	expect(tree).toMatchSnapshot();
+function mockProject(amountOfRooms: number = 1) {
+	let rooms: Room[] = [];
+
+	for (let i = 0; i < amountOfRooms; i++) {
+		rooms.push(mockRoom());
+	}
+
+	return new Project("aslkmd", "My First Project", rooms);
+}
+
+describe("<NavMenu />", () => {
+	let shallow;
+
+	beforeEach(() => {
+		shallow = createShallow();
+	});
+
+	it("should render", () => {
+		mount(<NavMenu projects={[mockProject()]} />);
+	});
 });
-
-it("renders a project without rooms", () => {});

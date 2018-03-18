@@ -7,7 +7,6 @@ import type { Project } from "../../types/Models";
 import ProjectNavItem from "./ProjectNavItem";
 
 type Props = {
-	menuItems: any[],
 	classes: any,
 	projects: Project[]
 };
@@ -20,10 +19,10 @@ const styles = theme => ({
 	}
 });
 
-function NavMenu({ menuItems, classes, projects }: Props) {
+function NavMenu({ classes, projects }: Props) {
 	return (
 		<div className={classes.root}>
-			<List component="nav">
+			<List component="nav" className={classes.root}>
 				{projects &&
 					projects.map(project => (
 						<ProjectNavItem project={project} key={project.id} />
