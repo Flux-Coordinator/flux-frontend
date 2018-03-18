@@ -6,13 +6,9 @@ import Layout from "./Layout";
 import { Measurement, Project, Room } from "../types/Models";
 
 const measurements: Measurement[] = [
-	new Measurement("asklmda", "Erste Messung", "Fri, 02 Feb 1996 03:04:05 GMT"),
-	new Measurement(
-		"asdkmlas",
-		"Zweite Messung",
-		"Sun, 31 Dec 1899 00:00:00 GMT"
-	),
-	new Measurement("askmlda1", "Dritte Messung", "Fri, 02 Feb 1996 03:04:05 GMT")
+	new Measurement("asklmda", "Erste Messung", new Date()),
+	new Measurement("asdkmlas", "Zweite Messung", new Date()),
+	new Measurement("askmlda1", "Dritte Messung", new Date())
 ];
 
 const rooms: Room[] = [new Room("askmld", "MyRoom", measurements)];
