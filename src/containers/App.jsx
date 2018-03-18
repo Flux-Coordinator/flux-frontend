@@ -5,7 +5,7 @@ import CssBaseline from "material-ui/CssBaseline/CssBaseline";
 import Layout from "./Layout";
 import type { Project } from "../types/Models";
 
-const currentProjects: [Project] = [
+const currentProjects: Project[] = [
 	{
 		id: "askldmkasmd",
 		name: "My First Project",
