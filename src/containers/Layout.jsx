@@ -96,7 +96,7 @@ class Layout extends React.Component<Prop, State> {
 							<MenuIcon />
 						</IconButton>
 						<Typography variant="title" color="inherit" noWrap>
-							Responsive Drawer
+							Flux Coordinator
 						</Typography>
 					</Toolbar>
 				</AppBar>
