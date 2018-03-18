@@ -11,7 +11,9 @@ import IconButton from "material-ui/IconButton";
 import Toolbar from "material-ui/Toolbar";
 import MenuIcon from "material-ui-icons/Menu";
 import NavMenu from "../components/navmenu/NavMenu";
+
 import type { Project } from "../types/Models";
+import ErrorBoundary from "./ErrorBoundary";
 
 type Prop = {
 	classes: any,
@@ -75,8 +77,9 @@ class Layout extends React.Component<Prop, State> {
 			<div>
 				<div className={classes.toolbar} />
 				<Divider />
-				<NavMenu projects={projects} />
-				<Divider />
+				<ErrorBoundary>
+					<NavMenu projects={projects} />
+				</ErrorBoundary>
 			</div>
 		);
 
