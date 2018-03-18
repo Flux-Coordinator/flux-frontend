@@ -52,5 +52,8 @@
 		"hooks": {
 			"pre-commit": "pretty-quick --staged"
 		}
+	},
+	"peerDependencies": {
+		"jest": "20.0.4"
 	}
 }
