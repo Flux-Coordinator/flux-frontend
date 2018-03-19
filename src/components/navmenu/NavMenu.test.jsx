@@ -4,8 +4,10 @@ import React from "react";
 import { mount } from "enzyme";
 
 import NavMenu from "./NavMenu";
-import { Measurement, Project, Room } from "../../types/Models";
 import { createShallow } from "material-ui/test-utils";
+import { Measurement } from "../../models/Measurement";
+import { Project } from "../../models/Project";
+import { Room } from "../../models/Room";
 
 function mockMeasurement() {
 	return new Measurement("asklmda", "Erste Messung", new Date());

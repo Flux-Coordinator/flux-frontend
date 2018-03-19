@@ -1,10 +1,11 @@
 // @flow
 
 import * as React from "react";
-import { List } from "material-ui";
 import { withStyles } from "material-ui/styles";
-import type { Project } from "../../types/Models";
+import { List } from "material-ui";
+
 import ProjectNavItem from "./ProjectNavItem";
+import { Project } from "../../models/Project";
 
 type Props = {
 	classes: any,

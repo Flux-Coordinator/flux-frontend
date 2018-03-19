@@ -3,7 +3,7 @@ import { withStyles } from "material-ui/styles/index";
 import InsertDriveFileIcon from "material-ui-icons/InsertDriveFile";
 
 import NavMenuItem from "./NavMenuItem";
-import type { Room } from "../../types/Models";
+import { Room } from "../../models/Room";
 
 type Props = {
 	room: Room

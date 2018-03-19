@@ -6156,7 +6156,7 @@ material-ui-icons@^1.0.0-beta.36:
   dependencies:
     recompose "^0.26.0"
 
-material-ui@1.0.0-beta.38:
+material-ui@^1.0.0-beta.38:
   version "1.0.0-beta.38"
   resolved "https://registry.yarnpkg.com/material-ui/-/material-ui-1.0.0-beta.38.tgz#213e53c232c3ccf4b5ca3bfe1e1971a3d076d180"
   dependencies:

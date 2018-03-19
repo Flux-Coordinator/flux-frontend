@@ -3,7 +3,9 @@ import React from "react";
 import CssBaseline from "material-ui/CssBaseline/CssBaseline";
 
 import Layout from "./Layout";
-import { Measurement, Project, Room } from "../types/Models";
+import { Room } from "../models/Room";
+import { Measurement } from "../models/Measurement";
+import { Project } from "../models/Project";
 
 const measurements: Measurement[] = [
 	new Measurement("asklmda", "Erste Messung", new Date()),

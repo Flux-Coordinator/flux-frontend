@@ -13,7 +13,7 @@ import MenuIcon from "material-ui-icons/Menu";
 import NavMenu from "../components/navmenu/NavMenu";
 
 import ErrorBoundary from "./ErrorBoundary";
-import { Project } from "../types/Models";
+import { Project } from "../models/Project";
 
 type Prop = {
 	classes: any,

@@ -7,8 +7,8 @@ import { ExpandLess, ExpandMore } from "material-ui-icons";
 import { Collapse, List } from "material-ui";
 
 import NavMenuItem from "./NavMenuItem";
-import type { Project } from "../../types/Models";
 import RoomNavItem from "./RoomNavItem";
+import { Project } from "../../models/Project";
 
 type Props = {
 	classes: any,
