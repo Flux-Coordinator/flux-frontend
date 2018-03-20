@@ -1,8 +1,8 @@
 // @flow
 
-import { Measurement } from "./Measurement";
+import Measurement from "./Measurement";
 
-export class Room {
+export default class Room {
 	id: string;
 	name: string;
 	measurements: Measurement[];

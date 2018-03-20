@@ -1,8 +1,8 @@
 // @flow
 
-import { Room } from "./Room";
+import Room from "./Room";
 
-export class Project {
+export default class Project {
 	id: string;
 	name: string;
 	rooms: Room[];

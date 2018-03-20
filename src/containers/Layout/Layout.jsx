@@ -2,6 +2,7 @@
 import * as React from "react";
 
 import { withStyles } from "material-ui/styles";
+import { Link } from "react-router-dom";
 import Drawer from "material-ui/Drawer";
 import AppBar from "material-ui/AppBar";
 import Typography from "material-ui/Typography";
@@ -10,10 +11,10 @@ import Divider from "material-ui/Divider";
 import IconButton from "material-ui/IconButton";
 import Toolbar from "material-ui/Toolbar";
 import MenuIcon from "material-ui-icons/Menu";
-import NavMenu from "../components/navmenu/NavMenu";
+import NavMenu from "../../components/navmenu/NavMenu";
 
-import ErrorBoundary from "./ErrorBoundary";
-import { Project } from "../models/Project";
+import ErrorBoundary from "../ErrorBoundary/ErrorBoundary";
+import Project from "../../models/Project";
 
 type Prop = {
 	classes: any,
@@ -42,6 +43,10 @@ const styles = theme => ({
 		[theme.breakpoints.up("md")]: {
 			width: `calc(100% - ${drawerWidth}px)`
 		}
+	},
+	title: {
+		textDecoration: "none",
+		color: "inherit"
 	},
 	navIconHide: {
 		[theme.breakpoints.up("md")]: {
@@ -96,7 +101,9 @@ class Layout extends React.Component<Prop, State> {
 							<MenuIcon />
 						</IconButton>
 						<Typography variant="title" color="inherit" noWrap>
-							Flux Coordinator
+							<Link className={classes.title} to={"/"}>
+								Flux Coordinator
+							</Link>
 						</Typography>
 					</Toolbar>
 				</AppBar>

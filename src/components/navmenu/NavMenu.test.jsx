@@ -5,9 +5,9 @@ import { mount } from "enzyme";
 
 import NavMenu from "./NavMenu";
 import { createShallow } from "material-ui/test-utils";
-import { Measurement } from "../../models/Measurement";
-import { Project } from "../../models/Project";
-import { Room } from "../../models/Room";
+import Measurement from "../../models/Measurement";
+import Project from "../../models/Project";
+import Room from "../../models/Room";
 
 function mockMeasurement() {
 	return new Measurement("asklmda", "Erste Messung", new Date());

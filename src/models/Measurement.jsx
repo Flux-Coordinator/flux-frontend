@@ -1,6 +1,6 @@
 // @flow
 
-export class Measurement {
+export default class Measurement {
 	id: string;
 	description: string;
 	date: Date;

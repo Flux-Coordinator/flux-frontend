@@ -8,7 +8,7 @@ import { Collapse, List } from "material-ui";
 
 import NavMenuItem from "./NavMenuItem";
 import RoomNavItem from "./RoomNavItem";
-import { Project } from "../../models/Project";
+import Project from "../../models/Project";
 
 type Props = {
 	classes: any,
