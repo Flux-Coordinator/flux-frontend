@@ -1,3 +1,4 @@
+// @flow
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { withStyles } from "material-ui/styles/index";
@@ -7,6 +8,7 @@ import NavMenuItem from "./NavMenuItem";
 import Room from "../../models/Room";
 
 type Props = {
+	classes: Object,
 	room: Room
 };
 

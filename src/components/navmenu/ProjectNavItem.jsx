@@ -1,5 +1,4 @@
 // @flow
-
 import * as React from "react";
 import { withStyles } from "material-ui/styles/index";
 import FolderIcon from "material-ui-icons/Folder";

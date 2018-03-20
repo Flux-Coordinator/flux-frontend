@@ -1,5 +1,4 @@
 // @flow
-
 import * as React from "react";
 import { withStyles } from "material-ui/styles";
 import { List } from "material-ui";
@@ -8,7 +7,7 @@ import ProjectNavItem from "./ProjectNavItem";
 import Project from "../../models/Project";
 
 type Props = {
-	classes: any,
+	classes: Object,
 	projects: Project[]
 };
 

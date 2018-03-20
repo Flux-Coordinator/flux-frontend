@@ -1,3 +1,4 @@
+// @flow
 import * as React from "react";
 
 export default class ErrorBoundary extends React.Component {

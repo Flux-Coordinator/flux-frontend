@@ -1,5 +1,4 @@
 // @flow
-
 import Room from "./Room";
 
 export default class Project {
