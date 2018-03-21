@@ -1,5 +1,3 @@
-[Sonar Cloud](https://sonarcloud.io/api/project_badges/measure?project=flux-frontend&metric=reliability_rating)
-
 # Flux-Frontend
 
 <div align="center">
