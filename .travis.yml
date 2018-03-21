@@ -13,7 +13,7 @@ addons:
     organization: "flux-coordinator"
     branches:
       - master
-      - development
+      - develop
 
 script:
   - yarn test-ci
