@@ -27,23 +27,20 @@ const currentProjects: Project[] = [
 	new Project("583492902", "Schule Rapperswil", rooms)
 ];
 
-const RenderRoomPage = ({ match }) => {
+const RenderRoomPage = ({ match }: { match: Object }) => {
 	let foundRoom;
-	for (let project of currentProjects) {
-		foundRoom = project.rooms.find(room => room.id === match.params.id);
+	for (const project of currentProjects) {
+		foundRoom = project.rooms.find(room => room.id === match.params.roomId);
 
 		if (foundRoom) {
 			break;
 		}
 	}
-	console.log(foundRoom);
 	if (foundRoom) {
 		return <Room room={foundRoom} />;
-	} else {
-		const infoMessage =
-			"The Room with the ID " + match.params.id + " was not found.";
-		return <NotFound info={infoMessage} />;
 	}
+	const infoMessage = `The Room with the ID ${match.params.id} was not found.`;
+	return <NotFound info={infoMessage} />;
 };
 
 function App() {
@@ -53,7 +50,7 @@ function App() {
 			<BrowserRouter>
 				<Layout projects={currentProjects}>
 					<Switch>
-						<Route path="/room/:id" render={RenderRoomPage} />
+						<Route path="/room/:roomId" render={RenderRoomPage} />
 						<Route path="/" component={Welcome} />
 					</Switch>
 				</Layout>

@@ -55,7 +55,7 @@
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "pretty-quick --staged"
+			"pre-commit": "set CI=true&&yarn test && pretty-quick --staged"
 		}
 	},
 	"peerDependencies": {
