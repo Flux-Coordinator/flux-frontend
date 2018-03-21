@@ -1,16 +1,14 @@
 // @flow
 import React from "react";
-import CssBaseline from "material-ui/CssBaseline/CssBaseline";
-import { Route, Switch } from "react-router";
-import { BrowserRouter } from "react-router-dom";
+import App2 from "grommet/components/App";
+import Heading from "grommet/components/Heading";
 
-import Layout from "../Layout/Layout";
 import RoomModel from "../../models/Room";
 import Measurement from "../../models/Measurement";
 import Project from "../../models/Project";
-import Welcome from "../../components/welcome/Welcome";
 import Room from "../../components/room/Room";
 import NotFound from "../../components/notfound/NotFound";
+import Layout from "../Layout/Layout";
 
 const measurements: Measurement[] = [
 	new Measurement("15564564564", "Erste Messung", new Date()),
@@ -45,16 +43,12 @@ const RenderRoomPage = ({ match }: { match: Object }) => {
 
 function App() {
 	return (
-		<div className="App">
-			<CssBaseline />
-			<BrowserRouter>
+		<div>
+			<App2 centered={false}>
 				<Layout projects={currentProjects}>
-					<Switch>
-						<Route path="/room/:roomId" render={RenderRoomPage} />
-						<Route path="/" component={Welcome} />
-					</Switch>
+					<Heading tag={"h2"}>Wir arbeiten gerade an etwas tollem...</Heading>
 				</Layout>
-			</BrowserRouter>
+			</App2>
 		</div>
 	);
 }
