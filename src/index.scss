@@ -1,1 +1,7 @@
 @import "grommet/scss/vanilla/index";
+
+nav {
+	a.grommetux-anchor {
+		padding: 0 !important;
+	}
+}

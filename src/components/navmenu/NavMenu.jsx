@@ -1,10 +1,10 @@
 // @flow
 import * as React from "react";
 import Menu from "grommet/components/Menu";
-import Anchor from "grommet/components/Anchor";
-import Actions from "grommet/components/icons/base/Actions";
+import Accordion from "grommet/components/Accordion";
 
 import Project from "../../models/Project";
+import ProjectNavItem from "./ProjectNavItem";
 
 type Props = {
 	projects: Project[]
@@ -12,9 +12,13 @@ type Props = {
 
 export default function NavMenu({ projects }: Props) {
 	return (
-		<Menu fill={true} primary={true}>
+		<Menu fill={true} pad="none" primary size="small">
 			{projects &&
-				projects.map(project => <Anchor href="#">{project.name}</Anchor>)}
+				projects.map(project => (
+					<Accordion key={project.id}>
+						<ProjectNavItem project={project} key={project.id} />
+					</Accordion>
+				))}
 		</Menu>
 	);
 }

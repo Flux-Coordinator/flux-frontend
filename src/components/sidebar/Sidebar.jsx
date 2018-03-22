@@ -15,12 +15,12 @@ type Props = {
 
 export default function Sidebar({ title, children, footer, toggler }: Props) {
 	return (
-		<GrommetSidebar colorIndex="neutral-1">
-			<Header pad="medium" justify="between">
+		<GrommetSidebar colorIndex="neutral-1" size="small">
+			<Header pad="small" justify="between">
 				{toggler}
 				<Title>{title}</Title>
 			</Header>
-			<Box flex="grow" justify="start">
+			<Box flex="grow" pad="none" justify="start">
 				{children}
 			</Box>
 			<Footer pad="medium">{footer}</Footer>

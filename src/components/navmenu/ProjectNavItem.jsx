@@ -1,16 +1,14 @@
 // @flow
 import * as React from "react";
-import { withStyles } from "material-ui/styles/index";
-import FolderIcon from "material-ui-icons/Folder";
-import { ExpandLess, ExpandMore } from "material-ui-icons";
-import { Collapse, List } from "material-ui";
+import FolderIcon from "grommet/components/icons/base/Folder";
+import FolderOpenIcon from "grommet/components/icons/base/FolderOpen";
+import AccordionPanel from "grommet/components/AccordionPanel";
+import Anchor from "grommet/components/Anchor";
 
-import NavMenuItem from "./NavMenuItem";
 import RoomNavItem from "./RoomNavItem";
 import Project from "../../models/Project";
 
 type Props = {
-	classes: any,
 	project: Project
 };
 
@@ -18,13 +16,7 @@ type State = {
 	isOpen: boolean
 };
 
-const styles = theme => ({
-	nested: {
-		paddingLeft: theme.spacing.unit * 4
-	}
-});
-
-class ProjectNavItem extends React.Component<Props, State> {
+export default class ProjectNavItem extends React.Component<Props, State> {
 	state = {
 		isOpen: false
 	};
@@ -34,32 +26,19 @@ class ProjectNavItem extends React.Component<Props, State> {
 	};
 
 	render() {
-		const { classes, project } = this.props;
-
+		const { project } = this.props;
+		const icon = this.state.isOpen ? (
+			<FolderOpenIcon size="xsmall" />
+		) : (
+			<FolderIcon size="xsmall" />
+		);
+		const heading = <Anchor icon={icon}>{project.name}</Anchor>;
 		return (
-			<React.Fragment>
-				<NavMenuItem
-					icon={<FolderIcon />}
-					primaryText={project.name}
-					onClick={this.toggleCollapse}
-				>
-					{this.state.isOpen ? <ExpandLess /> : <ExpandMore />}
-				</NavMenuItem>
-				<Collapse in={this.state.isOpen} timeout="auto" unmountOnExit>
-					<List component="div" disablePadding>
-						{project.rooms &&
-							project.rooms.map(room => (
-								<RoomNavItem
-									className={classes.nested}
-									room={room}
-									key={room.id}
-								/>
-							))}
-					</List>
-				</Collapse>
-			</React.Fragment>
+			<AccordionPanel pad="none" icon={icon} heading={heading}>
+				{project.rooms.map(room => {
+					return <RoomNavItem room={room} key={room.id} />;
+				})}
+			</AccordionPanel>
 		);
 	}
 }
-
-export default withStyles(styles, { withTheme: true })(ProjectNavItem);
