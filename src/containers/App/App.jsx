@@ -26,16 +26,14 @@ const currentProjects: Project[] = [
 ];
 
 const RenderRoomPage = ({ match }: { match: Object }) => {
-	let foundRoom;
 	for (const project of currentProjects) {
-		foundRoom = project.rooms.find(room => room.id === match.params.roomId);
+		const foundRoom = project.rooms.find(
+			room => room.id === match.params.roomId
+		);
 
 		if (foundRoom) {
-			break;
+			return <Room room={foundRoom} />;
 		}
-	}
-	if (foundRoom) {
-		return <Room room={foundRoom} />;
 	}
 	const infoMessage = `The Room with the ID ${match.params.id} was not found.`;
 	return <NotFound info={infoMessage} />;
@@ -46,7 +44,7 @@ function App() {
 		<div>
 			<App2 centered={false}>
 				<Layout projects={currentProjects}>
-					<Heading tag={"h2"}>Wir arbeiten gerade an etwas tollem...</Heading>
+					<Heading tag="h2">Wir arbeiten gerade an etwas tollem...</Heading>
 				</Layout>
 			</App2>
 		</div>

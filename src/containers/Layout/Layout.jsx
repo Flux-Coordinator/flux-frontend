@@ -31,7 +31,7 @@ function Toggler({ onToggle }: TogglerProps) {
 		<Button
 			icon={<Actions />}
 			onClick={onToggle}
-			plain={false}
+			plain
 			secondary={false}
 			primary={false}
 			accent={false}
@@ -54,7 +54,6 @@ export default class Layout extends React.Component<Prop, State> {
 	}
 
 	handleResponsive = (small: boolean) => {
-		console.log("Is mobile is now: " + small.toString());
 		this.setState(() => ({ isMobileScreen: small }));
 	};
 
@@ -70,23 +69,22 @@ export default class Layout extends React.Component<Prop, State> {
 		const sidebarToggler: React.Node = this.state.isMobileScreen ? (
 			<Toggler onToggle={this.toggleSidebarOnMobile} />
 		) : null;
-		console.log(sidebarToggler);
 		return (
 			<Split
 				flex="right"
 				showOnResponsive={this.state.sidebarOpenOnMobile ? "both" : "priority"}
 				separator={false}
 			>
-				<Sidebar title={"Flux-Coordinator"} toggler={sidebarToggler}>
+				<Sidebar title="Flux-Coordinator" toggler={sidebarToggler}>
 					<NavMenu projects={projects} />
 				</Sidebar>
-				<Box colorIndex="light-2" basis={"full"} full={true} pad="medium">
-					<Header>
-						{this.state.isMobileScreen && (
+				<Box colorIndex="light-2" basis="full" full primary>
+					{this.state.isMobileScreen && (
+						<Header fixed size="small" colorIndex="neutral-1">
 							<Toggler onToggle={this.toggleSidebarOnMobile} />
-						)}
-						<Heading>Willkommen zu Flux-Coordinator!</Heading>
-					</Header>
+							<Heading>Willkommen zu Flux-Coordinator!</Heading>
+						</Header>
+					)}
 					<Box>{children}</Box>
 				</Box>
 			</Split>
