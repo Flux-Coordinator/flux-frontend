@@ -4,9 +4,9 @@ import Responsive from "grommet/utils/Responsive";
 import Split from "grommet/components/Split";
 import Box from "grommet/components/Box";
 import Header from "grommet/components/Header";
+import Title from "grommet/components/Title";
 import Button from "grommet/components/Button";
-import Actions from "grommet/components/icons/base/Actions";
-import Heading from "grommet/components/Heading";
+import SidebarIcon from "grommet/components/icons/base/Sidebar";
 
 import Project from "../../models/Project";
 import NavMenu from "../../components/navmenu/NavMenu";
@@ -29,12 +29,10 @@ type TogglerProps = {
 function Toggler({ onToggle }: TogglerProps) {
 	return (
 		<Button
-			icon={<Actions />}
-			onClick={onToggle}
+			id="sidebar-toggler"
+			icon={<SidebarIcon />}
 			plain
-			secondary={false}
-			primary={false}
-			accent={false}
+			onClick={onToggle}
 		/>
 	);
 }
@@ -65,6 +63,7 @@ export default class Layout extends React.Component<Prop, State> {
 
 	render() {
 		const { children, projects } = this.props;
+		const title = "Flux-Coordinator";
 
 		const sidebarToggler: React.Node = this.state.isMobileScreen ? (
 			<Toggler onToggle={this.toggleSidebarOnMobile} />
@@ -75,14 +74,14 @@ export default class Layout extends React.Component<Prop, State> {
 				showOnResponsive={this.state.sidebarOpenOnMobile ? "both" : "priority"}
 				separator={false}
 			>
-				<Sidebar title="Flux-Coordinator" toggler={sidebarToggler}>
+				<Sidebar title={title} toggler={sidebarToggler}>
 					<NavMenu projects={projects} />
 				</Sidebar>
 				<Box colorIndex="light-2" basis="full" full primary>
 					{this.state.isMobileScreen && (
-						<Header fixed size="small" colorIndex="neutral-1">
-							<Toggler onToggle={this.toggleSidebarOnMobile} />
-							<Heading>Willkommen zu Flux-Coordinator!</Heading>
+						<Header fixed pad="small" colorIndex="neutral-1">
+							{sidebarToggler}
+							<Title>{title}</Title>
 						</Header>
 					)}
 					<Box>{children}</Box>

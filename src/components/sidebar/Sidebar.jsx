@@ -16,7 +16,7 @@ type Props = {
 export default function Sidebar({ title, children, footer, toggler }: Props) {
 	return (
 		<GrommetSidebar colorIndex="neutral-1" size="small">
-			<Header pad="small" justify="between">
+			<Header pad="small">
 				{toggler}
 				<Title>{title}</Title>
 			</Header>
@@ -29,5 +29,6 @@ export default function Sidebar({ title, children, footer, toggler }: Props) {
 }
 
 Sidebar.defaultProps = {
-	footer: null
+	footer: null,
+	toggler: null
 };
