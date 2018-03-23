@@ -1,13 +1,13 @@
 // @flow
 import React from "react";
 import App2 from "grommet/components/App";
-import Heading from "grommet/components/Heading";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import RoomModel from "../../models/Room";
 import Measurement from "../../models/Measurement";
 import Project from "../../models/Project";
 import Room from "../../components/room/Room";
+import Welcome from "../../components/welcome/Welcome";
 import NotFound from "../../components/notfound/NotFound";
 import Layout from "../Layout/Layout";
 
@@ -46,7 +46,10 @@ function App() {
 			<App2 centered={false}>
 				<Router>
 					<Layout projects={currentProjects}>
-						<Heading tag="h2">Wir arbeiten gerade an etwas tollem...</Heading>
+						<Switch>
+							<Route path="/rooms/:roomId" component={RenderRoomPage} />
+							<Route path="/" component={Welcome} />
+						</Switch>
 					</Layout>
 				</Router>
 			</App2>

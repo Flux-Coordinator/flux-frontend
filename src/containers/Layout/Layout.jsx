@@ -5,6 +5,7 @@ import Split from "grommet/components/Split";
 import Box from "grommet/components/Box";
 import Button from "grommet/components/Button";
 import SidebarIcon from "grommet/components/icons/base/Sidebar";
+import Anchor from "grommet/components/Anchor";
 
 import Project from "../../models/Project";
 import Header from "../../components/header/Header";

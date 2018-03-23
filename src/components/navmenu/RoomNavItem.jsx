@@ -1,10 +1,7 @@
 // @flow
 import React from "react";
-import { NavLink } from "react-router-dom";
-import NoteIcon from "grommet/components/icons/base/Note";
-import Anchor from "grommet/components/Anchor";
+import Button from "grommet/components/Button";
 
-import NavMenuItem from "./NavMenuItem";
 import Room from "../../models/Room";
 
 type Props = {
@@ -13,10 +10,5 @@ type Props = {
 
 export default function RoomNavItem({ room }: Props) {
 	const path: string = `/rooms/${room.id}`;
-	return (
-		<Anchor path={path}>{room.name}</Anchor>
-		// <NavLink to={"/room/" + room.id}>
-		// 	<NavMenuItem icon={<NoteIcon />} primaryText={room.name} />
-		// </NavLink>
-	);
+	return <Button path={path}>{room.name}</Button>;
 }
