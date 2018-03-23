@@ -2,6 +2,7 @@
 import React from "react";
 import App2 from "grommet/components/App";
 import Heading from "grommet/components/Heading";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import RoomModel from "../../models/Room";
 import Measurement from "../../models/Measurement";
@@ -43,9 +44,11 @@ function App() {
 	return (
 		<div>
 			<App2 centered={false}>
-				<Layout projects={currentProjects}>
-					<Heading tag="h2">Wir arbeiten gerade an etwas tollem...</Heading>
-				</Layout>
+				<Router>
+					<Layout projects={currentProjects}>
+						<Heading tag="h2">Wir arbeiten gerade an etwas tollem...</Heading>
+					</Layout>
+				</Router>
 			</App2>
 		</div>
 	);

@@ -35,9 +35,7 @@ export default class ProjectNavItem extends React.Component<Props, State> {
 		const heading = <Anchor icon={icon}>{project.name}</Anchor>;
 		return (
 			<AccordionPanel pad="none" icon={icon} heading={heading}>
-				{project.rooms.map(room => {
-					return <RoomNavItem room={room} key={room.id} />;
-				})}
+				{project.rooms.map(room => <RoomNavItem room={room} key={room.id} />)}
 			</AccordionPanel>
 		);
 	}

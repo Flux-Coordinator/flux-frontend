@@ -2,6 +2,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import NoteIcon from "grommet/components/icons/base/Note";
+import Anchor from "grommet/components/Anchor";
 
 import NavMenuItem from "./NavMenuItem";
 import Room from "../../models/Room";
@@ -11,10 +12,11 @@ type Props = {
 };
 
 export default function RoomNavItem({ room }: Props) {
-	console.log(room);
+	const path: string = `/rooms/${room.id}`;
 	return (
-		<NavLink to={"/room/" + room.id}>
-			<NavMenuItem icon={<NoteIcon />} primaryText={room.name} />
-		</NavLink>
+		<Anchor path={path}>{room.name}</Anchor>
+		// <NavLink to={"/room/" + room.id}>
+		// 	<NavMenuItem icon={<NoteIcon />} primaryText={room.name} />
+		// </NavLink>
 	);
 }

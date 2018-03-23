@@ -3,12 +3,11 @@ import * as React from "react";
 import Responsive from "grommet/utils/Responsive";
 import Split from "grommet/components/Split";
 import Box from "grommet/components/Box";
-import Header from "grommet/components/Header";
-import Title from "grommet/components/Title";
 import Button from "grommet/components/Button";
 import SidebarIcon from "grommet/components/icons/base/Sidebar";
 
 import Project from "../../models/Project";
+import Header from "../../components/header/Header";
 import NavMenu from "../../components/navmenu/NavMenu";
 import Sidebar from "../../components/sidebar/Sidebar";
 
@@ -68,22 +67,22 @@ export default class Layout extends React.Component<Prop, State> {
 		const sidebarToggler: React.Node = this.state.isMobileScreen ? (
 			<Toggler onToggle={this.toggleSidebarOnMobile} />
 		) : null;
+
+		const header: React.Node = (
+			<Header title={title} toggler={sidebarToggler} />
+		);
+
 		return (
 			<Split
 				flex="right"
 				showOnResponsive={this.state.sidebarOpenOnMobile ? "both" : "priority"}
 				separator={false}
 			>
-				<Sidebar title={title} toggler={sidebarToggler}>
+				<Sidebar header={header}>
 					<NavMenu projects={projects} />
 				</Sidebar>
 				<Box colorIndex="light-2" basis="full" full primary>
-					{this.state.isMobileScreen && (
-						<Header fixed pad="small" colorIndex="neutral-1">
-							{sidebarToggler}
-							<Title>{title}</Title>
-						</Header>
-					)}
+					{this.state.isMobileScreen && header}
 					<Box>{children}</Box>
 				</Box>
 			</Split>
