@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import App2 from "grommet/components/App";
+import GrommetApp from "grommet/components/App";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import RoomModel from "../../models/Room";
@@ -43,7 +43,7 @@ const RenderRoomPage = ({ match }: { match: Object }) => {
 function App() {
 	return (
 		<div>
-			<App2 centered={false}>
+			<GrommetApp centered={false}>
 				<Router>
 					<Layout projects={currentProjects}>
 						<Switch>
@@ -52,7 +52,7 @@ function App() {
 						</Switch>
 					</Layout>
 				</Router>
-			</App2>
+			</GrommetApp>
 		</div>
 	);
 }

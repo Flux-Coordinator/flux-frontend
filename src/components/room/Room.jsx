@@ -1,13 +1,15 @@
 // @flow
 import * as React from "react";
 import Header from "grommet/components/Header";
-import Title from "grommet/components/Title";
+import Heading from "grommet/components/Heading";
+import Tiles from "grommet/components/Tiles";
+import Tile from "grommet/components/Tile";
 import Section from "grommet/components/Section";
-import Box from "grommet/components/Box";
+import Article from "grommet/components/Article";
 import Image from "grommet/components/Image";
-import Paragraph from "grommet/components/Paragraph";
 
 import RoomModel from "../../models/Room";
+import MeasurementList from "../measurements/MeasurementsList";
 import placeholder from "../../images/placeholder.png";
 
 type Props = {
@@ -16,36 +18,41 @@ type Props = {
 
 export default function Room({ room }: Props) {
 	return (
-		<Box pad="small">
+		<Article>
 			<Section>
-				<Header size="small">
-					<Title>Beschreibung</Title>
+				<Header justify="between">
+					<Heading tag="h2" margin="none">
+						Raumbeschreibung
+					</Heading>
 				</Header>
-				<Paragraph margin="none">
-					Name: {room.name ? room.name : "Raum hat keinen Namen"}
-				</Paragraph>
-				<Paragraph margin="none">
-					Beschreibung:{" "}
-					{room.description ? room.description : "Keine Beschreibung"}
-				</Paragraph>
-				<Paragraph margin="none">
-					Länge: {room.length ? room.length : "Keine Länge vorhanden"}
-				</Paragraph>
-				<Paragraph margin="none">
-					Breite: {room.width ? room.width : "Keine Breite vorhanden"}
-				</Paragraph>
+				<Tiles fill>
+					<Tile pad="medium">
+						<Header size="small" justify="center">
+							<Heading tag="h3">Beschreibung</Heading>
+						</Header>
+						<div>Name: {room.name ? room.name : "Raum hat keinen Namen"}</div>
+						<div>
+							Länge: {room.length ? room.length : "Keine Länge vorhanden"}
+						</div>
+						<div>
+							Breite: {room.width ? room.width : "Keine Breite vorhanden"}
+						</div>
+					</Tile>
+					<Tile pad="medium" />
+					<Tile pad="medium">
+						<Header size="small" justify="center">
+							<Heading tag="h3">Grundriss</Heading>
+						</Header>
+						<Image src={placeholder} size="large" />
+					</Tile>
+				</Tiles>
 			</Section>
 			<Section>
-				<Header size="small">
-					<Title>Messungen</Title>
+				<Header size="small" justify="center">
+					<Heading tag="h3">Messungen</Heading>
 				</Header>
+				<MeasurementList measurements={room.measurements} />
 			</Section>
-			<Section>
-				<Header size="small">
-					<Title>Grundriss</Title>
-				</Header>
-				<Image src={placeholder} size="large" />
-			</Section>
-		</Box>
+		</Article>
 	);
 }
