@@ -18,10 +18,10 @@ type Props = {
 
 export default function Room({ room }: Props) {
 	return (
-		<Article>
-			<Section>
+		<Article pad="medium">
+			<Section pad="none">
 				<Header justify="between">
-					<Heading tag="h2" margin="none">
+					<Heading tag="h2" margin="none" pad="medium">
 						Raumbeschreibung
 					</Heading>
 				</Header>
