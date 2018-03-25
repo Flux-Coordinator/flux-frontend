@@ -6,8 +6,6 @@
 		"concurrently": "^3.5.1",
 		"cross-env": "^5.1.4",
 		"grommet": "^1.10.1",
-		"material-ui": "^1.0.0-beta.38",
-		"material-ui-icons": "^1.0.0-beta.36",
 		"node-sass-chokidar": "^1.2.0",
 		"npm-run-all": "^4.1.2",
 		"react": "16.2.0",

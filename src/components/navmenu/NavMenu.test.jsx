@@ -3,7 +3,6 @@ import React from "react";
 import { mount } from "enzyme";
 
 import NavMenu from "./NavMenu";
-import { createShallow } from "material-ui/test-utils";
 import Measurement from "../../models/Measurement";
 import Project from "../../models/Project";
 import Room from "../../models/Room";
@@ -33,11 +32,7 @@ function mockProject(amountOfRooms: number = 1) {
 }
 
 describe("<NavMenu />", () => {
-	let shallow;
-
-	beforeEach(() => {
-		shallow = createShallow();
-	});
+	beforeEach(() => {});
 
 	it("should render", () => {
 		mount(<NavMenu projects={[mockProject()]} />);
