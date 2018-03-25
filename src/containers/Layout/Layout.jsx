@@ -72,6 +72,12 @@ export default class Layout extends React.Component<Prop, State> {
 			<Header title={title} toggler={sidebarToggler} />
 		);
 
+		const onNavigateCallback: () => void = () => {
+			if (this.state.isMobileScreen) {
+				this.setState(() => ({ sidebarOpenOnMobile: false }));
+			}
+		};
+
 		return (
 			<Split
 				flex="right"
@@ -79,7 +85,7 @@ export default class Layout extends React.Component<Prop, State> {
 				separator={false}
 			>
 				<Sidebar header={header}>
-					<NavMenu projects={projects} />
+					<NavMenu projects={projects} onNavigate={onNavigateCallback} />
 				</Sidebar>
 				<Box colorIndex="light-2" basis="full" full primary>
 					{this.state.isMobileScreen && header}

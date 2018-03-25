@@ -5,10 +5,19 @@ import Button from "grommet/components/Button";
 import Room from "../../models/Room";
 
 type Props = {
-	room: Room
+	room: Room,
+	onClick?: () => void
 };
 
-export default function RoomNavItem({ room }: Props) {
+export default function RoomNavItem({ room, onClick }: Props) {
 	const path: string = `/rooms/${room.id}`;
-	return <Button path={path}>{room.name}</Button>;
+	return (
+		<Button path={path} onClick={onClick}>
+			{room.name}
+		</Button>
+	);
 }
+
+RoomNavItem.defaultProps = {
+	onClick: null
+};

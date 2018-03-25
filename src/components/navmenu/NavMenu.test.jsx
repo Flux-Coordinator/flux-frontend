@@ -32,9 +32,7 @@ function mockProject(amountOfRooms: number = 1) {
 }
 
 describe("<NavMenu />", () => {
-	beforeEach(() => {});
-
 	it("should render", () => {
-		mount(<NavMenu projects={[mockProject()]} />);
+		mount(<NavMenu projects={[mockProject()]} onNavigate={() => {}} />);
 	});
 });

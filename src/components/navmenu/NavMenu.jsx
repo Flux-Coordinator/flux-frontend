@@ -9,10 +9,11 @@ import RoomNavItem from "./RoomNavItem";
 import Project from "../../models/Project";
 
 type Props = {
-	projects: Project[]
+	projects: Project[],
+	onNavigate?: () => void
 };
 
-export default function NavMenu({ projects }: Props) {
+export default function NavMenu({ projects, onNavigate }: Props) {
 	const icon = <FolderOpenIcon size="xsmall" />;
 	return (
 		<Menu fill pad="none" primary size="small">
@@ -26,7 +27,7 @@ export default function NavMenu({ projects }: Props) {
 							className="project-accordion"
 						>
 							{project.rooms.map(room => (
-								<RoomNavItem room={room} key={room.id} />
+								<RoomNavItem room={room} key={room.id} onClick={onNavigate} />
 							))}
 						</AccordionPanel>
 					</Accordion>
@@ -34,3 +35,7 @@ export default function NavMenu({ projects }: Props) {
 		</Menu>
 	);
 }
+
+NavMenu.defaultProps = {
+	onNavigate: null
+};
