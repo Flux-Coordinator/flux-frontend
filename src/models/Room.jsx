@@ -9,9 +9,15 @@ export default class Room {
 	length: number;
 	width: number;
 
-	constructor(id: string, name: string, measurements: Measurement[]) {
+	constructor(
+		id: string,
+		name: string,
+		description: string = "",
+		measurements: Measurement[] = []
+	) {
 		this.id = id;
 		this.name = name;
+		this.description = description;
 		this.measurements = measurements;
 	}
 }

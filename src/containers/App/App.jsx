@@ -18,8 +18,18 @@ const measurements: Measurement[] = [
 ];
 
 const rooms: RoomModel[] = [
-	new RoomModel("1234564", "Aula", measurements),
-	new RoomModel("7542213", "Mensa", measurements)
+	new RoomModel(
+		"1234564",
+		"Aula",
+		"Ein grosser Saal mit Plätzen für 200 Personen und in der Mitte eine Absenkung.",
+		measurements
+	),
+	new RoomModel(
+		"7542213",
+		"Mensa",
+		"Platz für 400 Personen und eine Glasfassade.",
+		measurements
+	)
 ];
 
 const currentProjects: Project[] = [

@@ -12,19 +12,19 @@ function mockMeasurement() {
 }
 
 function mockRoom(amountOfMeasurements: number = 1) {
-	let measurements: Measurement[] = [];
+	const measurements: Measurement[] = [];
 
-	for (let i = 0; i < amountOfMeasurements; i++) {
+	for (let i = 0; i < amountOfMeasurements; i += 1) {
 		measurements.push(mockMeasurement());
 	}
 
-	return new Room("askmld", "MyRoom", measurements);
+	return new Room("askmld", "MyRoom", "Test Room", measurements);
 }
 
 function mockProject(amountOfRooms: number = 1) {
-	let rooms: Room[] = [];
+	const rooms: Room[] = [];
 
-	for (let i = 0; i < amountOfRooms; i++) {
+	for (let i = 0; i < amountOfRooms; i += 1) {
 		rooms.push(mockRoom());
 	}
 

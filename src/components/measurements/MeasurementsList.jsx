@@ -9,11 +9,19 @@ type Props = {
 	measurements: Measurement[]
 };
 export default function MeasurementsList({ measurements }: Props) {
+	const listItemPadding = {
+		horizontal: "none",
+		vertical: "medium"
+	};
 	return (
 		<List selectable>
 			{measurements &&
 				measurements.map(measurement => (
-					<ListItem key={measurement.id} justify="between">
+					<ListItem
+						key={measurement.id}
+						pad={listItemPadding}
+						justify="between"
+					>
 						<span>{measurement.description}</span>
 						<span>{measurement.date.toLocaleString()}</span>
 					</ListItem>
