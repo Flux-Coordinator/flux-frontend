@@ -1,5 +1,6 @@
 // @flow
 import * as React from "react";
+import Status from "grommet/components/icons/Status";
 import Header from "grommet/components/Header";
 import Article from "grommet/components/Article";
 import Box from "grommet/components/Box";
@@ -17,7 +18,9 @@ export default function Welcome() {
 						<Heading tag="h3">Systemstatus</Heading>
 					</Header>
 					<div>Platform: Cloud</div>
-					<div>Status: Bereit</div>
+					<div>
+						Status: Bereit <Status size="small" value="ok" />
+					</div>
 					<div>
 						Sensoren:
 						<ul>
