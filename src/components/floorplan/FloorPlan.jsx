@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function FloorPlan({ src, alt }: Props) {
-	return <Image src={src} alt="Floor Plan" size="large" />;
+	return <Image src={src} alt={alt} size="large" />;
 }
 
 FloorPlan.defaultProps = {
