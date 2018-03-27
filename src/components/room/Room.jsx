@@ -9,7 +9,6 @@ import Article from "grommet/components/Article";
 import RoomModel from "../../models/Room";
 import MeasurementList from "../measurements/MeasurementsList";
 import FloorPlan from "../floorplan/FloorPlan";
-import placeholder from "../../images/placeholder.png";
 
 type Props = {
 	room: RoomModel
