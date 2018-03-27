@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { Typography } from "material-ui";
+import Heading from "grommet/components/Heading";
 
 type Props = {
 	info: string
@@ -9,8 +9,8 @@ type Props = {
 function NotFound({ info }: Props) {
 	return (
 		<React.Fragment>
-			<Typography variant={"headline"}>Error: Route not found!</Typography>
-			<Typography variant={"subheading"}>{info}</Typography>
+			<Heading>Error: Route not found!</Heading>
+			<Heading>{info}</Heading>
 		</React.Fragment>
 	);
 }

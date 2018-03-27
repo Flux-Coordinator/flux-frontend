@@ -1,0 +1,15 @@
+@import "grommet/scss/vanilla/index";
+
+nav {
+	a.grommetux-anchor {
+		padding: 0 !important;
+	}
+}
+
+#sidebar-toggler {
+	border: 0;
+}
+
+nav .project-accordion .grommetux-accordion-panel__header {
+	min-height: 2em !important;
+}

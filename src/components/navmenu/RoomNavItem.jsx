@@ -1,29 +1,23 @@
 // @flow
 import React from "react";
-import { NavLink } from "react-router-dom";
-import { withStyles } from "material-ui/styles/index";
-import InsertDriveFileIcon from "material-ui-icons/InsertDriveFile";
+import Button from "grommet/components/Button";
 
-import NavMenuItem from "./NavMenuItem";
 import Room from "../../models/Room";
 
 type Props = {
-	classes: Object,
-	room: Room
+	room: Room,
+	onClick?: () => void
 };
 
-const styles = theme => ({
-	link: {
-		textDecoration: "none"
-	}
-});
-
-function RoomNavItem({ classes, room }: Props) {
+export default function RoomNavItem({ room, onClick }: Props) {
+	const path: string = `/rooms/${room.id}`;
 	return (
-		<NavLink className={classes.link} to={"/room/" + room.id}>
-			<NavMenuItem icon={<InsertDriveFileIcon />} primaryText={room.name} />
-		</NavLink>
+		<Button path={path} onClick={onClick}>
+			{room.name}
+		</Button>
 	);
 }
 
-export default withStyles(styles, { withTheme: true })(RoomNavItem);
+RoomNavItem.defaultProps = {
+	onClick: null
+};

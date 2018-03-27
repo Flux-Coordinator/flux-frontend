@@ -3,7 +3,6 @@ import React from "react";
 import { mount } from "enzyme";
 
 import NavMenu from "./NavMenu";
-import { createShallow } from "material-ui/test-utils";
 import Measurement from "../../models/Measurement";
 import Project from "../../models/Project";
 import Room from "../../models/Room";
@@ -13,19 +12,19 @@ function mockMeasurement() {
 }
 
 function mockRoom(amountOfMeasurements: number = 1) {
-	let measurements: Measurement[] = [];
+	const measurements: Measurement[] = [];
 
-	for (let i = 0; i < amountOfMeasurements; i++) {
+	for (let i = 0; i < amountOfMeasurements; i += 1) {
 		measurements.push(mockMeasurement());
 	}
 
-	return new Room("askmld", "MyRoom", measurements);
+	return new Room("askmld", "MyRoom", "Test Room", measurements);
 }
 
 function mockProject(amountOfRooms: number = 1) {
-	let rooms: Room[] = [];
+	const rooms: Room[] = [];
 
-	for (let i = 0; i < amountOfRooms; i++) {
+	for (let i = 0; i < amountOfRooms; i += 1) {
 		rooms.push(mockRoom());
 	}
 
@@ -33,13 +32,7 @@ function mockProject(amountOfRooms: number = 1) {
 }
 
 describe("<NavMenu />", () => {
-	let shallow;
-
-	beforeEach(() => {
-		shallow = createShallow();
-	});
-
 	it("should render", () => {
-		mount(<NavMenu projects={[mockProject()]} />);
+		mount(<NavMenu projects={[mockProject()]} onNavigate={() => {}} />);
 	});
 });

@@ -1,35 +1,41 @@
 // @flow
 import * as React from "react";
-import { withStyles } from "material-ui/styles";
-import { List } from "material-ui";
+import FolderOpenIcon from "grommet/components/icons/base/FolderOpen";
+import Menu from "grommet/components/Menu";
+import Accordion from "grommet/components/Accordion";
+import AccordionPanel from "grommet/components/AccordionPanel";
 
-import ProjectNavItem from "./ProjectNavItem";
+import RoomNavItem from "./RoomNavItem";
 import Project from "../../models/Project";
 
 type Props = {
-	classes: Object,
-	projects: Project[]
+	projects: Project[],
+	onNavigate?: () => void
 };
 
-const styles = theme => ({
-	root: {
-		width: "100%",
-		maxWidth: 360,
-		backgroundColor: theme.palette.background.paper
-	}
-});
-
-function NavMenu({ classes, projects }: Props) {
+export default function NavMenu({ projects, onNavigate }: Props) {
+	const icon = <FolderOpenIcon size="xsmall" />;
 	return (
-		<div className={classes.root}>
-			<List component="nav" className={classes.root}>
-				{projects &&
-					projects.map(project => (
-						<ProjectNavItem project={project} key={project.id} />
-					))}
-			</List>
-		</div>
+		<Menu fill pad="none" primary size="small">
+			{projects &&
+				projects.map(project => (
+					<Accordion key={project.id}>
+						<AccordionPanel
+							pad="small"
+							icon={icon}
+							heading={project.name}
+							className="project-accordion"
+						>
+							{project.rooms.map(room => (
+								<RoomNavItem room={room} key={room.id} onClick={onNavigate} />
+							))}
+						</AccordionPanel>
+					</Accordion>
+				))}
+		</Menu>
 	);
 }
 
-export default withStyles(styles, { withTheme: true })(NavMenu);
+NavMenu.defaultProps = {
+	onNavigate: null
+};

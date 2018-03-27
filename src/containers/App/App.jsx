@@ -1,16 +1,15 @@
 // @flow
 import React from "react";
-import CssBaseline from "material-ui/CssBaseline/CssBaseline";
-import { Route, Switch } from "react-router";
-import { BrowserRouter } from "react-router-dom";
+import GrommetApp from "grommet/components/App";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import Layout from "../Layout/Layout";
 import RoomModel from "../../models/Room";
 import Measurement from "../../models/Measurement";
 import Project from "../../models/Project";
-import Welcome from "../../components/welcome/Welcome";
 import Room from "../../components/room/Room";
+import Welcome from "../../components/welcome/Welcome";
 import NotFound from "../../components/notfound/NotFound";
+import Layout from "../Layout/Layout";
 
 const measurements: Measurement[] = [
 	new Measurement("15564564564", "Erste Messung", new Date()),
@@ -19,8 +18,18 @@ const measurements: Measurement[] = [
 ];
 
 const rooms: RoomModel[] = [
-	new RoomModel("1234564", "Aula", measurements),
-	new RoomModel("7542213", "Mensa", measurements)
+	new RoomModel(
+		"1234564",
+		"Aula",
+		"Ein grosser Saal mit Plätzen für 200 Personen und in der Mitte eine Absenkung.",
+		measurements
+	),
+	new RoomModel(
+		"7542213",
+		"Mensa",
+		"Platz für 400 Personen und eine Glasfassade.",
+		measurements
+	)
 ];
 
 const currentProjects: Project[] = [
@@ -28,16 +37,14 @@ const currentProjects: Project[] = [
 ];
 
 const RenderRoomPage = ({ match }: { match: Object }) => {
-	let foundRoom;
 	for (const project of currentProjects) {
-		foundRoom = project.rooms.find(room => room.id === match.params.roomId);
+		const foundRoom = project.rooms.find(
+			room => room.id === match.params.roomId
+		);
 
 		if (foundRoom) {
-			break;
+			return <Room room={foundRoom} />;
 		}
-	}
-	if (foundRoom) {
-		return <Room room={foundRoom} />;
 	}
 	const infoMessage = `The Room with the ID ${match.params.id} was not found.`;
 	return <NotFound info={infoMessage} />;
@@ -45,16 +52,17 @@ const RenderRoomPage = ({ match }: { match: Object }) => {
 
 function App() {
 	return (
-		<div className="App">
-			<CssBaseline />
-			<BrowserRouter>
-				<Layout projects={currentProjects}>
-					<Switch>
-						<Route path="/room/:roomId" render={RenderRoomPage} />
-						<Route path="/" component={Welcome} />
-					</Switch>
-				</Layout>
-			</BrowserRouter>
+		<div>
+			<GrommetApp centered={false}>
+				<Router>
+					<Layout projects={currentProjects}>
+						<Switch>
+							<Route path="/rooms/:roomId" component={RenderRoomPage} />
+							<Route path="/" component={Welcome} />
+						</Switch>
+					</Layout>
+				</Router>
+			</GrommetApp>
 		</div>
 	);
 }

@@ -1,5 +1,6 @@
 # Custom
 /.idea/inspectionProfiles/profiles_settings.xml
+/src/index.css
 
 # testing
 /coverage
