@@ -5,10 +5,10 @@ import Heading from "grommet/components/Heading";
 import Box from "grommet/components/Box";
 import Section from "grommet/components/Section";
 import Article from "grommet/components/Article";
-import Image from "grommet/components/Image";
 
 import RoomModel from "../../models/Room";
 import MeasurementList from "../measurements/MeasurementsList";
+import FloorPlan from "../floorplan/FloorPlan";
 import placeholder from "../../images/placeholder.png";
 
 type Props = {
@@ -41,7 +41,7 @@ export default function Room({ room }: Props) {
 						<Header size="small">
 							<Heading tag="h3">Grundriss</Heading>
 						</Header>
-						<Image src={placeholder} size="large" />
+						<FloorPlan />
 					</Box>
 				</Box>
 			</Section>
