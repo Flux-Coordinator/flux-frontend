@@ -11,12 +11,12 @@ type Props = {
 	projects: Project[]
 };
 
-export default function ProjectsList({ projects }: Props) {
-	const listItemPadding = {
-		horizontal: "none",
-		vertical: "medium"
-	};
+const listItemPadding = {
+	horizontal: "none",
+	vertical: "medium"
+};
 
+export default function ProjectsList({ projects }: Props) {
 	const unfilteredTotal = projects ? projects.length : 0;
 	const filteredTotal = projects ? projects.length : 0;
 
@@ -29,7 +29,7 @@ export default function ProjectsList({ projects }: Props) {
 			<List selectable>
 				{projects &&
 					projects.map(project => (
-						<ListItem key={project.id}>
+						<ListItem key={project.id} pad={listItemPadding}>
 							<Anchor path={"/projects/" + project.id}>{project.name}</Anchor>
 						</ListItem>
 					))}
