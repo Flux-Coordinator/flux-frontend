@@ -1,12 +1,13 @@
 // @flow
 import React from "react";
-import { mount } from "enzyme";
+import { mount, shallow } from "enzyme";
+import { MemoryRouter } from "react-router";
+import Anchor from "grommet/components/Anchor";
 
 import NavMenu from "./NavMenu";
 import Measurement from "../../models/Measurement";
 import Project from "../../models/Project";
 import Room from "../../models/Room";
-import { MemoryRouter } from "react-router";
 
 function mockMeasurement() {
 	return new Measurement("asklmda", "Erste Messung", new Date());
@@ -36,8 +37,13 @@ describe("<NavMenu />", () => {
 	it("should render", () => {
 		mount(
 			<MemoryRouter>
-				<NavMenu onNavigate={() => {}} />
+				<NavMenu />
 			</MemoryRouter>
 		);
+	});
+
+	it("should have menu entries", () => {
+		const wrapper = shallow(<NavMenu />);
+		expect(wrapper.find(Anchor).length).toBeGreaterThan(0);
 	});
 });
