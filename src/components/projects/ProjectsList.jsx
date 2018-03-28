@@ -2,6 +2,7 @@
 import * as React from "react";
 import List from "grommet/components/List";
 import ListItem from "grommet/components/ListItem";
+import Anchor from "grommet/components/Anchor";
 import ListPlaceholder from "grommet-addons/components/ListPlaceholder";
 
 import Project from "../../models/Project";
@@ -28,8 +29,8 @@ export default function ProjectsList({ projects }: Props) {
 			<List selectable>
 				{projects &&
 					projects.map(project => (
-						<ListItem key={project.id} pad={listItemPadding} justify="between">
-							<span>{project.name}</span>
+						<ListItem key={project.id}>
+							<Anchor path={"/projects/" + project.id}>{project.name}</Anchor>
 						</ListItem>
 					))}
 			</List>
