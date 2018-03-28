@@ -1,37 +1,28 @@
 // @flow
 import * as React from "react";
-import FolderOpenIcon from "grommet/components/icons/base/FolderOpen";
 import Menu from "grommet/components/Menu";
-import Accordion from "grommet/components/Accordion";
-import AccordionPanel from "grommet/components/AccordionPanel";
-
-import RoomNavItem from "./RoomNavItem";
-import Project from "../../models/Project";
+import Anchor from "grommet/components/Anchor";
 
 type Props = {
-	projects: Project[],
 	onNavigate?: () => void
 };
 
-export default function NavMenu({ projects, onNavigate }: Props) {
-	const icon = <FolderOpenIcon size="xsmall" />;
+export default function NavMenu({ onNavigate }: Props) {
 	return (
-		<Menu fill pad="none" primary size="small">
-			{projects &&
-				projects.map(project => (
-					<Accordion key={project.id}>
-						<AccordionPanel
-							pad="small"
-							icon={icon}
-							heading={project.name}
-							className="project-accordion"
-						>
-							{project.rooms.map(room => (
-								<RoomNavItem room={room} key={room.id} onClick={onNavigate} />
-							))}
-						</AccordionPanel>
-					</Accordion>
-				))}
+		<Menu fill pad="none" primary>
+			<Anchor path={{ path: "/", index: true }} onClick={onNavigate}>
+				Dashboard
+			</Anchor>
+			<Anchor path="/projects" onClick={onNavigate}>
+				Projekte
+			</Anchor>
+			<Anchor path="/import" onClick={onNavigate}>
+				Import / Export
+			</Anchor>
+			<Anchor path="/settings" onClick={onNavigate}>
+				Einstellungen
+			</Anchor>
+			<Anchor onClick={onNavigate}>Abmelden</Anchor>
 		</Menu>
 	);
 }

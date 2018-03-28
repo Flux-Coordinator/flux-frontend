@@ -6,6 +6,7 @@ import NavMenu from "./NavMenu";
 import Measurement from "../../models/Measurement";
 import Project from "../../models/Project";
 import Room from "../../models/Room";
+import { MemoryRouter } from "react-router";
 
 function mockMeasurement() {
 	return new Measurement("asklmda", "Erste Messung", new Date());
@@ -33,6 +34,10 @@ function mockProject(amountOfRooms: number = 1) {
 
 describe("<NavMenu />", () => {
 	it("should render", () => {
-		mount(<NavMenu projects={[mockProject()]} onNavigate={() => {}} />);
+		mount(
+			<MemoryRouter>
+				<NavMenu onNavigate={() => {}} />
+			</MemoryRouter>
+		);
 	});
 });
