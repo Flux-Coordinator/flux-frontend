@@ -6,6 +6,7 @@
 		"concurrently": "^3.5.1",
 		"cross-env": "^5.1.4",
 		"grommet": "^1.10.1",
+		"grommet-addons": "^0.6.0",
 		"node-sass-chokidar": "^1.2.0",
 		"npm-run-all": "^4.1.2",
 		"react": "16.2.0",

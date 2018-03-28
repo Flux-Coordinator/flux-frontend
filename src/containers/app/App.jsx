@@ -34,7 +34,8 @@ const rooms: RoomModel[] = [
 ];
 
 const currentProjects: Project[] = [
-	new Project("583492902", "Schule Rapperswil", rooms)
+	new Project("583492902", "Hochschule Rapperswil", rooms),
+	new Project("120991323", "Hochschule St. Gallen", rooms)
 ];
 
 const RenderRoomPage = ({ match }: { match: Object }) => {
@@ -51,6 +52,10 @@ const RenderRoomPage = ({ match }: { match: Object }) => {
 	return <NotFound info={infoMessage} />;
 };
 
+const RenderProjectsPage = () => {
+	return <Projects projects={currentProjects} />;
+};
+
 function App() {
 	return (
 		<div>
@@ -58,7 +63,7 @@ function App() {
 				<Router>
 					<Layout projects={currentProjects}>
 						<Switch>
-							<Route path="/projects" component={Projects} />
+							<Route path="/projects" component={RenderProjectsPage} />
 							<Route path="/rooms/:roomId" component={RenderRoomPage} />
 							<Route path="/" exact component={Dashboard} />
 							<Route path="/" component={NotFound} />

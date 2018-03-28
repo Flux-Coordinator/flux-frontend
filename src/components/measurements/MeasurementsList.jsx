@@ -13,6 +13,7 @@ export default function MeasurementsList({ measurements }: Props) {
 		horizontal: "none",
 		vertical: "medium"
 	};
+
 	return (
 		<List selectable>
 			{measurements &&
