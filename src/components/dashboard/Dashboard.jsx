@@ -10,7 +10,7 @@ import ContentBox from "../contentBox/ContentBox";
 export default function Dashboard() {
 	return (
 		<ContentBox heading="Dashboard">
-			<Box basis="1/2">
+			<Box>
 				<Header size="small">
 					<Heading tag="h3">Systemstatus</Heading>
 				</Header>

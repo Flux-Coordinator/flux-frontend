@@ -7,11 +7,12 @@ type Props = {
 };
 
 function NotFound({ info }: Props) {
-	return <ContentBox heading="Route not found!">{info}</ContentBox>;
+	return <ContentBox heading="Route nicht gefunden!">{info}</ContentBox>;
 }
 
 NotFound.defaultProps = {
-	info: "The route you tried to access does not exist or is prohibited."
+	info:
+		"Die Rute, auf die Sie zugreifen wollten existiert nicht oder ist geschützt."
 };
 
 export default NotFound;

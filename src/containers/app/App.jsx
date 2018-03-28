@@ -5,12 +5,13 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import RoomModel from "../../models/Room";
 import Measurement from "../../models/Measurement";
-import Project from "../../models/Project";
+import ProjectModel from "../../models/Project";
 import Room from "../../components/room/Room";
 import Dashboard from "../../components/dashboard/Dashboard";
 import NotFound from "../../components/notfound/NotFound";
 import Projects from "../../components/projects/Projects";
 import Layout from "../layout/Layout";
+import Project from "../../components/projects/Project";
 
 const measurements: Measurement[] = [
 	new Measurement("15564564564", "Erste Messung", new Date()),
@@ -33,9 +34,9 @@ const rooms: RoomModel[] = [
 	)
 ];
 
-const currentProjects: Project[] = [
-	new Project("583492902", "Hochschule Rapperswil", rooms),
-	new Project("120991323", "Hochschule St. Gallen", rooms)
+const currentProjects: ProjectModel[] = [
+	new ProjectModel("583492902", "Hochschule Rapperswil", rooms),
+	new ProjectModel("120991323", "Hochschule St. Gallen", rooms)
 ];
 
 const RenderRoomPage = ({ match }: { match: Object }) => {
@@ -48,12 +49,28 @@ const RenderRoomPage = ({ match }: { match: Object }) => {
 			return <Room room={foundRoom} />;
 		}
 	}
-	const infoMessage = `The Room with the ID ${match.params.id} was not found.`;
+	const infoMessage = `Das Projekt mit der ID ${
+		match.params.roomId
+	} konnte nicht gefunden werden.`;
 	return <NotFound info={infoMessage} />;
 };
 
 const RenderProjectsPage = () => {
 	return <Projects projects={currentProjects} />;
+};
+
+const RenderProjectPage = ({ match }: { match: Object }) => {
+	const foundProject = currentProjects.find(
+		project => project.id === match.params.projectId
+	);
+
+	if (foundProject) {
+		return <Project project={foundProject} />;
+	}
+	const infoMessage = `Das Projekt mit der ID ${
+		match.params.projectId
+	} konnte nicht gefunden werden.`;
+	return <NotFound info={infoMessage} />;
 };
 
 function App() {
@@ -63,6 +80,10 @@ function App() {
 				<Router>
 					<Layout projects={currentProjects}>
 						<Switch>
+							<Route
+								path="/projects/:projectId"
+								component={RenderProjectPage}
+							/>
 							<Route path="/projects" component={RenderProjectsPage} />
 							<Route path="/rooms/:roomId" component={RenderRoomPage} />
 							<Route path="/" exact component={Dashboard} />
