@@ -9,6 +9,7 @@ import Project from "../../models/Project";
 import Room from "../../components/room/Room";
 import Welcome from "../../components/welcome/Welcome";
 import NotFound from "../../components/notfound/NotFound";
+import Projects from "../../components/projects/Projects";
 import Layout from "../Layout/Layout";
 
 const measurements: Measurement[] = [
@@ -57,6 +58,7 @@ function App() {
 				<Router>
 					<Layout projects={currentProjects}>
 						<Switch>
+							<Route path="/projects" component={Projects} />
 							<Route path="/rooms/:roomId" component={RenderRoomPage} />
 							<Route path="/" component={Welcome} />
 						</Switch>
