@@ -4,7 +4,7 @@ import Menu from "grommet/components/Menu";
 import Anchor from "grommet/components/Anchor";
 
 type Props = {
-	onNavigate?: () => void
+	onNavigate: ?() => void
 };
 
 export default function NavMenu({ onNavigate }: Props) {

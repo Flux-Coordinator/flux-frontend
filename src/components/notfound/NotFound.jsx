@@ -1,18 +1,18 @@
 // @flow
 import * as React from "react";
 import Heading from "grommet/components/Heading";
+import ContentBox from "../contentBox/ContentBox";
 
 type Props = {
-	info: string
+	info?: string
 };
 
 function NotFound({ info }: Props) {
-	return (
-		<React.Fragment>
-			<Heading>Error: Route not found!</Heading>
-			<Heading>{info}</Heading>
-		</React.Fragment>
-	);
+	return <ContentBox heading="Route not found!">{info}</ContentBox>;
 }
+
+NotFound.defaultProps = {
+	info: "The route you tried to access does not exist or is prohibited."
+};
 
 export default NotFound;

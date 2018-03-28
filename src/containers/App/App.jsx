@@ -60,7 +60,8 @@ function App() {
 						<Switch>
 							<Route path="/projects" component={Projects} />
 							<Route path="/rooms/:roomId" component={RenderRoomPage} />
-							<Route path="/" component={Welcome} />
+							<Route path="/" exact component={Welcome} />
+							<Route path="/" component={NotFound} />
 						</Switch>
 					</Layout>
 				</Router>
