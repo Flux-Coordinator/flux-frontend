@@ -1,6 +1,5 @@
 // @flow
 import * as React from "react";
-import Heading from "grommet/components/Heading";
 import ContentBox from "../contentBox/ContentBox";
 
 type Props = {

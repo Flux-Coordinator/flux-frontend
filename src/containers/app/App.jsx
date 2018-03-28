@@ -10,7 +10,7 @@ import Room from "../../components/room/Room";
 import Dashboard from "../../components/dashboard/Dashboard";
 import NotFound from "../../components/notfound/NotFound";
 import Projects from "../../components/projects/Projects";
-import Layout from "../Layout/Layout";
+import Layout from "../layout/Layout";
 
 const measurements: Measurement[] = [
 	new Measurement("15564564564", "Erste Messung", new Date()),

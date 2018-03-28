@@ -5,11 +5,6 @@ type State = {
 	hasError: boolean
 };
 
-type ErrorBoundaryParameters = {
-	error: Error,
-	info: string
-};
-
 type Props = {
 	children: React.Node
 };
