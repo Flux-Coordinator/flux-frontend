@@ -8,7 +8,7 @@ import ListPlaceholder from "grommet-addons/components/ListPlaceholder";
 import Project from "../../models/Project";
 
 type Props = {
-	projects: ?(Project[])
+	projects?: Project[]
 };
 
 const listItemPadding = {
@@ -28,13 +28,11 @@ export default function ProjectsList({ projects }: Props) {
 			/>
 			<List selectable>
 				{projects &&
-					projects.map(project => {
-						return (
-							<ListItem key={project.id} pad={listItemPadding}>
-								<Anchor path={"/projects/" + project.id}>{project.name}</Anchor>
-							</ListItem>
-						);
-					})}
+					projects.map(project => (
+						<ListItem key={project.id} pad={listItemPadding}>
+							<Anchor path={"/projects/" + project.id}>{project.name}</Anchor>
+						</ListItem>
+					))}
 			</List>
 		</React.Fragment>
 	);
