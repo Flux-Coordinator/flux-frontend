@@ -1,3 +1,4 @@
+// @flow
 import * as React from "react";
 import Box from "grommet/components/Box";
 import Header from "grommet/components/Header";

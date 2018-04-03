@@ -8,7 +8,7 @@ import ListPlaceholder from "grommet-addons/components/ListPlaceholder";
 import Room from "../../models/Room";
 
 type Props = {
-	rooms: Room[]
+	rooms?: ?(Room[])
 };
 
 const listItemPadding = {
@@ -30,10 +30,14 @@ export default function RoomList({ rooms }: Props) {
 				{rooms &&
 					rooms.map(room => (
 						<ListItem key={room.id} pad={listItemPadding} justify="between">
-							<Anchor path={"/rooms/" + room.id}>{room.name}</Anchor>
+							<Anchor path={`/rooms/${room.id}`}>{room.name}</Anchor>
 						</ListItem>
 					))}
 			</List>
 		</React.Fragment>
 	);
 }
+
+RoomList.defaultProps = {
+	rooms: null
+};
