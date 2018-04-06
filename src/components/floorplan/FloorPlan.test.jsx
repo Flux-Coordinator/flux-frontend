@@ -5,7 +5,7 @@ import { shallow } from "enzyme";
 import FloorPlan from "./FloorPlan";
 
 describe("<FloorPlan />", () => {
-	const placeholderText = "placeholder.png";
+	const placeholderImage = "placeholder.png";
 	const alternativeText = "Floor Plan";
 
 	it("should render", () => {
@@ -15,7 +15,7 @@ describe("<FloorPlan />", () => {
 
 	it("should have a placeholder image when nothing else is provided", () => {
 		const wrapper = shallow(<FloorPlan />);
-		expect(wrapper.props().src).toBe(placeholderText);
+		expect(wrapper.props().src).toBe(placeholderImage);
 	});
 
 	it("should have a placeholder alt text when nothing else is provided", () => {
