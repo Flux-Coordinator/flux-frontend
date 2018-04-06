@@ -2,6 +2,7 @@
 
 <div align="center">
   
+  [![Tested with Jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/facebook/jest)
   [![GitHub license](https://img.shields.io/github/license/Flux-Coordinator/flux-frontend.svg)](https://github.com/Flux-Coordinator/flux-frontend)
   [![Sonar Cloud Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=flux-frontend&metric=reliability_rating)](https://sonarcloud.io/api/project_badges/measure?project=flux-frontend&metric=reliability_rating)
   [![Sonar Cloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=flux-frontend&metric=coverage)](https://sonarcloud.io/api/project_badges/measure?project=flux-frontend&metric=coverage)

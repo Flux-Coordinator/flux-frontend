@@ -1,17 +1,24 @@
 // @flow
 import * as React from "react";
 
-export default class ErrorBoundary extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = { hasError: false };
-	}
+type State = {
+	hasError: boolean
+};
 
-	logErrorToMyService = (error, info) => {
+type Props = {
+	children: React.Node
+};
+
+export default class ErrorBoundary extends React.Component<Props, State> {
+	state = {
+		hasError: false
+	};
+
+	logErrorToMyService = (error: Error, info: string) => {
 		console.error(error, info);
 	};
 
-	componentDidCatch(error, info) {
+	componentDidCatch(error: Error, info: string) {
 		// Display fallback UI
 		this.setState({ hasError: true });
 		// You can also log the error to an error reporting service

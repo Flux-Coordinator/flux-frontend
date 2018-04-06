@@ -1,18 +1,18 @@
 // @flow
 import * as React from "react";
-import { Typography } from "material-ui";
+import ContentBox from "../contentBox/ContentBox";
 
 type Props = {
-	info: string
+	info?: string
 };
 
 function NotFound({ info }: Props) {
-	return (
-		<React.Fragment>
-			<Typography variant={"headline"}>Error: Route not found!</Typography>
-			<Typography variant={"subheading"}>{info}</Typography>
-		</React.Fragment>
-	);
+	return <ContentBox heading="Seite nicht gefunden!">{info}</ContentBox>;
 }
+
+NotFound.defaultProps = {
+	info:
+		"Die Seite, auf die Sie zugreifen wollten existiert nicht oder ist geschützt."
+};
 
 export default NotFound;

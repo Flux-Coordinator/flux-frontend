@@ -11,10 +11,7 @@ cache:
 addons:
   sonarcloud:
     organization: "flux-coordinator"
-    branches:
-      - master
-      - develop
-
+    
 script:
   - yarn test-ci
   - sonar-scanner

@@ -5,8 +5,10 @@
 	"dependencies": {
 		"concurrently": "^3.5.1",
 		"cross-env": "^5.1.4",
-		"material-ui": "^1.0.0-beta.38",
-		"material-ui-icons": "^1.0.0-beta.36",
+		"grommet": "^1.10.1",
+		"grommet-addons": "^0.6.0",
+		"node-sass-chokidar": "^1.2.0",
+		"npm-run-all": "^4.1.2",
 		"react": "16.2.0",
 		"react-dom": "16.2.0",
 		"react-router": "^4.2.0",
@@ -15,10 +17,14 @@
 		"typeface-roboto": "^0.0.54"
 	},
 	"scripts": {
-		"start-all":
-			"cross-env NODE_PATH=src concurrently \"react-scripts start\" \"start-storybook -p 3001 -c .storybook\"",
-		"start": "cross-env NODE_PATH=src react-scripts start",
-		"build": "cross-env NODE_PATH=src react-scripts build",
+		"build-css":
+			"node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
+		"watch-css":
+			"npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
+		"start-react": "cross-env NODE_PATH=src react-scripts start",
+		"start": "npm-run-all -p watch-css start-react",
+		"build-react": "cross-env NODE_PATH=src react-scripts build",
+		"build": "npm-run-all build-css build-react",
 		"test": "cross-env NODE_PATH=src react-scripts test --env=jsdom",
 		"test-ci":
 			"cross-env NODE_PATH=src react-scripts test --env=jsdom --coverage",
