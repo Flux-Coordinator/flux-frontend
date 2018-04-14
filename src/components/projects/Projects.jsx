@@ -10,6 +10,7 @@ import Heading from "grommet/components/Heading";
 import ContentBox from "../contentBox/ContentBox";
 import ProjectsList from "./ProjectsList";
 import Project from "../../models/Project";
+import AddProjectButton from "../addProjectButton/AddProjectButton";
 
 type Props = {
 	projects: Project[]
@@ -35,6 +36,7 @@ export default function Projects({ projects }: Props) {
 			<Section>
 				<Header size="small">
 					<Heading tag="h3">Projekte</Heading>
+					<AddProjectButton />
 				</Header>
 				<ProjectsList projects={projects} />
 			</Section>
