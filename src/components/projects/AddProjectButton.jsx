@@ -9,7 +9,7 @@ import Project from "../../models/Project";
 function addProject() {
 	const projectName = `NewProject${new Date()}`;
 	const apiUrl = process.env.REACT_APP_SERVICE_URI;
-	const project = new Project("", projectName, []);
+	const project = new Project({ name: projectName, rooms: [] });
 	axios
 		.post(`${apiUrl}/projects`, project)
 		.then(result => {
