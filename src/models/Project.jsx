@@ -6,7 +6,7 @@ export default class Project {
 	name: string;
 	rooms: Room[];
 
-	constructor(id: string, name: string, rooms: Room[]) {
+	constructor(id: string = null, name: string, rooms: Room[]) {
 		this.projectId = id;
 		this.name = name;
 		this.rooms = rooms;
