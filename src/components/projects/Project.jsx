@@ -19,7 +19,7 @@ export default function Project({ project }: Props) {
 				<Header size="small">
 					<Heading tag="h3">Räume</Heading>
 				</Header>
-				<RoomList rooms={project.rooms} />
+				<RoomList parentProject={project} rooms={project.rooms} />
 			</Box>
 		</ContentBox>
 	);

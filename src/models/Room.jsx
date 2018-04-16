@@ -2,7 +2,7 @@
 import Measurement from "./Measurement";
 
 export default class Room {
-	id: string;
+	roomId: string;
 	name: string;
 	description: string;
 	measurements: Measurement[];
@@ -15,7 +15,7 @@ export default class Room {
 		description: string = "",
 		measurements: Measurement[] = []
 	) {
-		this.id = id;
+		this.roomId = id;
 		this.name = name;
 		this.description = description;
 		this.measurements = measurements;

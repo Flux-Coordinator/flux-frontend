@@ -29,7 +29,7 @@ export default function MeasurementsList({ measurements }: Props) {
 				{measurements &&
 					measurements.map(measurement => (
 						<ListItem
-							key={measurement.id}
+							key={measurement.measurementId}
 							pad={listItemPadding}
 							justify="between"
 						>
