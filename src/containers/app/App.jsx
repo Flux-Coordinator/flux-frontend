@@ -41,7 +41,9 @@ export default class App extends React.Component<Prop, State> {
 	getProjects = () => {
 		this.setState(({ loading: true }: State));
 		axios
-			.get(`${this.apiUrl}/projects`, { cancelToken: this.source.token })
+			.get(`${this.apiUrl}/projects?limit=0`, {
+				cancelToken: this.source.token
+			})
 			.then(result => {
 				this.setState(({ projects: result.data, loading: false }: State));
 			})
