@@ -2,9 +2,9 @@
 import React from "react";
 import GrommetApp from "grommet/components/App";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import axios, { CancelToken } from "axios";
 
 import RoomModel from "../../models/Room";
-import Measurement from "../../models/Measurement";
 import ProjectModel from "../../models/Project";
 import Room from "../../components/room/Room";
 import Dashboard from "../../components/dashboard/Dashboard";
@@ -13,87 +13,110 @@ import Projects from "../../components/projects/Projects";
 import Layout from "../layout/Layout";
 import Project from "../../components/projects/Project";
 
-const measurements: Measurement[] = [
-	new Measurement("15564564564", "Erste Messung", new Date()),
-	new Measurement("45648994884", "Zweite Messung", new Date()),
-	new Measurement("16455161566", "Dritte Messung", new Date())
-];
+type Prop = {};
 
-const rooms: RoomModel[] = [
-	new RoomModel(
-		"1234564",
-		"Aula",
-		"Ein grosser Saal mit Plätzen für 200 Personen und in der Mitte eine Absenkung.",
-		measurements
-	),
-	new RoomModel(
-		"7542213",
-		"Mensa",
-		"Platz für 400 Personen und eine Glasfassade.",
-		measurements
-	)
-];
+type State = {
+	projects: Project[]
+};
 
-const currentProjects: ProjectModel[] = [
-	new ProjectModel("583492902", "Hochschule Rapperswil", rooms),
-	new ProjectModel("120991323", "Hochschule St. Gallen", rooms)
-];
+export default class App extends React.Component<Prop, State> {
+	constructor() {
+		super();
+		this.apiUrl = process.env.REACT_APP_SERVICE_URI;
+		this.source = CancelToken.source();
+	}
 
-const RenderRoomPage = ({ match }: { match: Object }) => {
-	for (const project of currentProjects) {
-		const foundRoom = project.rooms.find(
-			room => room.id === match.params.roomId
+	state = {
+		projects: []
+	};
+
+	componentDidMount() {
+		this.getProjects();
+	}
+
+	componentWillUnmount() {
+		this.source.cancel();
+	}
+
+	getProjects = () => {
+		this.setState(({ loading: true }: State));
+		axios
+			.get(`${this.apiUrl}/projects`, { cancelToken: this.source.token })
+			.then(result => {
+				this.setState(({ projects: result.data, loading: false }: State));
+			})
+			.catch(error => {
+				if (!axios.isCancel(error)) {
+					this.setState(({ projects: [], loading: false }: State));
+				}
+			});
+	};
+
+	renderProjectsPage = () => <Projects projects={this.state.projects} />;
+
+	renderProjectPage = ({ match }) => {
+		const foundProject = this.state.projects.find(
+			project => project.projectId === match.params.projectId
 		);
 
-		if (foundRoom) {
-			return <Room room={foundRoom} />;
+		if (foundProject) {
+			return <Project project={foundProject} />;
 		}
+		const infoMessage = `Das Projekt mit der ID ${
+			match.params.projectId
+		} konnte nicht gefunden werden.`;
+		return <NotFound info={infoMessage} />;
+	};
+
+	renderRoomPage = ({ match }) => {
+		const foundProject = this.state.projects.find(
+			(project: ProjectModel) => project.projectId === match.params.projectId
+		);
+
+		if (foundProject) {
+			const foundRoom = foundProject.rooms.find(
+				(room: RoomModel) => room.name === match.params.roomName
+			);
+
+			if (foundRoom) {
+				return <Room room={foundRoom} />;
+			}
+		}
+
+		const infoMessage = `Der Raum mit dem Namen ${
+			match.params.roomId
+		} konnte nicht gefunden werden.`;
+		return <NotFound info={infoMessage} />;
+	};
+
+	render() {
+		return (
+			<div>
+				<GrommetApp centered={false}>
+					<Router>
+						<Layout projects={this.state.projects}>
+							<Switch>
+								<Route
+									path="/projects/:projectId"
+									exact
+									component={this.renderProjectPage}
+								/>
+								<Route
+									path="/projects"
+									exact
+									component={this.renderProjectsPage}
+								/>
+								<Route
+									path="/projects/:projectId/rooms/:roomName"
+									component={this.renderRoomPage}
+								/>
+								<Route path="/" exact component={Dashboard} />
+								<Route path="/" component={NotFound} />
+							</Switch>
+						</Layout>
+					</Router>
+				</GrommetApp>
+			</div>
+		);
 	}
-	const infoMessage = `Das Projekt mit der ID ${
-		match.params.roomId
-	} konnte nicht gefunden werden.`;
-	return <NotFound info={infoMessage} />;
-};
-
-const RenderProjectsPage = () => {
-	return <Projects projects={currentProjects} />;
-};
-
-const RenderProjectPage = ({ match }: { match: Object }) => {
-	const foundProject = currentProjects.find(
-		project => project.id === match.params.projectId
-	);
-
-	if (foundProject) {
-		return <Project project={foundProject} />;
-	}
-	const infoMessage = `Das Projekt mit der ID ${
-		match.params.projectId
-	} konnte nicht gefunden werden.`;
-	return <NotFound info={infoMessage} />;
-};
-
-function App() {
-	return (
-		<div>
-			<GrommetApp centered={false}>
-				<Router>
-					<Layout projects={currentProjects}>
-						<Switch>
-							<Route
-								path="/projects/:projectId"
-								component={RenderProjectPage}
-							/>
-							<Route path="/projects" component={RenderProjectsPage} />
-							<Route path="/rooms/:roomId" component={RenderRoomPage} />
-							<Route path="/" exact component={Dashboard} />
-							<Route path="/" component={NotFound} />
-						</Switch>
-					</Layout>
-				</Router>
-			</GrommetApp>
-		</div>
-	);
 }
-
-export default App;
