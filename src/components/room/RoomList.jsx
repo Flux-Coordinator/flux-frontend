@@ -17,10 +17,15 @@ const listItemPadding = {
 };
 
 export default function RoomList({ parentProject }: Props) {
+	if (parentProject.projectId == null) {
+		throw new Error(
+			"The project tried to access had a projectId with null value."
+		);
+	}
+
 	const { rooms } = parentProject;
 	const unfilteredTotal = rooms ? rooms.length : 0;
 	const filteredTotal = rooms ? rooms.length : 0;
-
 	return (
 		<React.Fragment>
 			<ListPlaceholder

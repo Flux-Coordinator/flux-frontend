@@ -7,7 +7,7 @@ import Room from "./Room";
 
 describe("<Room />", () => {
 	it("should render", () => {
-		const room = new RoomModel("asdodmp", "First Room", "Description");
+		const room = new RoomModel("First Room", "Description");
 		shallow(<Room room={room} />);
 	});
 });

@@ -8,8 +8,8 @@ import RoomList from "./RoomList";
 
 describe("<RoomList />", () => {
 	it("should render", () => {
-		const room = new RoomModel("asdodmp", "First Room", "Description");
-		const project = new ProjectModel("123123", "Testproject", [room]);
+		const room = new RoomModel("First Room", "Description");
+		const project = new ProjectModel("Testproject", [room], "asdasd");
 		shallow(<RoomList parentProject={project} />);
 	});
 });
