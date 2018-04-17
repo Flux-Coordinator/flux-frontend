@@ -7,9 +7,12 @@ import AddIcon from "grommet/components/icons/base/Add";
 import Project from "../../models/Project";
 
 function addProject() {
-	const projectName = `NewProject${new Date()}`;
 	const apiUrl = process.env.REACT_APP_SERVICE_URI;
-	const project = new Project({ name: projectName, rooms: [] });
+	const project = new Project({
+		name: `Project ${new Date()}`,
+		description: "This project was created client-side.",
+		rooms: []
+	});
 	axios
 		.post(`${apiUrl}/projects`, project)
 		.then(result => {
