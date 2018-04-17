@@ -16,10 +16,14 @@ import Project from "../../components/projects/Project";
 type Prop = {};
 
 type State = {
-	projects: Project[]
+	projects: ProjectModel[],
+	loading: boolean
 };
 
 export default class App extends React.Component<Prop, State> {
+	apiUrl: ?string;
+	source: any;
+
 	constructor() {
 		super();
 		this.apiUrl = process.env.REACT_APP_SERVICE_URI;
@@ -27,7 +31,8 @@ export default class App extends React.Component<Prop, State> {
 	}
 
 	state = {
-		projects: []
+		projects: [],
+		loading: true
 	};
 
 	componentDidMount() {
@@ -38,8 +43,8 @@ export default class App extends React.Component<Prop, State> {
 		this.source.cancel();
 	}
 
-	getProjects = () => {
-		this.setState(({ loading: true }: State));
+	getProjects = async () => {
+		this.setState({ loading: true });
 		axios
 			.get(`${this.apiUrl}/projects?limit=0`, {
 				cancelToken: this.source.token
@@ -54,9 +59,11 @@ export default class App extends React.Component<Prop, State> {
 			});
 	};
 
-	renderProjectsPage = () => <Projects projects={this.state.projects} />;
+	renderProjectsPage = () => (
+		<Projects loading={this.state.loading} projects={this.state.projects} />
+	);
 
-	renderProjectPage = ({ match }) => {
+	renderProjectPage = ({ match }: { match: any }) => {
 		const foundProject = this.state.projects.find(
 			project => project.projectId === match.params.projectId
 		);
@@ -70,7 +77,7 @@ export default class App extends React.Component<Prop, State> {
 		return <NotFound info={infoMessage} />;
 	};
 
-	renderRoomPage = ({ match }) => {
+	renderRoomPage = ({ match }: { match: any }) => {
 		const foundProject = this.state.projects.find(
 			(project: ProjectModel) => project.projectId === match.params.projectId
 		);

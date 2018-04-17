@@ -7,7 +7,7 @@ import Project from "./Project";
 
 describe("<Project />", () => {
 	it("should render", () => {
-		const project = new ProjectModel("asdodmp", "First Project", []);
+		const project = new ProjectModel("First Project", []);
 		shallow(<Project project={project} />);
 	});
 });

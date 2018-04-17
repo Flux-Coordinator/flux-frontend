@@ -20,7 +20,7 @@ function mockRoom(amountOfMeasurements: number = 1) {
 		measurements.push(mockMeasurement());
 	}
 
-	return new Room("askmld", "MyRoom", "Test Room", measurements);
+	return new Room("Test Room", measurements);
 }
 
 function mockProject(amountOfRooms: number = 1) {
@@ -30,7 +30,7 @@ function mockProject(amountOfRooms: number = 1) {
 		rooms.push(mockRoom());
 	}
 
-	return new Project("aslkmd", "My First Project", rooms);
+	return new Project("My First Project", rooms, "aslkmd");
 }
 
 describe("<NavMenu />", () => {
