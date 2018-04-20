@@ -50,7 +50,11 @@ export default class App extends React.Component<Prop, State> {
 				cancelToken: this.source.token
 			})
 			.then(result => {
-				this.setState(({ projects: result.data, loading: false }: State));
+				const projs: Project[] = [];
+				result.data.forEach(d => {
+					projs.push(ProjectModel.fromObject(d));
+				});
+				this.setState(({ projects: projs, loading: false }: State));
 			})
 			.catch(error => {
 				if (!axios.isCancel(error)) {
