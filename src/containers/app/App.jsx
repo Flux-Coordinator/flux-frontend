@@ -43,7 +43,7 @@ export default class App extends React.Component<Prop, State> {
 		this.source.cancel();
 	}
 
-	getProjects = async () => {
+	getProjects = () => {
 		this.setState({ loading: true });
 		axios
 			.get(`${this.apiUrl}/projects?limit=0`, {
