@@ -1,5 +1,6 @@
 // @flow
 import * as React from "react";
+import Anchor from "grommet/components/Anchor";
 import List from "grommet/components/List";
 import ListItem from "grommet/components/ListItem";
 import ListPlaceholder from "grommet-addons/components/ListPlaceholder";
@@ -7,10 +8,16 @@ import ListPlaceholder from "grommet-addons/components/ListPlaceholder";
 import Measurement from "../../models/Measurement";
 
 type Props = {
-	measurements?: ?(Measurement[])
+	measurements?: ?(Measurement[]),
+	parentProject: Project,
+	parentRoom: Room
 };
 
-export default function MeasurementsList({ measurements }: Props) {
+export default function MeasurementsList({
+	measurements,
+	parentProject,
+	parentRoom
+}: Props) {
 	const listItemPadding = {
 		horizontal: "none",
 		vertical: "medium"
@@ -33,8 +40,14 @@ export default function MeasurementsList({ measurements }: Props) {
 							pad={listItemPadding}
 							justify="between"
 						>
-							<span>{measurement.description}</span>
-							<span>{measurement.startDate.toLocaleString()}</span>
+							<Anchor
+								path={`/projects/${parentProject.projectId}/rooms/${
+									parentRoom.name
+								}/measurements/${measurement.measurementId}`}
+							>
+								<span>{measurement.description}</span>
+								<span>{measurement.startDate.toLocaleString()}</span>
+							</Anchor>
 						</ListItem>
 					))}
 			</List>

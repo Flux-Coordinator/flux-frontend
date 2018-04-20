@@ -11,10 +11,16 @@ import MeasurementList from "../measurements/MeasurementsList";
 import FloorPlan from "../floorplan/FloorPlan";
 
 type Props = {
-	room: RoomModel
+	room: RoomModel,
+	parentProject: Project,
+	currentMeasurementId: ?string
 };
 
-export default function Room({ room }: Props) {
+export default function Room({
+	room,
+	parentProject,
+	currentMeasurementId
+}: Props) {
 	return (
 		<Article pad="medium">
 			<Section pad="none">
@@ -44,11 +50,24 @@ export default function Room({ room }: Props) {
 					</Box>
 				</Box>
 			</Section>
+			{currentMeasurementId && (
+				<Section>
+					<Header size="small">
+						<Heading tag="h3">Aktuelle Messung</Heading>
+					</Header>
+					<Box>Test</Box>
+				</Section>
+			)}
 			<Section>
 				<Header size="small">
 					<Heading tag="h3">Messungen</Heading>
 				</Header>
-				<MeasurementList measurements={room.measurements} />
+				<MeasurementList
+					measurements={room.measurements}
+					parentProject={parentProject}
+					parentRoom={room}
+					currentMeasurementId={currentMeasurementId}
+				/>
 			</Section>
 		</Article>
 	);

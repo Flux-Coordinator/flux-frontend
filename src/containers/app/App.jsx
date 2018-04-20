@@ -92,7 +92,20 @@ export default class App extends React.Component<Prop, State> {
 			);
 
 			if (foundRoom) {
-				return <Room room={foundRoom} />;
+				let currentMeasurementId: string = null;
+				if (match.params.measurementId) {
+					currentMeasurementId = foundRoom.measurements.find(
+						measurement =>
+							measurement.measurementId === match.params.measurementId
+					).measurementId;
+				}
+				return (
+					<Room
+						parentProject={foundProject}
+						room={foundRoom}
+						currentMeasurementId={currentMeasurementId}
+					/>
+				);
 			}
 		}
 
@@ -118,6 +131,10 @@ export default class App extends React.Component<Prop, State> {
 									path="/projects"
 									exact
 									component={this.renderProjectsPage}
+								/>
+								<Route
+									path="/projects/:projectId/rooms/:roomName/measurements/:measurementId"
+									component={this.renderRoomPage}
 								/>
 								<Route
 									path="/projects/:projectId/rooms/:roomName"
