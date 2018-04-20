@@ -11,4 +11,12 @@ export default class Project {
 		this.name = name;
 		this.rooms = rooms;
 	}
+
+	static fromObject({ name, rooms, projectId }) {
+		const typedRoomObjects: Room[] = [];
+		rooms.forEach(r => {
+			typedRoomObjects.push(Room.fromObject(r));
+		});
+		return new Project(name, typedRoomObjects, projectId);
+	}
 }

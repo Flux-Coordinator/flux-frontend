@@ -11,10 +11,23 @@ export default class Room {
 	constructor(
 		name: string,
 		description: string = "",
-		measurements: Measurement[] = []
+		measurements: Measurement[] = [],
+		length: number = 0,
+		width: number = 0
 	) {
 		this.name = name;
 		this.description = description;
 		this.measurements = measurements;
+		this.length = length;
+		this.width = width;
+	}
+
+	static fromObject({ name, description, measurements, length, width }) {
+		const realMeasurements: Measurement = [];
+		measurements.forEach(m => {
+			realMeasurements.push(Measurement.fromObject(m));
+		});
+
+		return new Room(name, description, realMeasurements, length, width);
 	}
 }
