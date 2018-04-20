@@ -34,7 +34,7 @@ export default function MeasurementsList({ measurements }: Props) {
 							justify="between"
 						>
 							<span>{measurement.description}</span>
-							<span>{measurement.date.toLocaleString()}</span>
+							<span>{new Date(measurement.startDate).toLocaleString()}</span>
 						</ListItem>
 					))}
 			</List>

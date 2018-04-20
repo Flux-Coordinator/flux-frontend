@@ -2,11 +2,16 @@
 export default class Measurement {
 	measurementId: string;
 	description: string;
-	date: Date;
+	startDate: Date;
 
-	constructor(id: string, description: string, date: Date) {
+	constructor(id: string, description: string, startDate: Date, endDate: Date) {
 		this.measurementId = id;
 		this.description = description;
-		this.date = date;
+
+		if (typeof date === "string") {
+			this.startDate = new Date(startDate);
+		} else {
+			this.startDate = startDate;
+		}
 	}
 }
