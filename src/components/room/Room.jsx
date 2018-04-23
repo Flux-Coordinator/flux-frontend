@@ -6,20 +6,23 @@ import Box from "grommet/components/Box";
 import Section from "grommet/components/Section";
 import Article from "grommet/components/Article";
 
+import ProjectModel from "../../models/Project";
+import MeasurementModel from "../../models/Measurement";
 import RoomModel from "../../models/Room";
 import MeasurementList from "../measurements/MeasurementsList";
+import MeasurementSummary from "../measurements/MeasurementSummary";
 import FloorPlan from "../floorplan/FloorPlan";
 
 type Props = {
 	room: RoomModel,
-	parentProject: Project,
-	currentMeasurementId: ?string
+	parentProject: ProjectModel,
+	currentMeasurement: ?MeasurementModel
 };
 
 export default function Room({
 	room,
 	parentProject,
-	currentMeasurementId
+	currentMeasurement
 }: Props) {
 	return (
 		<Article pad="medium">
@@ -50,13 +53,8 @@ export default function Room({
 					</Box>
 				</Box>
 			</Section>
-			{currentMeasurementId && (
-				<Section>
-					<Header size="small">
-						<Heading tag="h3">Aktuelle Messung</Heading>
-					</Header>
-					<Box>Test</Box>
-				</Section>
+			{currentMeasurement && (
+				<MeasurementSummary currentMeasurement={currentMeasurement} />
 			)}
 			<Section>
 				<Header size="small">
@@ -66,7 +64,7 @@ export default function Room({
 					measurements={room.measurements}
 					parentProject={parentProject}
 					parentRoom={room}
-					currentMeasurementId={currentMeasurementId}
+					currentMeasurementId={currentMeasurement}
 				/>
 			</Section>
 		</Article>

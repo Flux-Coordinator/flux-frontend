@@ -6,6 +6,8 @@ import ListItem from "grommet/components/ListItem";
 import ListPlaceholder from "grommet-addons/components/ListPlaceholder";
 
 import Measurement from "../../models/Measurement";
+import Project from "../../models/Project";
+import Room from "../../models/Room";
 
 type Props = {
 	measurements?: ?(Measurement[]),
@@ -22,6 +24,11 @@ export default function MeasurementsList({
 		horizontal: "none",
 		vertical: "medium"
 	};
+
+	const project = parentProject;
+	if(project === null || typeof project === "undefined") {
+		return;
+	}
 
 	const unfilteredTotal = measurements ? measurements.length : 0;
 	const filteredTotal = measurements ? measurements.length : 0;
@@ -41,7 +48,7 @@ export default function MeasurementsList({
 							justify="between"
 						>
 							<Anchor
-								path={`/projects/${parentProject.projectId}/rooms/${
+								path={`/projects/${project.projectId}/rooms/${
 									parentRoom.name
 								}/measurements/${measurement.measurementId}`}
 							>
