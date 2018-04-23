@@ -10,7 +10,7 @@ import ProjectModel from "../../models/Project";
 import MeasurementModel from "../../models/Measurement";
 import RoomModel from "../../models/Room";
 import MeasurementList from "../measurements/MeasurementsList";
-import MeasurementSummary from "../measurements/MeasurementSummary";
+import MeasurementContainer from "../../containers/measurements/MeasurementContainer";
 import FloorPlan from "../floorplan/FloorPlan";
 
 type Props = {
@@ -54,7 +54,7 @@ export default function Room({
 				</Box>
 			</Section>
 			{currentMeasurement && (
-				<MeasurementSummary currentMeasurement={currentMeasurement} />
+				<MeasurementContainer measurement={currentMeasurement} />
 			)}
 			<Section>
 				<Header size="small">
