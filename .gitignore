@@ -1,6 +1,7 @@
 # Custom
 /.idea/inspectionProfiles/profiles_settings.xml
 /src/index.css
+/.vscode/launch.json
 
 # testing
 /coverage

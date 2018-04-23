@@ -17,10 +17,9 @@ const listItemPadding = {
 };
 
 export default function RoomList({ parentProject }: Props) {
-	if (parentProject.projectId == null) {
-		throw new Error(
-			"The project tried to access had a projectId with null value."
-		);
+	let projectId : string = "";
+	if(typeof parentProject === "undefined" && parentProject === null && parentProject.projectId === "undefined" && parentProject.projectId === null) {
+		throw new TypeError("The project tried to access had a projectId with null or undefined value.");
 	}
 
 	const { rooms } = parentProject;
@@ -37,7 +36,7 @@ export default function RoomList({ parentProject }: Props) {
 					rooms.map(room => (
 						<ListItem key={room.name} pad={listItemPadding} justify="between">
 							<Anchor
-								path={`/projects/${parentProject.projectId}/rooms/${room.name}`}
+								path={`/projects/${projectId}/rooms/${room.name}`}
 							>
 								{room.name}
 							</Anchor>

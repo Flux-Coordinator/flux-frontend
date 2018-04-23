@@ -4,6 +4,7 @@ import GrommetApp from "grommet/components/App";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import axios, { CancelToken } from "axios";
 
+import MeasurementModel from "../../models/Measurement";
 import RoomModel from "../../models/Room";
 import ProjectModel from "../../models/Project";
 import Room from "../../components/room/Room";
@@ -50,7 +51,7 @@ export default class App extends React.Component<Prop, State> {
 				cancelToken: this.source.token
 			})
 			.then(result => {
-				const projs: Project[] = [];
+				const projs: ProjectModel[] = [];
 				result.data.forEach(d => {
 					projs.push(ProjectModel.fromObject(d));
 				});
@@ -82,28 +83,27 @@ export default class App extends React.Component<Prop, State> {
 	};
 
 	renderRoomPage = ({ match }: { match: any }) => {
-		const foundProject = this.state.projects.find(
+		const foundProject : ?ProjectModel = this.state.projects.find(
 			(project: ProjectModel) => project.projectId === match.params.projectId
 		);
 
 		if (foundProject) {
-			const foundRoom = foundProject.rooms.find(
+			const foundRoom : ?RoomModel = foundProject.rooms.find(
 				(room: RoomModel) => room.name === match.params.roomName
 			);
 
 			if (foundRoom) {
-				let currentMeasurementId: string = null;
+				let currentMeasurement: ?MeasurementModel = null;
 				if (match.params.measurementId) {
-					currentMeasurementId = foundRoom.measurements.find(
-						measurement =>
-							measurement.measurementId === match.params.measurementId
-					).measurementId;
+					currentMeasurement = foundRoom.measurements.find(
+						(measurement) => measurement.measurementId === match.params.measurementId
+					);
 				}
 				return (
 					<Room
 						parentProject={foundProject}
 						room={foundRoom}
-						currentMeasurementId={currentMeasurementId}
+						currentMeasurement={currentMeasurement}
 					/>
 				);
 			}
