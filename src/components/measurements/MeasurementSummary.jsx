@@ -12,13 +12,13 @@ import ReadingModel from "../../models/Reading";
 
 type Props = {
 	currentMeasurement: MeasurementModel,
+	onStartMeasurement: () => void,
 	readings: ?(ReadingModel[])
 };
 
-function startMeasurement() {}
-
 export default function MeasurementSummary({
 	currentMeasurement,
+	onStartMeasurement,
 	readings
 }: Props) {
 	return (
@@ -30,7 +30,7 @@ export default function MeasurementSummary({
 				<Paragraph>Messung ID: {currentMeasurement.measurementId}</Paragraph>
 				{readings && <Paragraph>Anzahl Messungen: {readings.length}</Paragraph>}
 			</Box>
-			<Button label="Start/Stopp" onClick={startMeasurement} />
+			<Button label="Start/Stopp" onClick={onStartMeasurement} />
 		</Section>
 	);
 }
