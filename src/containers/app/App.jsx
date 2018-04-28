@@ -82,13 +82,13 @@ export default class App extends React.Component<Prop, State> {
 		return <NotFound info={infoMessage} />;
 	};
 
-	renderRoomPage = ({ match }: { match: any }) => {
-		const foundProject : ?ProjectModel = this.state.projects.find(
+	renderRoomPage = ({ match }: any) => {
+		const foundProject: ?ProjectModel = this.state.projects.find(
 			(project: ProjectModel) => project.projectId === match.params.projectId
 		);
 
 		if (foundProject) {
-			const foundRoom : ?RoomModel = foundProject.rooms.find(
+			const foundRoom: ?RoomModel = foundProject.rooms.find(
 				(room: RoomModel) => room.name === match.params.roomName
 			);
 
@@ -96,7 +96,8 @@ export default class App extends React.Component<Prop, State> {
 				let currentMeasurement: ?MeasurementModel = null;
 				if (match.params.measurementId) {
 					currentMeasurement = foundRoom.measurements.find(
-						(measurement) => measurement.measurementId === match.params.measurementId
+						measurement =>
+							measurement.measurementId === match.params.measurementId
 					);
 				}
 				return (

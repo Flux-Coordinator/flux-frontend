@@ -2,14 +2,12 @@
 import * as React from "react";
 import { shallow } from "enzyme";
 
-import ProjectModel from "../../models/Project";
-import RoomModel from "../../models/Room";
+import DataGenerator from "../../utils/DataGenerator";
 import RoomList from "./RoomList";
 
 describe("<RoomList />", () => {
 	it("should render", () => {
-		const room = new RoomModel("First Room", "Description");
-		const project = new ProjectModel("Testproject", [room], "asdasd");
+		const project = DataGenerator.createProject(1);
 		shallow(<RoomList parentProject={project} />);
 	});
 });

@@ -1,12 +1,25 @@
 // @flow
+
+type ConstructorType = {
+	measurementId: string,
+	description: string,
+	startDate: Date,
+	endDate: Date
+};
+
 export default class Measurement {
 	measurementId: string;
 	description: string;
 	startDate: Date;
 	endDate: Date;
 
-	constructor(id: string, description: string, startDate: Date, endDate: Date) {
-		this.measurementId = id;
+	constructor(
+		measurementId: string,
+		description: string,
+		startDate: Date,
+		endDate: Date
+	) {
+		this.measurementId = measurementId;
 		this.description = description;
 
 		if (typeof startDate === "number" || typeof startDate === "string") {
@@ -22,7 +35,12 @@ export default class Measurement {
 		}
 	}
 
-	static fromObject({ measurementId, description, startDate, endDate }) {
+	static fromObject({
+		measurementId,
+		description,
+		startDate,
+		endDate
+	}: ConstructorType) {
 		return new Measurement(measurementId, description, startDate, endDate);
 	}
 }
