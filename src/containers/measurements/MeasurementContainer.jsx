@@ -63,6 +63,21 @@ export default class MeasurementContainer extends React.Component<
 			});
 	};
 
+	startMeasurement = () => {
+		axios
+			.put(
+				`${this.apiUrl}/measurements/active/${
+					this.props.measurement.measurementId
+				}`,
+				{
+					cancelToken: this.source.token
+				}
+			)
+			.then(
+				alert("Started measurement " + this.props.measurement.measurementId)
+			);
+	};
+
 	componentDidMount() {
 		this.getReadings();
 	}
@@ -82,6 +97,7 @@ export default class MeasurementContainer extends React.Component<
 		return (
 			<MeasurementSummary
 				currentMeasurement={this.props.measurement}
+				onStartMeasurement={this.startMeasurement}
 				readings={this.state.readings}
 			/>
 		);

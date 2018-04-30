@@ -1,4 +1,13 @@
 // @flow
+
+type ConstructorType = {
+	luxValue: number,
+	timeStamp: number,
+	yposition: number,
+	xposition: number,
+	zposition: number
+};
+
 export default class Reading {
 	luxValue: number;
 	timeStamp: number;
@@ -6,21 +15,27 @@ export default class Reading {
 	xposition: number;
 	zposition: number;
 
-	constructor({ luxValue, timestamp, yposition, xposition, zposition }) {
+	constructor(
+		luxValue: number,
+		timeStamp: number,
+		yposition: number,
+		xposition: number,
+		zposition: number
+	) {
 		this.luxValue = this.luxValue;
-		this.timeStamp = timestamp;
+		this.timeStamp = timeStamp;
 		this.yposition = yposition;
 		this.xposition = xposition;
 		this.zposition = zposition;
 	}
 
-	static fromObject({ luxValue, timeStamp, yposition, xposition, zposition }) {
-		return new Reading({
-			luxValue,
-			timeStamp,
-			yposition,
-			xposition,
-			zposition
-		});
+	static fromObject({
+		luxValue,
+		timeStamp,
+		yposition,
+		xposition,
+		zposition
+	}: ConstructorType) {
+		return new Reading(luxValue, timeStamp, yposition, xposition, zposition);
 	}
 }

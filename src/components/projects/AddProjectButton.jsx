@@ -4,15 +4,11 @@ import axios from "axios";
 import Anchor from "grommet/components/Anchor";
 import AddIcon from "grommet/components/icons/base/Add";
 
-import Project from "../../models/Project";
+import DataGenerator from "../../utils/DataGenerator";
 
 function addProject() {
 	const apiUrl = process.env.REACT_APP_SERVICE_URI;
-	const project = new Project({
-		name: `Project ${new Date()}`,
-		description: "This project was created client-side.",
-		rooms: []
-	});
+	const project = DataGenerator.createProject(3);
 	axios
 		.post(`${apiUrl}/projects`, project)
 		.then(result => {
