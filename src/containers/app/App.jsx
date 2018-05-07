@@ -101,7 +101,7 @@ export default class App extends React.Component<Prop, State> {
 				if (match.params.measurementId) {
 					currentMeasurement = foundRoom.measurements.find(
 						measurement =>
-							measurement.measurementId === match.params.measurementId
+							measurement.measurementId === parseInt(match.params.measurementId)
 					);
 				}
 				return (
