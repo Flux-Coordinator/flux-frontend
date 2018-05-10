@@ -13,6 +13,7 @@ import NotFound from "../../components/notfound/NotFound";
 import Projects from "../../components/projects/Projects";
 import Layout from "../layout/Layout";
 import Project from "../../components/projects/Project";
+import ImportExportContainer from "../importexport/ImportExport";
 
 type Prop = {};
 
@@ -22,12 +23,11 @@ type State = {
 };
 
 export default class App extends React.Component<Prop, State> {
-	apiUrl: ?string;
 	source: any;
 
 	constructor() {
 		super();
-		this.apiUrl = process.env.REACT_APP_SERVICE_URI;
+		axios.defaults.baseURL = process.env.REACT_APP_SERVICE_URI; // Sets the default URL for the rest of the applications lifetime.
 		this.source = CancelToken.source();
 	}
 
@@ -47,7 +47,7 @@ export default class App extends React.Component<Prop, State> {
 	getProjects = () => {
 		this.setState({ loading: true });
 		axios
-			.get(`${this.apiUrl}/projects?limit=0`, {
+			.get(`/projects?limit=0`, {
 				cancelToken: this.source.token
 			})
 			.then(result => {
@@ -61,6 +61,7 @@ export default class App extends React.Component<Prop, State> {
 				if (!axios.isCancel(error)) {
 					this.setState(({ projects: [], loading: false }: State));
 				}
+				console.log(error);
 			});
 	};
 
@@ -83,12 +84,12 @@ export default class App extends React.Component<Prop, State> {
 	};
 
 	renderRoomPage = ({ match }: { match: any }) => {
-		const foundProject : ?ProjectModel = this.state.projects.find(
+		const foundProject: ?ProjectModel = this.state.projects.find(
 			(project: ProjectModel) => project.projectId === match.params.projectId
 		);
 
 		if (foundProject) {
-			const foundRoom : ?RoomModel = foundProject.rooms.find(
+			const foundRoom: ?RoomModel = foundProject.rooms.find(
 				(room: RoomModel) => room.name === match.params.roomName
 			);
 
@@ -96,7 +97,8 @@ export default class App extends React.Component<Prop, State> {
 				let currentMeasurement: ?MeasurementModel = null;
 				if (match.params.measurementId) {
 					currentMeasurement = foundRoom.measurements.find(
-						(measurement) => measurement.measurementId === match.params.measurementId
+						measurement =>
+							measurement.measurementId === match.params.measurementId
 					);
 				}
 				return (
@@ -140,6 +142,7 @@ export default class App extends React.Component<Prop, State> {
 									path="/projects/:projectId/rooms/:roomName"
 									component={this.renderRoomPage}
 								/>
+								<Route path="/import" exact component={ImportExportContainer} />
 								<Route path="/" exact component={Dashboard} />
 								<Route path="/" component={NotFound} />
 							</Switch>
