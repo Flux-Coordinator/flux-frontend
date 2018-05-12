@@ -15,7 +15,7 @@ describe("<ProjectsList />", () => {
 	});
 
 	it("should render one project", () => {
-		const projects = [new Project("12345123", "Test Project", [])];
+		const projects = [new Project("Test Project", [], 1254)];
 
 		const wrapper = shallow(<ProjectsList projects={projects} />);
 		expect(wrapper.find("ListItem")).toHaveLength(1);
@@ -23,8 +23,8 @@ describe("<ProjectsList />", () => {
 
 	it("should render multiple projects", () => {
 		const projects = [
-			new Project("12345123", "Test Project", []),
-			new Project("4h5gwefs", "Test Project 2", [])
+			new Project("Test Project", [], 12389),
+			new Project("Test Project 2", [], 12312)
 		];
 
 		const wrapper = shallow(<ProjectsList projects={projects} />);

@@ -11,7 +11,7 @@ type Props = {
 };
 
 type State = {
-	file: File
+	file: ?File
 };
 
 export default class Import extends React.Component<Props, State> {
@@ -19,7 +19,7 @@ export default class Import extends React.Component<Props, State> {
 		file: null
 	};
 
-	onDrop = (acceptedFiles: Array, rejectedFiles) => {
+	onDrop = (acceptedFiles: Array<File>, rejectedFiles: Array<File>) => {
 		acceptedFiles.forEach(f => {
 			// Remove the preview of the file. This avoids memory leaks.
 			window.URL.revokeObjectURL(f.preview);

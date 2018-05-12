@@ -6,10 +6,12 @@ type ConstructorType = {
 	description: string,
 	measurements: Measurement[] | any,
 	length: number,
-	width: number
+	width: number,
+	roomId: ?number
 };
 
 export default class Room {
+	roomId: ?number;
 	name: string;
 	description: string;
 	measurements: Measurement[];
@@ -21,13 +23,15 @@ export default class Room {
 		description: string,
 		measurements: Measurement[],
 		length: number,
-		width: number
+		width: number,
+		roomId: ?number
 	) {
 		this.name = name;
 		this.description = description;
 		this.measurements = measurements;
 		this.length = length;
 		this.width = width;
+		this.roomId = roomId;
 	}
 
 	static fromObject({
@@ -35,7 +39,8 @@ export default class Room {
 		description,
 		measurements,
 		length,
-		width
+		width,
+		roomId
 	}: ConstructorType) {
 		const typedMeasurements: Measurement[] = [];
 		measurements.forEach(m => {
@@ -44,6 +49,13 @@ export default class Room {
 			);
 		});
 
-		return new Room(name, description, typedMeasurements, length, width);
+		return new Room(
+			name,
+			description,
+			typedMeasurements,
+			length,
+			width,
+			roomId
+		);
 	}
 }

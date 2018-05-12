@@ -27,7 +27,7 @@ export default class App extends React.Component<Prop, State> {
 
 	constructor() {
 		super();
-		axios.defaults.baseURL = process.env.REACT_APP_SERVICE_URI; // Sets the default URL for the rest of the applications lifetime.
+		(axios.defaults: Object).baseURL = process.env.REACT_APP_SERVICE_URI; // Sets the default URL for the rest of the applications lifetime.
 		this.source = CancelToken.source();
 	}
 
@@ -70,10 +70,10 @@ export default class App extends React.Component<Prop, State> {
 	);
 
 	renderProjectPage = ({ match }: { match: any }) => {
-		const projects = this.state.projects;
+		const { projects } = this.state;
 
 		const foundProject = projects.find(
-			project => project.projectId === parseInt(match.params.projectId)
+			project => project.projectId === parseInt(match.params.projectId, 10)
 		);
 
 		if (foundProject) {
@@ -88,7 +88,7 @@ export default class App extends React.Component<Prop, State> {
 	renderRoomPage = ({ match }: any) => {
 		const foundProject: ?ProjectModel = this.state.projects.find(
 			(project: ProjectModel) =>
-				project.projectId === parseInt(match.params.projectId)
+				project.projectId === parseInt(match.params.projectId, 10)
 		);
 
 		if (foundProject) {
@@ -101,7 +101,8 @@ export default class App extends React.Component<Prop, State> {
 				if (match.params.measurementId) {
 					currentMeasurement = foundRoom.measurements.find(
 						measurement =>
-							measurement.measurementId === parseInt(match.params.measurementId)
+							measurement.measurementId ===
+							parseInt(match.params.measurementId, 10)
 					);
 				}
 				return (

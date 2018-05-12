@@ -10,7 +10,7 @@ import Project from "../../models/Project";
 
 type Props = {
 	projects?: ?(Project[]),
-	loading: boolean
+	loading?: boolean
 };
 
 const listItemPadding = {
@@ -47,5 +47,6 @@ export default function ProjectsList({ projects, loading }: Props) {
 }
 
 ProjectsList.defaultProps = {
-	projects: null
+	projects: null,
+	loading: false
 };
