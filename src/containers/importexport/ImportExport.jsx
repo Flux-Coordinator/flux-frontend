@@ -13,7 +13,7 @@ export default class ImportExportContainer extends React.Component<Props> {
 
 	uploadFile = (file: File) => {
 		console.log(file);
-		console.log("TODO: File format is not compatible yet!");
+		console.log("TODO: File format is not compatible yet (server-side)!");
 		const headers = {
 			"Content-Type": "application/json"
 		};

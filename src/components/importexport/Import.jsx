@@ -5,6 +5,7 @@ import Header from "grommet/components/Header";
 import Title from "grommet/components/Title";
 import Button from "grommet/components/Button";
 import Dropzone from "react-dropzone";
+import type { DZFile as File } from "../../types/File";
 
 type Props = {
 	onUpload: (file: File) => void
@@ -15,11 +16,14 @@ type State = {
 };
 
 export default class Import extends React.Component<Props, State> {
-	state = {
-		file: null
-	};
+	constructor() {
+		super();
+		this.state = {
+			file: null
+		};
+	}
 
-	onDrop = (acceptedFiles: Array<File>, rejectedFiles: Array<File>) => {
+	onDrop = (acceptedFiles: File[], rejectedFiles: File[]) => {
 		acceptedFiles.forEach(f => {
 			// Remove the preview of the file. This avoids memory leaks.
 			window.URL.revokeObjectURL(f.preview);
@@ -35,7 +39,7 @@ export default class Import extends React.Component<Props, State> {
 	render() {
 		return (
 			<Section>
-				<Header>
+				<Header size="small">
 					<Title>Import</Title>
 				</Header>
 				<Dropzone
@@ -50,7 +54,7 @@ export default class Import extends React.Component<Props, State> {
 				</Dropzone>
 				{this.state.file && (
 					<Button
-						label={this.state.file.name + " hochladen"}
+						label={`${this.state.file.name} hochladen`}
 						onClick={() => this.props.onUpload(this.state.file)}
 					/>
 				)}
