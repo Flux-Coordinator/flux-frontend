@@ -26,8 +26,8 @@ export default function MeasurementsList({
 	};
 
 	const project = parentProject;
-	if(project === null || typeof project === "undefined") {
-		return;
+	if (project === null || typeof project === "undefined") {
+		return null;
 	}
 
 	const unfilteredTotal = measurements ? measurements.length : 0;

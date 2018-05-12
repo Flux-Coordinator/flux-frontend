@@ -70,8 +70,10 @@ export default class App extends React.Component<Prop, State> {
 	);
 
 	renderProjectPage = ({ match }: { match: any }) => {
-		const foundProject = this.state.projects.find(
-			project => project.projectId === match.params.projectId
+		const projects = this.state.projects;
+
+		const foundProject = projects.find(
+			project => project.projectId === parseInt(match.params.projectId)
 		);
 
 		if (foundProject) {
@@ -83,9 +85,10 @@ export default class App extends React.Component<Prop, State> {
 		return <NotFound info={infoMessage} />;
 	};
 
-	renderRoomPage = ({ match }: { match: any }) => {
+	renderRoomPage = ({ match }: any) => {
 		const foundProject: ?ProjectModel = this.state.projects.find(
-			(project: ProjectModel) => project.projectId === match.params.projectId
+			(project: ProjectModel) =>
+				project.projectId === parseInt(match.params.projectId)
 		);
 
 		if (foundProject) {
@@ -98,7 +101,7 @@ export default class App extends React.Component<Prop, State> {
 				if (match.params.measurementId) {
 					currentMeasurement = foundRoom.measurements.find(
 						measurement =>
-							measurement.measurementId === match.params.measurementId
+							measurement.measurementId === parseInt(match.params.measurementId)
 					);
 				}
 				return (

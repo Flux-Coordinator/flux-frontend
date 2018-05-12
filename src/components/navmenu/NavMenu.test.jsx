@@ -5,33 +5,6 @@ import { MemoryRouter } from "react-router";
 import Anchor from "grommet/components/Anchor";
 
 import NavMenu from "./NavMenu";
-import Measurement from "../../models/Measurement";
-import Project from "../../models/Project";
-import Room from "../../models/Room";
-
-function mockMeasurement() {
-	return new Measurement("asklmda", "Erste Messung", new Date());
-}
-
-function mockRoom(amountOfMeasurements: number = 1) {
-	const measurements: Measurement[] = [];
-
-	for (let i = 0; i < amountOfMeasurements; i += 1) {
-		measurements.push(mockMeasurement());
-	}
-
-	return new Room("Test Room", measurements);
-}
-
-function mockProject(amountOfRooms: number = 1) {
-	const rooms: Room[] = [];
-
-	for (let i = 0; i < amountOfRooms; i += 1) {
-		rooms.push(mockRoom());
-	}
-
-	return new Project("My First Project", rooms, "aslkmd");
-}
 
 describe("<NavMenu />", () => {
 	it("should render", () => {

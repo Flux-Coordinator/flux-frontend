@@ -16,7 +16,7 @@ import FloorPlan from "../floorplan/FloorPlan";
 type Props = {
 	room: RoomModel,
 	parentProject: ProjectModel,
-	currentMeasurement: ?MeasurementModel
+	currentMeasurement?: ?MeasurementModel
 };
 
 export default function Room({
@@ -70,3 +70,7 @@ export default function Room({
 		</Article>
 	);
 }
+
+Room.defaultProps = {
+	currentMeasurement: null
+};
