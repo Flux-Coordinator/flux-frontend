@@ -9,7 +9,7 @@ export default class DataGenerator {
 
 	static createMeasurement() {
 		return new Measurement(
-			`aslmkd${DataGenerator.getRandomInt()}`,
+			DataGenerator.getRandomInt(),
 			"Erste Messung",
 			new Date(),
 			new Date()
@@ -41,11 +41,7 @@ export default class DataGenerator {
 			rooms.push(DataGenerator.createRoom(amountOfMeasurementPerRoom));
 		}
 
-		return new Project(
-			"My First Project",
-			rooms,
-			`prid${DataGenerator.getRandomInt()}`
-		);
+		return new Project("My First Project", rooms, DataGenerator.getRandomInt());
 	}
 
 	static createProjects(
