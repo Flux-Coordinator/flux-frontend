@@ -2,7 +2,7 @@
 import React from "react";
 import GrommetApp from "grommet/components/App";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import axios, { CancelToken } from "axios";
+import axios, { CancelToken, CancelTokenSource } from "axios";
 
 import MeasurementModel from "../../models/Measurement";
 import RoomModel from "../../models/Room";
@@ -23,12 +23,11 @@ type State = {
 };
 
 export default class App extends React.Component<Prop, State> {
-	source: any;
+	source: CancelTokenSource = CancelToken.source();
 
 	constructor() {
 		super();
 		(axios.defaults: Object).baseURL = process.env.REACT_APP_SERVICE_URI; // Sets the default URL for the rest of the applications lifetime.
-		this.source = CancelToken.source();
 	}
 
 	state = {
@@ -55,11 +54,13 @@ export default class App extends React.Component<Prop, State> {
 				result.data.forEach(d => {
 					projs.push(ProjectModel.fromObject(d));
 				});
-				this.setState(({ projects: projs, loading: false }: State));
+				this.setState({ projects: projs, loading: false });
 			})
 			.catch(error => {
 				if (!axios.isCancel(error)) {
-					this.setState(({ projects: [], loading: false }: State));
+					this.setState({ projects: [], loading: false });
+				} else {
+					this.setState({ loading: false });
 				}
 				console.log(error);
 			});
