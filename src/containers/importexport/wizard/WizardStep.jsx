@@ -8,16 +8,31 @@ import Button from "grommet/components/Button";
 
 type Props = {
 	heading: React.Node,
+	subheading?: React.Node,
 	children: React.Node,
 	onNext: () => void
 };
 
-export default function WizardStep({ heading, children, onNext }: Props) {
+/**
+ * The standard layout for a step in the wizard.
+ * @param {*} props
+ */
+export default function WizardStep({
+	heading,
+	subheading,
+	children,
+	onNext
+}: Props) {
 	return (
 		<Section pad="small">
 			<Header>
 				<Heading tag="h3" margin="none" pad="small">
 					{heading}
+				</Heading>
+			</Header>
+			<Header size="small">
+				<Heading tag="h4" margin="none" pad="small">
+					{subheading}
 				</Heading>
 			</Header>
 			<Box>{children}</Box>

@@ -3,6 +3,8 @@ import * as React from "react";
 import Button from "grommet/components/Button";
 
 import WizardStep from "./WizardStep";
+import ProjectsList from "./../../../components/projects/ProjectsList";
+import Project from "./../../../models/Project";
 
 import type {
 	StepProps,
@@ -26,15 +28,30 @@ export default class SelectProjectsStep extends React.Component<
 		returnData: this.props.data
 	};
 
+	subheading: string = "Sie können mit CTRL + Mausclick mehrere Projekte auswählen.";
+
 	onNext = () => {
 		this.props.onNext(this.state.returnData);
 	};
 
 	render() {
 		return (
-			<WizardStep heading="Step 1" onNext={this.onNext}>
-				<h4>Children!</h4>
+			<WizardStep
+				heading="Schritt 1: Wählen Sie die Projekte aus"
+				subheading={this.subheading}
+				onNext={this.onNext}
+			>
+				<ProjectsList
+					ProjectItemRenderer={ProjectItemRenderer}
+					projects={this.props.data}
+					selectable={"multiple"}
+					loading={this.props.isLoading}
+				/>
 			</WizardStep>
 		);
 	}
+}
+
+function ProjectItemRenderer({ project }: { project: Project }) {
+	return project.name;
 }

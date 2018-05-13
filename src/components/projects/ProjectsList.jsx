@@ -2,7 +2,6 @@
 import * as React from "react";
 import List from "grommet/components/List";
 import ListItem from "grommet/components/ListItem";
-import Anchor from "grommet/components/Anchor";
 import ListPlaceholder from "grommet-addons/components/ListPlaceholder";
 import Spinning from "grommet/components/icons/Spinning";
 
@@ -10,7 +9,9 @@ import Project from "../../models/Project";
 
 type Props = {
 	projects?: ?(Project[]),
-	loading?: boolean
+	selectable?: boolean | "multiple",
+	loading?: boolean,
+	ProjectItemRenderer: React.ComponentType<{ project: Project }>
 };
 
 const listItemPadding = {
@@ -18,7 +19,12 @@ const listItemPadding = {
 	vertical: "medium"
 };
 
-export default function ProjectsList({ projects, loading }: Props) {
+export default function ProjectsList({
+	projects,
+	loading,
+	selectable,
+	ProjectItemRenderer
+}: Props) {
 	if (loading) {
 		return <Spinning size="large" />;
 	}
@@ -32,13 +38,11 @@ export default function ProjectsList({ projects, loading }: Props) {
 				unfilteredTotal={unfilteredTotal}
 				filteredTotal={filteredTotal}
 			/>
-			<List selectable>
+			<List selectable={selectable}>
 				{projects &&
 					projects.map(project => (
 						<ListItem key={project.projectId} pad={listItemPadding}>
-							<Anchor path={`/projects/${project.projectId}`}>
-								{project.name}
-							</Anchor>
+							<ProjectItemRenderer project={project} />
 						</ListItem>
 					))}
 			</List>

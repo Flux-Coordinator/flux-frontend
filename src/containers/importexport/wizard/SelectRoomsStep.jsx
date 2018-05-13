@@ -28,7 +28,10 @@ export default class SelectRoomsStep extends React.Component<StepProps, State> {
 
 	render() {
 		return (
-			<WizardStep heading="Step 2" onNext={this.onNext}>
+			<WizardStep
+				heading="Schritt 2: Wählen Sie die Räume aus"
+				onNext={this.onNext}
+			>
 				<h4>Children!</h4>
 			</WizardStep>
 		);

@@ -31,7 +31,10 @@ export default class SelectMeasurementsStep extends React.Component<
 
 	render() {
 		return (
-			<WizardStep heading="Step 3" onNext={this.onNext}>
+			<WizardStep
+				heading="Schritt 3: Wählen Sie die Messungen aus"
+				onNext={this.onNext}
+			>
 				<h4>Children!</h4>
 			</WizardStep>
 		);

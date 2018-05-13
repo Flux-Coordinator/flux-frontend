@@ -10,24 +10,21 @@ import SelectProjectsStep from "./wizard/SelectProjectsStep";
 import SelectRoomsStep from "./wizard/SelectRoomsStep";
 import SelectMeasurementsStep from "./wizard/SelectMeasurementsStep";
 
-export type ExportData = {
-	projects: Project[],
-	rooms: Room[],
-	measurements: Measurement[]
-};
+export type ExportData = Project[];
 
 type Props = {};
 
 type State = {
 	currentStep: number,
 	steps: React.ComponentType<StepProps>[],
-	data: ExportData,
+	projects: ExportData,
 	isLoading: boolean
 };
 
 export type StepProps = {
 	onNext: (data: ExportData) => void,
-	data: ExportData
+	data: ExportData,
+	isLoading?: boolean
 };
 
 export default class ExportWizard extends React.Component<Props, State> {
@@ -36,11 +33,7 @@ export default class ExportWizard extends React.Component<Props, State> {
 	state = {
 		currentStep: 0,
 		steps: [SelectProjectsStep, SelectRoomsStep, SelectMeasurementsStep],
-		data: {
-			projects: [],
-			rooms: [],
-			measurements: []
-		},
+		projects: [],
 		isLoading: false
 	};
 
@@ -62,11 +55,7 @@ export default class ExportWizard extends React.Component<Props, State> {
 					projs.push(Project.fromObject(d));
 				});
 
-				this.setState((prevState, props) => {
-					const data = prevState.data;
-					data.projects = projs;
-					return { data, isLoading: false };
-				});
+				this.setState({ projects: projs, isLoading: false });
 			})
 			.catch(error => {
 				if (!axios.isCancel(error)) {
@@ -88,8 +77,18 @@ export default class ExportWizard extends React.Component<Props, State> {
 		this.source.cancel();
 	}
 
+	componentDidMount() {
+		this.fetchProjects();
+	}
+
 	render() {
 		let Step = this.state.steps[this.state.currentStep];
-		return <Step data={this.state.data} onNext={this.next} />;
+		return (
+			<Step
+				data={this.state.projects}
+				onNext={this.next}
+				isLoading={this.state.isLoading}
+			/>
+		);
 	}
 }

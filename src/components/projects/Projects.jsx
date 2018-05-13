@@ -11,6 +11,7 @@ import ContentBox from "../contentBox/ContentBox";
 import ProjectsList from "./ProjectsList";
 import Project from "../../models/Project";
 import AddProjectButton from "./AddProjectButton";
+import AnchorProjectItemRenderer from "./AnchorProjectItemRenderer";
 
 type Props = {
 	projects: Project[],
@@ -39,7 +40,11 @@ export default function Projects({ projects, loading }: Props) {
 					<Heading tag="h3">Projekte</Heading>
 					<AddProjectButton />
 				</Header>
-				<ProjectsList projects={projects} loading={loading} />
+				<ProjectsList
+					ProjectItemRenderer={AnchorProjectItemRenderer}
+					projects={projects}
+					loading={loading}
+				/>
 			</Section>
 		</ContentBox>
 	);
