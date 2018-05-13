@@ -73,7 +73,7 @@ export default class ExportWizard extends React.Component<Props, State> {
 					// TODO: What do we want to do if there was an error fetching the projects?
 				}
 				this.setState({ isLoading: false });
-				console.log(error);
+				console.error(error);
 			});
 	};
 

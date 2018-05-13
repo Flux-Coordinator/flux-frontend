@@ -62,7 +62,7 @@ export default class App extends React.Component<Prop, State> {
 				} else {
 					this.setState({ loading: false });
 				}
-				console.log(error);
+				console.error(error);
 			});
 	};
 
