@@ -8,7 +8,7 @@ import Dropzone from "react-dropzone";
 import type { DZFile as File } from "../../types/File";
 
 type Props = {
-	onUpload: (file: File) => void
+	onUpload: (file: ?File) => void
 };
 
 type State = {

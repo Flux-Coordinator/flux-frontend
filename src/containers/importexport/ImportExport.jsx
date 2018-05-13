@@ -11,7 +11,7 @@ type Props = {};
 export default class ImportExportContainer extends React.Component<Props> {
 	source: any = CancelToken.source();
 
-	uploadFile = (file: File) => {
+	uploadFile = (file: ?File) => {
 		console.log(file);
 		console.log("TODO: File format is not compatible yet (server-side)!");
 		const headers = {

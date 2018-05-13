@@ -1,44 +1,43 @@
+// @flow
 import * as React from "react";
 import Button from "grommet/components/Button";
 import axios, { CancelToken } from "axios";
 
-type Props = {};
-type State = {
-	currentStep: number,
-	steps: (() => void)[]
+import Project from "./../../models/Project";
+import Room from "./../../models/Room";
+import Measurement from "./../../models/Measurement";
+import SelectProjectsStep from "./../../components/importexport/wizard/SelectProjectsStep";
+import SelectRoomsStep from "./../../components/importexport/wizard/SelectRoomsStep";
+import SelectMeasurementsStep from "./../../components/importexport/wizard/SelectMeasurementsStep";
+
+export type ExportData = {
+	projects: Project[],
+	rooms: Room[],
+	measurements: Measurement[]
 };
 
-function SelectProjectsStep(onNext: () => void) {
-	return (
-		<div>
-			<p>Step 1</p>
-			<Button label="Next" onClick={onNext} />
-		</div>
-	);
-}
+type Props = {};
 
-function SelectRoomsStep(onNext: () => void) {
-	return (
-		<div>
-			<p>Step 2</p>
-			<Button label="Next" onClick={onNext} />
-		</div>
-	);
-}
+type State = {
+	currentStep: number,
+	steps: React.ComponentType<StepProps>[],
+	data: ExportData
+};
 
-function SelectMeasurementsStep(onNext: () => void) {
-	return (
-		<div>
-			<p>Step 3</p>
-			<Button label="Next" onClick={onNext} />
-		</div>
-	);
-}
+export type StepProps = {
+	onNext: () => void,
+	data: ExportData
+};
 
 export default class ExportWizard extends React.Component<Props, State> {
 	state = {
 		currentStep: 0,
-		steps: [SelectProjectsStep, SelectRoomsStep, SelectMeasurementsStep]
+		steps: [SelectProjectsStep, SelectRoomsStep, SelectMeasurementsStep],
+		data: {
+			projects: [],
+			rooms: [],
+			measurements: []
+		}
 	};
 
 	next = () => {
@@ -57,6 +56,7 @@ export default class ExportWizard extends React.Component<Props, State> {
 	};
 
 	render() {
-		return this.state.steps[this.state.currentStep](this.next);
+		let Step = this.state.steps[this.state.currentStep];
+		return <Step data={this.state.data} onNext={this.next} />;
 	}
 }
