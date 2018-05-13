@@ -2,6 +2,8 @@
 import * as React from "react";
 import Button from "grommet/components/Button";
 
+import WizardStep from "./WizardStep";
+
 import type {
 	StepProps,
 	ExportData
@@ -23,15 +25,15 @@ export default class SelectMeasurementsStep extends React.Component<
 		returnData: this.props.data
 	};
 
+	onNext = () => {
+		this.props.onNext(this.state.returnData);
+	};
+
 	render() {
 		return (
-			<div>
-				<p>Step 3</p>
-				<Button
-					label="Next"
-					onClick={() => this.props.onNext(this.state.returnData)}
-				/>
-			</div>
+			<WizardStep heading="Step 3" onNext={this.onNext}>
+				<h4>Children!</h4>
+			</WizardStep>
 		);
 	}
 }

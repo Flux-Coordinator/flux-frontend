@@ -14,6 +14,7 @@ type State = {
 };
 
 /**
+import WizardStep from "./WizardStep";
  * This step receives the full list of projects and when the user clicks next, it has to clean up
  * the list of projects and leave only the projects that were selected in the state.
  */
