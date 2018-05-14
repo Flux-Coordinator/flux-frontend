@@ -1,0 +1,39 @@
+// @flow
+import * as React from "react";
+import Button from "grommet/components/Button";
+
+import WizardStep from "./WizardStep";
+
+import type {
+	StepProps,
+	ExportData
+} from "./../../../containers/importexport/ExportWizard";
+
+type State = {
+	returnData: ExportData
+};
+
+/**
+ * This step receives the full list of rooms and when the user clicks next, it has to clean
+ * up the rooms and leave only the rooms that were selected inside the return data.
+ */
+export default class SelectRoomsStep extends React.Component<StepProps, State> {
+	state = {
+		returnData: this.props.data
+	};
+
+	onNext = () => {
+		this.props.onNext(this.state.returnData);
+	};
+
+	render() {
+		return (
+			<WizardStep
+				heading="Schritt 2: Wählen Sie die Räume aus"
+				onNext={this.onNext}
+			>
+				<h4>Children!</h4>
+			</WizardStep>
+		);
+	}
+}

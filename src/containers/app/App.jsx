@@ -2,9 +2,8 @@
 import React from "react";
 import GrommetApp from "grommet/components/App";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import axios, { CancelToken } from "axios";
+import axios, { CancelToken, CancelTokenSource } from "axios";
 
-import MeasurementModel from "../../models/Measurement";
 import RoomModel from "../../models/Room";
 import ProjectModel from "../../models/Project";
 import Room from "../../components/room/Room";
@@ -13,6 +12,7 @@ import NotFound from "../../components/notfound/NotFound";
 import Projects from "../../components/projects/Projects";
 import Layout from "../layout/Layout";
 import Project from "../../components/projects/Project";
+import ImportExportContainer from "../importexport/ImportExport";
 
 type Prop = {};
 
@@ -22,13 +22,11 @@ type State = {
 };
 
 export default class App extends React.Component<Prop, State> {
-	apiUrl: ?string;
-	source: any;
+	source: CancelTokenSource = CancelToken.source();
 
 	constructor() {
 		super();
-		this.apiUrl = process.env.REACT_APP_SERVICE_URI;
-		this.source = CancelToken.source();
+		(axios.defaults: Object).baseURL = process.env.REACT_APP_SERVICE_URI; // Sets the default URL for the rest of the applications lifetime.
 	}
 
 	state = {
@@ -47,7 +45,7 @@ export default class App extends React.Component<Prop, State> {
 	getProjects = () => {
 		this.setState({ loading: true });
 		axios
-			.get(`${this.apiUrl}/projects?limit=0`, {
+			.get(`/projects?limit=0`, {
 				cancelToken: this.source.token
 			})
 			.then(result => {
@@ -55,12 +53,15 @@ export default class App extends React.Component<Prop, State> {
 				result.data.forEach(d => {
 					projs.push(ProjectModel.fromObject(d));
 				});
-				this.setState(({ projects: projs, loading: false }: State));
+				this.setState({ projects: projs, loading: false });
 			})
 			.catch(error => {
 				if (!axios.isCancel(error)) {
-					this.setState(({ projects: [], loading: false }: State));
+					this.setState({ projects: [], loading: false });
+				} else {
+					this.setState({ loading: false });
 				}
+				console.error(error);
 			});
 	};
 
@@ -69,15 +70,14 @@ export default class App extends React.Component<Prop, State> {
 	);
 
 	renderProjectPage = ({ match }: { match: any }) => {
-		const projects = this.state.projects;
-		debugger;
+		const { projects } = this.state;
 
 		const foundProject = projects.find(
-			project => project.projectId === parseInt(match.params.projectId)
+			project => project.projectId === parseInt(match.params.projectId, 10)
 		);
 
 		if (foundProject) {
-			return <Project project={foundProject} />;
+			return <Project project={foundProject} match={match} />;
 		}
 		const infoMessage = `Das Projekt mit der ID ${
 			match.params.projectId
@@ -88,33 +88,22 @@ export default class App extends React.Component<Prop, State> {
 	renderRoomPage = ({ match }: any) => {
 		const foundProject: ?ProjectModel = this.state.projects.find(
 			(project: ProjectModel) =>
-				project.projectId === parseInt(match.params.projectId)
+				project.projectId === parseInt(match.params.projectId, 10)
 		);
 
 		if (foundProject) {
 			const foundRoom: ?RoomModel = foundProject.rooms.find(
-				(room: RoomModel) => room.name === match.params.roomName
+				(room: RoomModel) => room.roomId === parseInt(match.params.roomId, 10)
 			);
 
 			if (foundRoom) {
-				let currentMeasurement: ?MeasurementModel = null;
-				if (match.params.measurementId) {
-					currentMeasurement = foundRoom.measurements.find(
-						measurement =>
-							measurement.measurementId === parseInt(match.params.measurementId)
-					);
-				}
 				return (
-					<Room
-						parentProject={foundProject}
-						room={foundRoom}
-						currentMeasurement={currentMeasurement}
-					/>
+					<Room match={match} parentProject={foundProject} room={foundRoom} />
 				);
 			}
 		}
 
-		const infoMessage = `Der Raum mit dem Namen ${
+		const infoMessage = `Der Raum mit der ID ${
 			match.params.roomId
 		} konnte nicht gefunden werden.`;
 		return <NotFound info={infoMessage} />;
@@ -138,13 +127,10 @@ export default class App extends React.Component<Prop, State> {
 									component={this.renderProjectsPage}
 								/>
 								<Route
-									path="/projects/:projectId/rooms/:roomName/measurements/:measurementId"
+									path="/projects/:projectId/rooms/:roomId"
 									component={this.renderRoomPage}
 								/>
-								<Route
-									path="/projects/:projectId/rooms/:roomName"
-									component={this.renderRoomPage}
-								/>
+								<Route path="/import" exact component={ImportExportContainer} />
 								<Route path="/" exact component={Dashboard} />
 								<Route path="/" component={NotFound} />
 							</Switch>

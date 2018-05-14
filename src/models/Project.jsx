@@ -4,15 +4,15 @@ import Room from "./Room";
 type ConstructorType = {
 	name: string,
 	rooms: Room[],
-	projectId: ?string
+	projectId: ?number
 };
 
 export default class Project {
-	projectId: ?string;
+	projectId: ?number;
 	name: string;
 	rooms: Room[];
 
-	constructor(name: string, rooms: Room[], projectId: ?string) {
+	constructor(name: string, rooms: Room[], projectId: ?number) {
 		this.projectId = projectId;
 		this.name = name;
 		this.rooms = rooms;

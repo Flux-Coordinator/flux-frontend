@@ -5,25 +5,24 @@ import Heading from "grommet/components/Heading";
 import Box from "grommet/components/Box";
 import Section from "grommet/components/Section";
 import Article from "grommet/components/Article";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import ProjectModel from "../../models/Project";
-import MeasurementModel from "../../models/Measurement";
+import Measurement from "../../models/Measurement";
 import RoomModel from "../../models/Room";
-import MeasurementList from "../measurements/MeasurementsList";
+import ItemsList from "../list/ItemsList";
 import MeasurementContainer from "../../containers/measurements/MeasurementContainer";
 import FloorPlan from "../floorplan/FloorPlan";
+import AnchorMeasurementItemRenderer from "../measurements/AnchorMeasurementItemRenderer";
 
 type Props = {
+	match: any,
 	room: RoomModel,
-	parentProject: ProjectModel,
-	currentMeasurement?: ?MeasurementModel
+	parentProject: ProjectModel
 };
 
-export default function Room({
-	room,
-	parentProject,
-	currentMeasurement
-}: Props) {
+export default function Room({ match, room, parentProject }: Props) {
+	console.log(match);
 	return (
 		<Article pad="medium">
 			<Section pad="none">
@@ -53,22 +52,38 @@ export default function Room({
 					</Box>
 				</Box>
 			</Section>
-			{currentMeasurement && (
-				<MeasurementContainer measurement={currentMeasurement} />
-			)}
+			<Route
+				path={`${match.url}/measurements/:measurementId`}
+				component={({ match }) => {
+					return ShowMeasurement({ room, match });
+				}}
+			/>
 			<Section>
 				<Header size="small">
 					<Heading tag="h3">Messungen</Heading>
 				</Header>
-				<MeasurementList
-					measurements={room.measurements}
-					parentProject={parentProject}
-					parentRoom={room}
-					currentMeasurementId={currentMeasurement}
+				<ItemsList
+					items={room.measurements}
+					keyFunc={(item: Measurement) => item.measurementId}
+					ItemRenderer={({ item }) =>
+						AnchorMeasurementItemRenderer({ item, match })
+					}
 				/>
 			</Section>
 		</Article>
 	);
+}
+
+function ShowMeasurement({ room, match }) {
+	let currentMeasurement: ?Measurement = null;
+	if (match.params.measurementId) {
+		currentMeasurement = room.measurements.find(
+			measurement =>
+				measurement.measurementId === parseInt(match.params.measurementId, 10)
+		);
+		return <MeasurementContainer measurement={currentMeasurement} />;
+	}
+	return null;
 }
 
 Room.defaultProps = {

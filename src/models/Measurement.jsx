@@ -1,20 +1,20 @@
 // @flow
 
 type ConstructorType = {
-	measurementId: string,
+	measurementId: number,
 	description: string,
 	startDate: Date,
 	endDate: Date
 };
 
 export default class Measurement {
-	measurementId: string;
+	measurementId: number;
 	description: string;
 	startDate: Date;
 	endDate: Date;
 
 	constructor(
-		measurementId: string,
+		measurementId: number,
 		description: string,
 		startDate: Date,
 		endDate: Date

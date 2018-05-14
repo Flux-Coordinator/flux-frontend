@@ -18,7 +18,6 @@ export default class MeasurementContainer extends React.Component<
 	Props,
 	State
 > {
-	apiUrl: ?string = process.env.REACT_APP_SERVICE_URI;
 	source: any = CancelToken.source();
 
 	static getDerivedStateFromProps(nextProps, prevState) {
@@ -44,12 +43,9 @@ export default class MeasurementContainer extends React.Component<
 
 	getReadings = () => {
 		axios
-			.get(
-				`${this.apiUrl}/measurements/${this.props.measurement.measurementId}`,
-				{
-					cancelToken: this.source.token
-				}
-			)
+			.get(`/measurements/${this.props.measurement.measurementId}`, {
+				cancelToken: this.source.token
+			})
 			.then(result => {
 				const tmp: ReadingModel[] = result.data.readings.map(
 					reading => new ReadingModel(reading)

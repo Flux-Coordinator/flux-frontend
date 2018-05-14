@@ -7,10 +7,9 @@ import AddIcon from "grommet/components/icons/base/Add";
 import DataGenerator from "../../utils/DataGenerator";
 
 function addProject() {
-	const apiUrl = process.env.REACT_APP_SERVICE_URI;
 	const project = DataGenerator.createProject(3);
 	axios
-		.post(`${apiUrl}/projects`, project)
+		.post("/projects", project)
 		.then(result => {
 			console.log(`Project available under: ${result.data}`);
 		})
