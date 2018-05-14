@@ -55,7 +55,6 @@ export default function Room({ match, room, parentProject }: Props) {
 			<Route
 				path={`${match.url}/measurements/:measurementId`}
 				component={({ match }) => {
-					console.log(match);
 					return ShowMeasurement({ room, match });
 				}}
 			/>
