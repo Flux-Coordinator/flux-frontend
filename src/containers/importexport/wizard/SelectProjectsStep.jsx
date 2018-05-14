@@ -12,7 +12,8 @@ import type {
 } from "./../../../containers/importexport/ExportWizard";
 
 type State = {
-	returnData: ExportData
+	returnData: ExportData,
+	selected: ?number | ?(number[])
 };
 
 /**
@@ -25,14 +26,40 @@ export default class SelectProjectsStep extends React.Component<
 	State
 > {
 	state = {
-		returnData: this.props.data
+		returnData: this.props.data,
+		selected: null
 	};
 
 	subheading: string = "Sie können mit CTRL + Mausclick mehrere Projekte auswählen.";
 
 	onNext = () => {
+		const selected = this.state.selected;
+		let remainingProjects = this.state.returnData;
+
+		if (selected) {
+			if (typeof selected === "number") {
+				remainingProjects = remainingProjects[selected];
+			} else {
+				remainingProjects = this.state.returnData.filter((element, index) =>
+					selected.includes(index)
+				);
+			}
+		}
+		console.log(remainingProjects);
 		this.props.onNext(this.state.returnData);
 	};
+
+	onSelect = (selected: ?number | number[]) => {
+		this.setState({ selected: selected });
+		console.log(selected);
+	};
+
+	static getDerivedStateFromProps(nextProps: StepProps, prevState: State) {
+		return {
+			returnData: nextProps.data,
+			selected: null
+		};
+	}
 
 	render() {
 		return (
@@ -46,6 +73,7 @@ export default class SelectProjectsStep extends React.Component<
 					items={this.props.data}
 					keyFunc={item => item.projectId}
 					selectable={"multiple"}
+					onSelect={this.onSelect}
 					loading={this.props.isLoading}
 				/>
 			</WizardStep>

@@ -9,6 +9,7 @@ type Props<T> = {
 	items?: ?(T[]),
 	keyFunc: (item: T) => ?number,
 	selectable?: boolean | "multiple",
+	onSelect?: (selected: number | number[]) => void,
 	loading?: boolean,
 	ItemRenderer: React.ComponentType<{ item: T }>
 };
@@ -21,6 +22,7 @@ const listItemPadding = {
 export default function ItemsList<T>({
 	items,
 	keyFunc,
+	onSelect,
 	selectable,
 	loading,
 	ItemRenderer
@@ -38,7 +40,7 @@ export default function ItemsList<T>({
 				unfilteredTotal={unfilteredTotal}
 				filteredTotal={filteredTotal}
 			/>
-			<List selectable={selectable}>
+			<List selectable={selectable} onSelect={onSelect}>
 				{items &&
 					items.map(item => (
 						<ListItem key={keyFunc(item)} pad={listItemPadding}>
