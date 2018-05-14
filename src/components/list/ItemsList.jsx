@@ -5,13 +5,12 @@ import ListItem from "grommet/components/ListItem";
 import ListPlaceholder from "grommet-addons/components/ListPlaceholder";
 import Spinning from "grommet/components/icons/Spinning";
 
-import Project from "../../models/Project";
-
-type Props = {
-	projects?: ?(Project[]),
+type Props<T> = {
+	items?: ?(T[]),
+	keyFunc: (item: T) => ?number,
 	selectable?: boolean | "multiple",
 	loading?: boolean,
-	ProjectItemRenderer: React.ComponentType<{ project: Project }>
+	ItemRenderer: React.ComponentType<{ item: T }>
 };
 
 const listItemPadding = {
@@ -19,18 +18,19 @@ const listItemPadding = {
 	vertical: "medium"
 };
 
-export default function ProjectsList({
-	projects,
-	loading,
+export default function ItemsList<T>({
+	items,
+	keyFunc,
 	selectable,
-	ProjectItemRenderer
-}: Props) {
+	loading,
+	ItemRenderer
+}: Props<T>) {
 	if (loading) {
 		return <Spinning size="large" />;
 	}
 
-	const unfilteredTotal = projects ? projects.length : 0;
-	const filteredTotal = projects ? projects.length : 0;
+	const unfilteredTotal = items ? items.length : 0;
+	const filteredTotal = items ? items.length : 0;
 
 	return (
 		<React.Fragment>
@@ -39,18 +39,13 @@ export default function ProjectsList({
 				filteredTotal={filteredTotal}
 			/>
 			<List selectable={selectable}>
-				{projects &&
-					projects.map(project => (
-						<ListItem key={project.projectId} pad={listItemPadding}>
-							<ProjectItemRenderer project={project} />
+				{items &&
+					items.map(item => (
+						<ListItem key={keyFunc(item)} pad={listItemPadding}>
+							<ItemRenderer item={item} />
 						</ListItem>
 					))}
 			</List>
 		</React.Fragment>
 	);
 }
-
-ProjectsList.defaultProps = {
-	projects: null,
-	loading: false
-};

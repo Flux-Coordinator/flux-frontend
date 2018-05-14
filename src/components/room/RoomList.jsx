@@ -8,7 +8,7 @@ import ListPlaceholder from "grommet-addons/components/ListPlaceholder";
 import Project from "../../models/Project";
 
 type Props = {
-	parentProject: Project
+	parentProject?: ?Project
 };
 
 const listItemPadding = {

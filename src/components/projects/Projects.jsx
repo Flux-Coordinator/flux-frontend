@@ -8,7 +8,7 @@ import Search from "grommet/components/Search";
 import Heading from "grommet/components/Heading";
 
 import ContentBox from "../contentBox/ContentBox";
-import ProjectsList from "./ProjectsList";
+import ItemsList from "./../list/ItemsList";
 import Project from "../../models/Project";
 import AddProjectButton from "./AddProjectButton";
 import AnchorProjectItemRenderer from "./AnchorProjectItemRenderer";
@@ -40,10 +40,11 @@ export default function Projects({ projects, loading }: Props) {
 					<Heading tag="h3">Projekte</Heading>
 					<AddProjectButton />
 				</Header>
-				<ProjectsList
-					ProjectItemRenderer={AnchorProjectItemRenderer}
-					projects={projects}
+				<ItemsList
+					items={projects}
+					keyFunc={project => project.projectId}
 					loading={loading}
+					ItemRenderer={AnchorProjectItemRenderer}
 				/>
 			</Section>
 		</ContentBox>
