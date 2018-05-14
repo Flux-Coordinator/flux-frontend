@@ -59,7 +59,8 @@ export default class SelectRoomsStep extends React.Component<StepProps, State> {
 				const oldSelected = prevState.selected.findIndex(
 					s => s.projectId === projectId
 				);
-				prevState[oldSelected] = selectedProject;
+				prevState.selected[oldSelected] = selectedProject;
+				return prevState;
 			} else {
 				return { selected: [selectedProject] };
 			}

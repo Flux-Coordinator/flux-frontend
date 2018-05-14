@@ -36,7 +36,6 @@ export default class ExportWizard extends React.Component<Props, State> {
 	};
 
 	next = (data: Project[]) => {
-		console.log(data);
 		if (this.state.currentStep < this.state.steps.length - 1) {
 			this.setState((prevState, props) => {
 				return {
