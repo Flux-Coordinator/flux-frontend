@@ -4,7 +4,6 @@ import GrommetApp from "grommet/components/App";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import axios, { CancelToken, CancelTokenSource } from "axios";
 
-import MeasurementModel from "../../models/Measurement";
 import RoomModel from "../../models/Room";
 import ProjectModel from "../../models/Project";
 import Room from "../../components/room/Room";
@@ -78,7 +77,7 @@ export default class App extends React.Component<Prop, State> {
 		);
 
 		if (foundProject) {
-			return <Project project={foundProject} />;
+			return <Project project={foundProject} match={match} />;
 		}
 		const infoMessage = `Das Projekt mit der ID ${
 			match.params.projectId
@@ -94,29 +93,17 @@ export default class App extends React.Component<Prop, State> {
 
 		if (foundProject) {
 			const foundRoom: ?RoomModel = foundProject.rooms.find(
-				(room: RoomModel) => room.name === match.params.roomName
+				(room: RoomModel) => room.roomId === parseInt(match.params.roomId, 10)
 			);
 
 			if (foundRoom) {
-				let currentMeasurement: ?MeasurementModel = null;
-				if (match.params.measurementId) {
-					currentMeasurement = foundRoom.measurements.find(
-						measurement =>
-							measurement.measurementId ===
-							parseInt(match.params.measurementId, 10)
-					);
-				}
 				return (
-					<Room
-						parentProject={foundProject}
-						room={foundRoom}
-						currentMeasurement={currentMeasurement}
-					/>
+					<Room match={match} parentProject={foundProject} room={foundRoom} />
 				);
 			}
 		}
 
-		const infoMessage = `Der Raum mit dem Namen ${
+		const infoMessage = `Der Raum mit der ID ${
 			match.params.roomId
 		} konnte nicht gefunden werden.`;
 		return <NotFound info={infoMessage} />;
@@ -140,11 +127,7 @@ export default class App extends React.Component<Prop, State> {
 									component={this.renderProjectsPage}
 								/>
 								<Route
-									path="/projects/:projectId/rooms/:roomName/measurements/:measurementId"
-									component={this.renderRoomPage}
-								/>
-								<Route
-									path="/projects/:projectId/rooms/:roomName"
+									path="/projects/:projectId/rooms/:roomId"
 									component={this.renderRoomPage}
 								/>
 								<Route path="/import" exact component={ImportExportContainer} />

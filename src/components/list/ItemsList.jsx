@@ -49,3 +49,8 @@ export default function ItemsList<T>({
 		</React.Fragment>
 	);
 }
+
+ItemsList.defaultProps = {
+	loading: false,
+	selectable: true
+};

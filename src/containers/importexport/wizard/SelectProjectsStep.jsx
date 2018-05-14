@@ -3,7 +3,7 @@ import * as React from "react";
 import Button from "grommet/components/Button";
 
 import WizardStep from "./WizardStep";
-import ProjectsList from "./../../../components/projects/ProjectsList";
+import ItemsList from "./../../../components/list/ItemsList";
 import Project from "./../../../models/Project";
 
 import type {
@@ -41,9 +41,10 @@ export default class SelectProjectsStep extends React.Component<
 				subheading={this.subheading}
 				onNext={this.onNext}
 			>
-				<ProjectsList
-					ProjectItemRenderer={ProjectItemRenderer}
-					projects={this.props.data}
+				<ItemsList
+					ItemRenderer={ProjectItemRenderer}
+					items={this.props.data}
+					keyFunc={item => item.projectId}
 					selectable={"multiple"}
 					loading={this.props.isLoading}
 				/>
@@ -52,6 +53,6 @@ export default class SelectProjectsStep extends React.Component<
 	}
 }
 
-function ProjectItemRenderer({ project }: { project: Project }) {
-	return project.name;
+function ProjectItemRenderer({ item }: { item: Project }) {
+	return item.name;
 }
