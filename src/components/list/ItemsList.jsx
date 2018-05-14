@@ -27,11 +27,6 @@ type Props<T> = {
 	}
 };
 
-const listItemPadding = {
-	horizontal: "none",
-	vertical: "medium"
-};
-
 export default function ItemsList<T>({
 	items,
 	keyFunc,
@@ -57,11 +52,7 @@ export default function ItemsList<T>({
 			<List selectable={selectable} onSelect={onSelect}>
 				{items &&
 					items.map(item => (
-						<ListItem
-							key={keyFunc(item)}
-							pad={listItemPadding}
-							listItemProperties={listItemProperties}
-						>
+						<ListItem key={keyFunc(item)} {...listItemProperties}>
 							<ItemRenderer item={item} />
 						</ListItem>
 					))}
@@ -73,5 +64,10 @@ export default function ItemsList<T>({
 ItemsList.defaultProps = {
 	loading: false,
 	selectable: true,
-	listItemProperties: {}
+	listItemProperties: {
+		pad: {
+			horizontal: "none",
+			vertical: "medium"
+		}
+	}
 };

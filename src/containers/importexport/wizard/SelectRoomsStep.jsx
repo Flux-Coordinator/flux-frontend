@@ -15,7 +15,10 @@ import type { StepProps } from "./../../../containers/importexport/ExportWizard"
 
 type State = {
 	returnData: Project[],
-	selected: ?number | ?(number[])
+	selected: ?({
+		projectId: ?number,
+		selected: ?number | ?(number[])
+	}[])
 };
 
 /**
@@ -34,11 +37,33 @@ export default class SelectRoomsStep extends React.Component<StepProps, State> {
 	};
 
 	onNext = () => {
+		const selects = this.state.selected;
+		let remainingRooms = this.state.returnData;
+
+		if (selects) {
+		}
+
+		console.log(this.state.selected);
+
 		this.props.onNext(this.state.returnData);
 	};
 
-	onSelect = (selected: ?number | number[]) => {
-		this.setState({ selected: selected });
+	onSelect = (selected: ?number | number[], projectId: ?number) => {
+		const selectedProject = {
+			projectId: projectId,
+			selected: selected
+		};
+
+		this.setState(prevState => {
+			if (prevState.selected) {
+				const oldSelected = prevState.selected.findIndex(
+					s => s.projectId === projectId
+				);
+				prevState[oldSelected] = selectedProject;
+			} else {
+				return { selected: [selectedProject] };
+			}
+		});
 	};
 
 	static getDerivedStateFromProps(nextProps: StepProps, prevState: State) {
@@ -71,7 +96,7 @@ export default class SelectRoomsStep extends React.Component<StepProps, State> {
 									items={p.rooms}
 									keyFunc={item => item.roomId}
 									selectable={"multiple"}
-									onSelect={this.onSelect}
+									onSelect={selected => this.onSelect(selected, p.projectId)}
 									loading={this.props.isLoading}
 								/>
 							</Box>
