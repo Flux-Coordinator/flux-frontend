@@ -6,13 +6,10 @@ import WizardStep from "./WizardStep";
 import ItemsList from "./../../../components/list/ItemsList";
 import Project from "./../../../models/Project";
 
-import type {
-	StepProps,
-	ExportData
-} from "./../../../containers/importexport/ExportWizard";
+import type { StepProps } from "./../../../containers/importexport/ExportWizard";
 
 type State = {
-	returnData: ExportData,
+	returnData: Project[],
 	selected: ?number | ?(number[])
 };
 
@@ -26,7 +23,7 @@ export default class SelectProjectsStep extends React.Component<
 	State
 > {
 	state = {
-		returnData: this.props.data,
+		returnData: this.props.projects,
 		selected: null
 	};
 
@@ -38,25 +35,23 @@ export default class SelectProjectsStep extends React.Component<
 
 		if (selected) {
 			if (typeof selected === "number") {
-				remainingProjects = remainingProjects[selected];
+				remainingProjects = [remainingProjects[selected]];
 			} else {
 				remainingProjects = this.state.returnData.filter((element, index) =>
 					selected.includes(index)
 				);
 			}
 		}
-		console.log(remainingProjects);
-		this.props.onNext(this.state.returnData);
+		this.props.onNext(remainingProjects);
 	};
 
 	onSelect = (selected: ?number | number[]) => {
 		this.setState({ selected: selected });
-		console.log(selected);
 	};
 
 	static getDerivedStateFromProps(nextProps: StepProps, prevState: State) {
 		return {
-			returnData: nextProps.data,
+			returnData: nextProps.projects,
 			selected: null
 		};
 	}
@@ -70,7 +65,7 @@ export default class SelectProjectsStep extends React.Component<
 			>
 				<ItemsList
 					ItemRenderer={ProjectItemRenderer}
-					items={this.props.data}
+					items={this.props.projects}
 					keyFunc={item => item.projectId}
 					selectable={"multiple"}
 					onSelect={this.onSelect}

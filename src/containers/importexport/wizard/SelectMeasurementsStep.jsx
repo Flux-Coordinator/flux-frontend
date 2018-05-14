@@ -3,14 +3,12 @@ import * as React from "react";
 import Button from "grommet/components/Button";
 
 import WizardStep from "./WizardStep";
+import Project from "./../../../models/Project";
 
-import type {
-	StepProps,
-	ExportData
-} from "./../../../containers/importexport/ExportWizard";
+import type { StepProps } from "./../../../containers/importexport/ExportWizard";
 
 type State = {
-	returnData: ExportData
+	returnData: Project[]
 };
 
 /**
@@ -22,7 +20,7 @@ export default class SelectMeasurementsStep extends React.Component<
 	State
 > {
 	state = {
-		returnData: this.props.data
+		returnData: this.props.projects
 	};
 
 	onNext = () => {

@@ -11,7 +11,20 @@ type Props<T> = {
 	selectable?: boolean | "multiple",
 	onSelect?: (selected: number | number[]) => void,
 	loading?: boolean,
-	ItemRenderer: React.ComponentType<{ item: T }>
+	ItemRenderer: React.ComponentType<{ item: T }>,
+	listItemProperties?: {
+		margin?: "none" | "small" | "medium" | "large",
+		pad?: "none" | "small" | "medium" | "large",
+		size?:
+			| "auto"
+			| "xsmall"
+			| "small"
+			| "medium"
+			| "large"
+			| "xlarge"
+			| "xxlarge"
+			| "full"
+	}
 };
 
 const listItemPadding = {
@@ -25,7 +38,8 @@ export default function ItemsList<T>({
 	onSelect,
 	selectable,
 	loading,
-	ItemRenderer
+	ItemRenderer,
+	listItemProperties
 }: Props<T>) {
 	if (loading) {
 		return <Spinning size="large" />;
@@ -43,7 +57,11 @@ export default function ItemsList<T>({
 			<List selectable={selectable} onSelect={onSelect}>
 				{items &&
 					items.map(item => (
-						<ListItem key={keyFunc(item)} pad={listItemPadding}>
+						<ListItem
+							key={keyFunc(item)}
+							pad={listItemPadding}
+							listItemProperties={listItemProperties}
+						>
 							<ItemRenderer item={item} />
 						</ListItem>
 					))}
@@ -54,5 +72,6 @@ export default function ItemsList<T>({
 
 ItemsList.defaultProps = {
 	loading: false,
-	selectable: true
+	selectable: true,
+	listItemProperties: {}
 };

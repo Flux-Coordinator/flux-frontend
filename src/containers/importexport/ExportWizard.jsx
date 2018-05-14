@@ -10,20 +10,18 @@ import SelectProjectsStep from "./wizard/SelectProjectsStep";
 import SelectRoomsStep from "./wizard/SelectRoomsStep";
 import SelectMeasurementsStep from "./wizard/SelectMeasurementsStep";
 
-export type ExportData = Project[];
-
 type Props = {};
 
 type State = {
 	currentStep: number,
 	steps: React.ComponentType<StepProps>[],
-	projects: ExportData,
+	projects: Project[],
 	isLoading: boolean
 };
 
 export type StepProps = {
-	onNext: (data: ExportData) => void,
-	data: ExportData,
+	onNext: (data: Project[]) => void,
+	projects: Project[],
 	isLoading?: boolean
 };
 
@@ -37,10 +35,14 @@ export default class ExportWizard extends React.Component<Props, State> {
 		isLoading: false
 	};
 
-	next = (data: ExportData) => {
+	next = (data: Project[]) => {
+		console.log(data);
 		if (this.state.currentStep < this.state.steps.length - 1) {
 			this.setState((prevState, props) => {
-				return { currentStep: prevState.currentStep + 1 };
+				return {
+					currentStep: prevState.currentStep + 1,
+					projects: data
+				};
 			});
 		}
 	};
@@ -85,7 +87,7 @@ export default class ExportWizard extends React.Component<Props, State> {
 		let Step = this.state.steps[this.state.currentStep];
 		return (
 			<Step
-				data={this.state.projects}
+				projects={this.state.projects}
 				onNext={this.next}
 				isLoading={this.state.isLoading}
 			/>
