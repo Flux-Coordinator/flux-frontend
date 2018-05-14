@@ -12,7 +12,6 @@ import Measurement from "../../models/Measurement";
 import RoomModel from "../../models/Room";
 import ItemsList from "../list/ItemsList";
 import MeasurementContainer from "../../containers/measurements/MeasurementContainer";
-import FloorPlan from "../floorplan/FloorPlan";
 import AnchorMeasurementItemRenderer from "../measurements/AnchorMeasurementItemRenderer";
 
 type Props = {
@@ -22,7 +21,6 @@ type Props = {
 };
 
 export default function Room({ match, room, parentProject }: Props) {
-	console.log(match);
 	return (
 		<Article pad="medium">
 			<Section pad="none">
@@ -31,26 +29,18 @@ export default function Room({ match, room, parentProject }: Props) {
 						{room.name}
 					</Heading>
 				</Header>
-				<Box direction="row" size="full">
-					<Box basis="1/2">
-						<Header size="small">
-							<Heading tag="h4">{room.description}</Heading>
-						</Header>
-						<div>Name: {room.name ? room.name : "Raum hat keinen Namen"}</div>
-						<div>
-							Länge: {room.length ? room.length : "Keine Länge vorhanden"}
-						</div>
-						<div>
-							Breite: {room.width ? room.width : "Keine Breite vorhanden"}
-						</div>
-					</Box>
-					<Box basis="1/2">
-						<Header size="small">
-							<Heading tag="h3">Grundriss</Heading>
-						</Header>
-						<FloorPlan />
-					</Box>
-				</Box>
+                <Box>
+                    <Header size="small">
+                        <Heading tag="h4">{room.description}</Heading>
+                    </Header>
+                    <div>Name: {room.name ? room.name : "Raum hat keinen Namen"}</div>
+                    <div>
+                        Länge: {room.length ? room.length : "Keine Länge vorhanden"}
+                    </div>
+                    <div>
+                        Breite: {room.width ? room.width : "Keine Breite vorhanden"}
+                    </div>
+                </Box>
 			</Section>
 			<Route
 				path={`${match.url}/measurements/:measurementId`}
