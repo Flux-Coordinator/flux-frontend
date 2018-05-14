@@ -14,7 +14,7 @@ type Props<T> = {
 	ItemRenderer: React.ComponentType<{ item: T }>,
 	listItemProperties?: {
 		margin?: "none" | "small" | "medium" | "large",
-		pad?: "none" | "small" | "medium" | "large",
+		pad?: "none" | "small" | "medium" | "large" | any,
 		size?:
 			| "auto"
 			| "xsmall"

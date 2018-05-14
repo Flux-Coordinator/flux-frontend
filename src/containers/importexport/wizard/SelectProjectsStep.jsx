@@ -33,12 +33,12 @@ export default class SelectProjectsStep extends React.Component<
 		const selected = this.state.selected;
 		let remainingProjects = this.state.returnData;
 
-		if (selected) {
+		if (selected !== "undefined" && selected !== null) {
 			if (typeof selected === "number") {
 				remainingProjects = [remainingProjects[selected]];
 			} else {
-				remainingProjects = this.state.returnData.filter((element, index) =>
-					selected.includes(index)
+				remainingProjects = this.state.returnData.filter(
+					(element, index) => (selected ? selected.includes(index) : false)
 				);
 			}
 		}
