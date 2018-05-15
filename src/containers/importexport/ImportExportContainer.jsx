@@ -21,19 +21,23 @@ export default class ImportExportContainer extends React.Component<
 	};
 
 	uploadFile = (file: ?File) => {
-		console.log(file);
-		console.log("TODO: File format is not compatible yet (server-side)!");
-		const headers = {
-			"Content-Type": "application/json"
-		};
-		axios
-			.post("/import", file, headers)
-			.then(response => {
-				console.log(response);
-			})
-			.catch(error => {
-				console.log(error);
-			});
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = () => {
+				const fileAsBinaryString = reader.result;
+				axios
+					.post("/import", fileAsBinaryString, {
+						headers: { "Content-Type": "application/json" }
+					})
+					.then(response => {
+						console.log(response);
+					})
+					.catch(error => {
+						console.log(error);
+					});
+			};
+			reader.readAsText(file, "utf-8");
+		}
 	};
 
 	render() {
