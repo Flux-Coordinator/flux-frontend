@@ -1,8 +1,10 @@
 // @flow
 import * as React from "react";
 import axios, { CancelToken, CancelTokenSource } from "axios";
+import fileDownload from "js-file-download";
 
 import Project from "./../../models/Project";
+import Measurement from "./../../models/Measurement";
 import SelectProjectsStep from "./wizard/SelectProjectsStep";
 import SelectRoomsStep from "./wizard/SelectRoomsStep";
 import SelectMeasurementsStep from "./wizard/SelectMeasurementsStep";
@@ -40,7 +42,31 @@ export default class ExportWizard extends React.Component<Props, State> {
 					projects: data
 				};
 			});
+		} else {
+			// If it's the last step -> Send the data!
+			const rooms = [].concat.apply([], data.map(p => p.rooms));
+			const measurements = [].concat.apply([], rooms.map(r => r.measurements));
+			const exportBody = measurements.map(m => ({
+				measurementId: m.measurementId
+			}));
+			this.exportData(exportBody);
 		}
+	};
+
+	exportData = (measurements: { measurementId: number }[]) => {
+		axios
+			.post("/export", measurements, { cancelToken: this.source.token })
+			.then(result => {
+				fileDownload(JSON.stringify(result.data), "export.json");
+			})
+			.catch(error => {
+				if (!axios.isCancel(error)) {
+					// TODO: What do we want to do if there was an error fetching the projects?
+				}
+				this.setState({ isLoading: false });
+				console.error(error);
+			});
+		return;
 	};
 
 	fetchProjects = () => {
@@ -52,7 +78,6 @@ export default class ExportWizard extends React.Component<Props, State> {
 				result.data.forEach(d => {
 					projs.push(Project.fromObject(d));
 				});
-
 				this.setState({ projects: projs, isLoading: false });
 			})
 			.catch(error => {
@@ -62,13 +87,6 @@ export default class ExportWizard extends React.Component<Props, State> {
 				this.setState({ isLoading: false });
 				console.error(error);
 			});
-	};
-
-	fetchSmart = () => {
-		// TODO:    Fetch the data after next is called. Make this a smart algorithm, that
-		//          fetches the data from the available projects. If there are projects,
-		//          fetch rooms. If there are rooms, fetch their measurements.
-		//          Like this, we avoid having to make complicated callbacks for the steps to fetch data.
 	};
 
 	componentWillUnmount() {

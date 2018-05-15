@@ -14,7 +14,8 @@ import Measurement from "./../../../models/Measurement";
 import type { StepProps } from "./../../../containers/importexport/ExportWizard";
 
 type State = {
-	returnData: Project[]
+	returnData: Project[],
+	projects: Project[]
 };
 
 /**
@@ -26,11 +27,62 @@ export default class SelectMeasurementsStep extends React.Component<
 	State
 > {
 	state = {
-		returnData: this.props.projects
+		returnData: this.props.projects,
+		projects: []
 	};
 
 	onNext = () => {
 		this.props.onNext(this.state.returnData);
+	};
+
+	getMeasurementsOfRoom = (
+		data: Project[],
+		projectId: ?number,
+		roomId: ?number
+	) => {
+		const foundProjectInProps = data.find(p => p.projectId === projectId);
+		const foundRoomInProps = foundProjectInProps
+			? foundProjectInProps.rooms.find(r => (r.roomId = roomId))
+			: null;
+
+		return foundRoomInProps ? foundRoomInProps.measurements : null;
+	};
+
+	onSelect = (selected: number | number[], project: Project, room: Room) => {
+		const foundProjectInState = this.state.projects.find(
+			p => p.projectId === project.projectId
+		);
+		const foundRoomInState = foundProjectInState
+			? foundProjectInState.rooms.find(r => (r.roomId = room.roomId))
+			: null;
+
+		const allMeasurements = this.getMeasurementsOfRoom(
+			this.props.projects,
+			project.projectId,
+			room.roomId
+		);
+		const selectedMeasurements = getItemsFromArrayByIndex(
+			allMeasurements,
+			selected
+		);
+
+		if (foundRoomInState) {
+			foundRoomInState.measurements = (selectedMeasurements: any);
+		} else {
+			let projectInState: Project;
+			if (!foundProjectInState) {
+				projectInState = Project.fromObject(Object.assign({}, project));
+				projectInState.rooms = [];
+				this.state.projects.push(projectInState);
+			} else {
+				projectInState = foundProjectInState;
+			}
+
+			const newRoomForState = Room.fromObject(Object.assign({}, room));
+
+			newRoomForState.measurements = (selectedMeasurements: any);
+			projectInState.rooms.push(newRoomForState);
+		}
 	};
 
 	RenderProject = (project: Project) => {
@@ -47,7 +99,7 @@ export default class SelectMeasurementsStep extends React.Component<
 						items={r.measurements}
 						keyFunc={item => item.measurementId}
 						selectable={"multiple"}
-						// onSelect={selected => this.onSelect(selected, p)}
+						onSelect={selected => this.onSelect(selected, project, r)}
 						loading={this.props.isLoading}
 					/>
 				</Box>
@@ -57,11 +109,10 @@ export default class SelectMeasurementsStep extends React.Component<
 
 	render() {
 		const projects = this.props.projects;
-		console.log(projects);
 		return (
 			<WizardStep
 				heading="Schritt 3: Wählen Sie die Messungen aus"
-				onNext={this.onNext}
+				onNext={() => this.props.onNext(this.state.projects)}
 			>
 				{projects && projects.map(p => this.RenderProject(p))}
 			</WizardStep>
@@ -71,4 +122,17 @@ export default class SelectMeasurementsStep extends React.Component<
 
 function MeasurementItemRenderer({ item }: { item: Measurement }) {
 	return item.description;
+}
+
+function getItemsFromArrayByIndex<T>(
+	array: ?Array<T>,
+	indexes: number[] | number
+) {
+	if (!array) return [];
+
+	if (typeof indexes === "number") {
+		return [array[indexes]];
+	} else {
+		return array.filter((item, index) => (indexes: any).includes(index));
+	}
 }

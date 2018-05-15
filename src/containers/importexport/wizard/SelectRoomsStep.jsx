@@ -40,7 +40,7 @@ export default class SelectRoomsStep extends React.Component<StepProps, State> {
 				selectedRooms = [foundProject.rooms[selected]];
 			} else {
 				selectedRooms = foundProject.rooms.filter(
-					(r, index) => (selected ? selected.includes(index) : false)
+					(r, index) => (selected ? (selected: any).includes(index) : false)
 				);
 			}
 
