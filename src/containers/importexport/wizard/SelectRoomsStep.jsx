@@ -13,12 +13,7 @@ import Room from "./../../../models/Room";
 import type { StepProps } from "./../../../containers/importexport/ExportWizard";
 
 type State = {
-	returnData: Project[],
 	selectedProjects: Project[]
-	// selected: ?({
-	// 	project: Project,
-	// 	selected: ?number | ?(number[])
-	// }[])
 };
 
 /**
@@ -27,29 +22,12 @@ type State = {
  */
 export default class SelectRoomsStep extends React.Component<StepProps, State> {
 	state = {
-		returnData: this.props.projects,
 		selectedProjects: []
-		// selected: null
 	};
 
 	listItemProperties = {
 		margin: "small",
 		pad: "small"
-	};
-
-	onNext = () => {
-		// const selects = this.state.selected;
-		// let remainingRooms = this.state.returnData;
-
-		// if (selects) {
-
-		// }
-
-		// console.log(selects);
-
-		console.log(this.state.selectedProjects);
-
-		this.props.onNext(this.state.selectedProjects);
 	};
 
 	onSelect = (selected: ?number | number[], project: Project) => {
@@ -71,34 +49,23 @@ export default class SelectRoomsStep extends React.Component<StepProps, State> {
 					p => p.projectId === project.projectId
 				);
 				if (projectInStateIndex > -1) {
-					prevState.selectedProjects[projectInStateIndex].rooms = selectedRooms;
+					if (selectedRooms.length > 0) {
+						prevState.selectedProjects[
+							projectInStateIndex
+						].rooms = selectedRooms;
+					} else {
+						prevState.selectedProjects.splice(projectInStateIndex, 1);
+					}
 				} else {
-					foundProject.rooms = selectedRooms;
-					prevState.selectedProjects.push(foundProject);
+					const newProjectObject = Project.fromObject(
+						Object.assign({}, foundProject)
+					);
+					newProjectObject.rooms = selectedRooms;
+					prevState.selectedProjects.push(newProjectObject);
 				}
 				return prevState;
-				// TODO: Remove project from state, if the selected array is empty?
 			});
 		}
-
-		// const selectedProject = {
-		// 	projectId: projectId,
-		// 	selected: selected
-		// };
-
-		// this.setState(prevState => {
-		// 	if (prevState.selected) {
-		// 		const oldSelected = prevState.selected.findIndex(
-		// 			s => s.projectId === projectId
-		// 		);
-		// 		if(prevState.selected) {
-		// 			prevState.selected[oldSelected] = selectedProject;
-		// 		}
-		// 		return prevState;
-		// 	} else {
-		// 		return { selected: [selectedProject] };
-		// 	}
-		// });
 	};
 
 	static getDerivedStateFromProps(nextProps: StepProps, prevState: State) {
@@ -110,11 +77,10 @@ export default class SelectRoomsStep extends React.Component<StepProps, State> {
 
 	render() {
 		const projects = this.props.projects;
-
 		return (
 			<WizardStep
 				heading="Schritt 2: Wählen Sie die Räume aus"
-				onNext={this.onNext}
+				onNext={() => this.props.onNext(this.state.selectedProjects)}
 			>
 				{projects &&
 					projects.map(p => (
