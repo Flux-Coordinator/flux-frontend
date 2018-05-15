@@ -7,9 +7,18 @@ import ImportComponent from "../../components/importexport/Import";
 import ExportComponent from "../../components/importexport/Export";
 
 type Props = {};
+type Status = {
+	showWizard: boolean
+};
 
-export default class ImportExportContainer extends React.Component<Props> {
+export default class ImportExportContainer extends React.Component<
+	Props,
+	Status
+> {
 	source: any = CancelToken.source();
+	state = {
+		showWizard: false
+	};
 
 	uploadFile = (file: ?File) => {
 		console.log(file);

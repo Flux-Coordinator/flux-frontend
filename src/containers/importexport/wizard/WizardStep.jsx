@@ -24,7 +24,7 @@ export default function WizardStep({
 	onNext
 }: Props) {
 	return (
-		<Section pad="small">
+		<Section pad="none">
 			<Header>
 				<Heading tag="h3" margin="none" pad="small">
 					{heading}

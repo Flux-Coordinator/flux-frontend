@@ -1,18 +1,15 @@
 // @flow
 import * as React from "react";
-import Button from "grommet/components/Button";
 
 import WizardStep from "./WizardStep";
 import ItemsList from "./../../../components/list/ItemsList";
 import Project from "./../../../models/Project";
 
-import type {
-	StepProps,
-	ExportData
-} from "./../../../containers/importexport/ExportWizard";
+import type { StepProps } from "./../../../containers/importexport/ExportWizard";
 
 type State = {
-	returnData: ExportData
+	returnData: Project[],
+	selected: ?number | ?(number[])
 };
 
 /**
@@ -25,14 +22,38 @@ export default class SelectProjectsStep extends React.Component<
 	State
 > {
 	state = {
-		returnData: this.props.data
+		returnData: this.props.projects,
+		selected: null
 	};
 
 	subheading: string = "Sie können mit CTRL + Mausclick mehrere Projekte auswählen.";
 
 	onNext = () => {
-		this.props.onNext(this.state.returnData);
+		const selected = this.state.selected;
+		let remainingProjects = this.state.returnData;
+
+		if (selected !== "undefined" && selected !== null) {
+			if (typeof selected === "number") {
+				remainingProjects = [remainingProjects[selected]];
+			} else {
+				remainingProjects = this.state.returnData.filter(
+					(element, index) => (selected ? selected.includes(index) : false)
+				);
+			}
+		}
+		this.props.onNext(remainingProjects);
 	};
+
+	onSelect = (selected: ?number | number[]) => {
+		this.setState({ selected: selected });
+	};
+
+	static getDerivedStateFromProps(nextProps: StepProps, prevState: State) {
+		return {
+			returnData: nextProps.projects,
+			selected: null
+		};
+	}
 
 	render() {
 		return (
@@ -43,9 +64,10 @@ export default class SelectProjectsStep extends React.Component<
 			>
 				<ItemsList
 					ItemRenderer={ProjectItemRenderer}
-					items={this.props.data}
+					items={this.props.projects}
 					keyFunc={item => item.projectId}
 					selectable={"multiple"}
+					onSelect={this.onSelect}
 					loading={this.props.isLoading}
 				/>
 			</WizardStep>

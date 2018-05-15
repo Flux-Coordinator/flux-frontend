@@ -12,7 +12,7 @@ import NotFound from "../../components/notfound/NotFound";
 import Projects from "../../components/projects/Projects";
 import Layout from "../layout/Layout";
 import Project from "../../components/projects/Project";
-import ImportExportContainer from "../importexport/ImportExport";
+import ImportExportContainer from "../importexport/ImportExportContainer";
 
 type Prop = {};
 
@@ -58,10 +58,7 @@ export default class App extends React.Component<Prop, State> {
 			.catch(error => {
 				if (!axios.isCancel(error)) {
 					this.setState({ projects: [], loading: false });
-				} else {
-					this.setState({ loading: false });
 				}
-				console.error(error);
 			});
 	};
 
