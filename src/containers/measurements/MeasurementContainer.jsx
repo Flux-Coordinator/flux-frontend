@@ -48,7 +48,7 @@ export default class MeasurementContainer extends React.Component<
 			})
 			.then(result => {
 				const tmp: ReadingModel[] = result.data.readings.map(
-					reading => new ReadingModel(reading)
+					reading => new ReadingModel(reading.readingId, reading.luxValue, reading.timestamp, reading.xposition, reading.yposition, reading.zposition)
 				);
 				this.setState(({ readings: tmp }: State));
 			})
