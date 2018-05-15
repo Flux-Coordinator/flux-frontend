@@ -34,7 +34,8 @@ export default function MeasurementSummary({
 				{readings && (
 					<div
 						style={{
-							width: 800,
+							width: "100%",
+							maxWidth: 800,
 							margin: "auto"
 						}}
 					>
@@ -46,7 +47,8 @@ export default function MeasurementSummary({
 							transformation={{
 								xOffset: 405,
 								yOffset: 30,
-								scaleFactor: 0.039
+								scaleFactor: 0.039,
+								targetWidth: 800
 							}}
 							configObject={{
 								radius: 10,
