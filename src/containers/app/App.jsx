@@ -12,7 +12,7 @@ import NotFound from "../../components/notfound/NotFound";
 import Projects from "../../components/projects/Projects";
 import Layout from "../layout/Layout";
 import Project from "../../components/projects/Project";
-import ImportExportContainer from "../importexport/ImportExport";
+import ImportExportContainer from "../importexport/ImportExportContainer";
 
 type Prop = {};
 

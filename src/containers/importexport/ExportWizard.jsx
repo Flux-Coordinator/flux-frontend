@@ -1,28 +1,25 @@
 // @flow
 import * as React from "react";
-import Button from "grommet/components/Button";
 import axios, { CancelToken, CancelTokenSource } from "axios";
 
 import Project from "./../../models/Project";
-import Room from "./../../models/Room";
-import Measurement from "./../../models/Measurement";
 import SelectProjectsStep from "./wizard/SelectProjectsStep";
 import SelectRoomsStep from "./wizard/SelectRoomsStep";
 import SelectMeasurementsStep from "./wizard/SelectMeasurementsStep";
 
 type Props = {};
 
+export type StepProps = {
+	onNext: (data: Project[]) => void,
+	projects: Project[],
+	isLoading?: boolean
+};
+
 type State = {
 	currentStep: number,
 	steps: React.ComponentType<StepProps>[],
 	projects: Project[],
 	isLoading: boolean
-};
-
-export type StepProps = {
-	onNext: (data: Project[]) => void,
-	projects: Project[],
-	isLoading?: boolean
 };
 
 export default class ExportWizard extends React.Component<Props, State> {

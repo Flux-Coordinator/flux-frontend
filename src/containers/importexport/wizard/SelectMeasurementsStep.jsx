@@ -1,6 +1,5 @@
 // @flow
 import * as React from "react";
-import Button from "grommet/components/Button";
 
 import WizardStep from "./WizardStep";
 import Project from "./../../../models/Project";
