@@ -31,10 +31,6 @@ export default class SelectMeasurementsStep extends React.Component<
 		projects: []
 	};
 
-	onNext = () => {
-		this.props.onNext(this.state.returnData);
-	};
-
 	getMeasurementsOfRoom = (
 		data: Project[],
 		projectId: ?number,
@@ -42,47 +38,51 @@ export default class SelectMeasurementsStep extends React.Component<
 	) => {
 		const foundProjectInProps = data.find(p => p.projectId === projectId);
 		const foundRoomInProps = foundProjectInProps
-			? foundProjectInProps.rooms.find(r => (r.roomId = roomId))
+			? foundProjectInProps.rooms.find(r => r.roomId === roomId)
 			: null;
 
 		return foundRoomInProps ? foundRoomInProps.measurements : null;
 	};
 
 	onSelect = (selected: number | number[], project: Project, room: Room) => {
-		const foundProjectInState = this.state.projects.find(
-			p => p.projectId === project.projectId
-		);
-		const foundRoomInState = foundProjectInState
-			? foundProjectInState.rooms.find(r => (r.roomId = room.roomId))
-			: null;
+		this.setState(prevState => {
+			const foundProjectInState = prevState.projects.find(
+				p => p.projectId === project.projectId
+			);
+			const foundRoomInState = foundProjectInState
+				? foundProjectInState.rooms.find(r => r.roomId === room.roomId)
+				: null;
 
-		const allMeasurements = this.getMeasurementsOfRoom(
-			this.props.projects,
-			project.projectId,
-			room.roomId
-		);
-		const selectedMeasurements = getItemsFromArrayByIndex(
-			allMeasurements,
-			selected
-		);
+			const allMeasurements = this.getMeasurementsOfRoom(
+				this.props.projects,
+				project.projectId,
+				room.roomId
+			);
+			const selectedMeasurements = getItemsFromArrayByIndex(
+				allMeasurements,
+				selected
+			);
 
-		if (foundRoomInState) {
-			foundRoomInState.measurements = (selectedMeasurements: any);
-		} else {
-			let projectInState: Project;
-			if (!foundProjectInState) {
-				projectInState = Project.fromObject(Object.assign({}, project));
-				projectInState.rooms = [];
-				this.state.projects.push(projectInState);
+			if (foundRoomInState) {
+				foundRoomInState.measurements = (selectedMeasurements: any);
 			} else {
-				projectInState = foundProjectInState;
+				let projectInState: Project;
+				if (!foundProjectInState) {
+					projectInState = Project.fromObject(Object.assign({}, project));
+					projectInState.rooms = [];
+					prevState.projects.push(projectInState);
+				} else {
+					projectInState = foundProjectInState;
+				}
+
+				const newRoomForState = Room.fromObject(Object.assign({}, room));
+
+				newRoomForState.measurements = (selectedMeasurements: any);
+				projectInState.rooms.push(newRoomForState);
 			}
 
-			const newRoomForState = Room.fromObject(Object.assign({}, room));
-
-			newRoomForState.measurements = (selectedMeasurements: any);
-			projectInState.rooms.push(newRoomForState);
-		}
+			return prevState;
+		});
 	};
 
 	RenderProject = (project: Project) => {
