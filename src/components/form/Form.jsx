@@ -9,12 +9,19 @@ import Button from "grommet/components/Button";
 
 type Props = {
 	heading: React.Node,
-	children: React.Node
+	children: React.Node,
+	onSubmit: () => void
 };
 
-export default function Form({ heading, children }: Props) {
+export default function Form({ heading, children, onSubmit }: Props) {
 	return (
-		<GrommetForm pad="medium">
+		<GrommetForm
+			pad="medium"
+			onSubmit={event => {
+				event.preventDefault();
+				onSubmit();
+			}}
+		>
 			<Header justify="between">
 				<Heading tag="h2" margin="none" pad="medium">
 					{heading}

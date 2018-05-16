@@ -12,41 +12,52 @@ import ItemsList from "./../list/ItemsList";
 import Project from "../../models/Project";
 import AddProjectButton from "./AddProjectButton";
 import AnchorProjectItemRenderer from "./AnchorProjectItemRenderer";
+import Toast from "./../toast/Toast";
+
+import type { ToastMetadata } from "./../toast/Toast";
 
 type Props = {
 	projects: Project[],
 	loading: boolean
 };
 
-export default function Projects({ projects, loading }: Props) {
-	return (
-		<ContentBox heading="Projekte">
-			<Section>
-				<Header size="small">
-					<Title>Alle Projekte</Title>
-					<Box flex justify="end" direction="row">
-						<Search
-							inline
-							fill
-							iconAlign="start"
-							size="medium"
-							placeholder="Projekte suchen"
-						/>
-					</Box>
-				</Header>
-			</Section>
-			<Section>
-				<Header size="small">
-					<Heading tag="h3">Projekte</Heading>
-					<AddProjectButton />
-				</Header>
-				<ItemsList
-					items={projects}
-					keyFunc={project => project.projectId}
-					loading={loading}
-					ItemRenderer={AnchorProjectItemRenderer}
-				/>
-			</Section>
-		</ContentBox>
-	);
+type State = {
+	toast?: ToastMetadata
+};
+
+// export default function Projects({ projects, loading }: Props) {
+export default class Projects extends React.Component<Props, State> {
+	render() {
+		const { projects, loading } = this.props;
+		return (
+			<ContentBox heading="Projekte">
+				<Section>
+					<Header size="small">
+						<Title>Alle Projekte</Title>
+						<Box flex justify="end" direction="row">
+							<Search
+								inline
+								fill
+								iconAlign="start"
+								size="medium"
+								placeholder="Projekte suchen"
+							/>
+						</Box>
+					</Header>
+				</Section>
+				<Section>
+					<Header size="small">
+						<Heading tag="h3">Projekte</Heading>
+						<AddProjectButton />
+					</Header>
+					<ItemsList
+						items={projects}
+						keyFunc={project => project.projectId}
+						loading={loading}
+						ItemRenderer={AnchorProjectItemRenderer}
+					/>
+				</Section>
+			</ContentBox>
+		);
+	}
 }
