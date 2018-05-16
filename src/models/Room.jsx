@@ -11,7 +11,6 @@ type ConstructorType = {
 	xOffset: ?number,
 	yOffset: ?number,
 	scaleFactor: ?number,
-	targetWidth: ?number,
 	roomId: ?number
 };
 
@@ -33,7 +32,6 @@ export default class Room {
 		xOffset: ?number,
 		yOffset: ?number,
 		scaleFactor: ?number,
-		targetWidth: ?number,
 		roomId: ?number
 	) {
 		this.name = name;
@@ -41,12 +39,7 @@ export default class Room {
 		this.measurements = measurements;
 		this.floorPlan = floorPlan;
 		this.floorSpace = floorSpace;
-		this.transformation = new Transformation(
-			xOffset,
-			yOffset,
-			scaleFactor,
-			targetWidth
-		);
+		this.transformation = new Transformation(xOffset, yOffset, scaleFactor);
 		this.roomId = roomId;
 	}
 
@@ -59,7 +52,6 @@ export default class Room {
 		xOffset,
 		yOffset,
 		scaleFactor,
-		targetWidth,
 		roomId
 	}: ConstructorType) {
 		const typedMeasurements: Measurement[] = [];
@@ -78,7 +70,6 @@ export default class Room {
 			xOffset,
 			yOffset,
 			scaleFactor,
-			targetWidth,
 			roomId
 		);
 	}
