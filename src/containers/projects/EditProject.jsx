@@ -42,8 +42,8 @@ export default class EditProject extends React.Component<Props, State> {
 		});
 	};
 
-	onTitleChanged = (event: any) => {
-		const target = event.target;
+	onTitleChanged = (event: SyntheticEvent<HTMLInputElement>) => {
+		const target = event.currentTarget;
 		const value = target.value;
 
 		this.setState(prevState => {
