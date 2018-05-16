@@ -1,5 +1,8 @@
 // @flow
 import * as React from "react";
+import GrommetForm from "grommet/components/Form";
+import FormField from "grommet/components/FormField";
+import FormFields from "grommet/components/FormFields";
 import Header from "grommet/components/Header";
 import Heading from "grommet/components/Heading";
 import Box from "grommet/components/Box";
@@ -105,31 +108,36 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 									blur: 0.75
 								}}
 							/>
-							<form>
-								<label>
-									Skalierungsfaktor:{" "}
-									<NumberInput
-										name={"scaleFactor"}
-										value={this.state.transformation.scaleFactor}
-										step={0.01}
-										onChange={this.handleTransformationChange}
-									/>
-									Horizontaler Versatz:{" "}
-									<NumberInput
-										name={"xOffset"}
-										value={this.state.transformation.xOffset}
-										step={5}
-										onChange={this.handleTransformationChange}
-									/>
-									Vertikaler Versatz:{" "}
-									<NumberInput
-										name={"yOffset"}
-										value={this.state.transformation.yOffset}
-										step={5}
-										onChange={this.handleTransformationChange}
-									/>
-								</label>
-							</form>
+							<GrommetForm pad="medium">
+								<FormFields>
+									<fieldset>
+										<FormField label="Skalierungsfaktor">
+											<NumberInput
+												name={"scaleFactor"}
+												value={this.state.transformation.scaleFactor}
+												step={0.01}
+												onChange={this.handleTransformationChange}
+											/>
+										</FormField>
+										<FormField label="Horizontaler Versatz">
+											<NumberInput
+												name={"xOffset"}
+												value={this.state.transformation.xOffset}
+												step={5}
+												onChange={this.handleTransformationChange}
+											/>
+										</FormField>
+										<FormField label="Vertikaler Versatz">
+											<NumberInput
+												name={"yOffset"}
+												value={this.state.transformation.yOffset}
+												step={5}
+												onChange={this.handleTransformationChange}
+											/>
+										</FormField>
+									</fieldset>
+								</FormFields>
+							</GrommetForm>
 						</div>
 					)}
 				</Box>
