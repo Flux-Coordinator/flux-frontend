@@ -40,13 +40,14 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 
 	state = {
 		container: {
-			height: 0,
-			width: 0
+			height: 1,
+			width: 1
 		}
 	};
 
 	heatmap: Heatmap;
 	divElement: ?HTMLDivElement;
+	imgElement: ?HTMLImageElement;
 	setData: (ReadingModel[]) => void;
 	setConfig: ConfigObject => void;
 	setContainerState: () => void;
@@ -75,14 +76,12 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	}
 
 	componentDidUpdate(prevProps: Props, prevState: State) {
-		console.log("heatmap update");
 		if (
 			this.divElement != null &&
 			this.divElement.clientWidth !== prevState.container.width
 		) {
 			this.updateFromContainerState();
 		} else {
-			console.log("setData");
 			this.setData(this.props.readings);
 		}
 		this.setConfig(this.props.configObject);
@@ -94,11 +93,17 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	}
 
 	setContainerState() {
-		if (this.divElement !== undefined && this.divElement !== null) {
+		if (this.divElement != null) {
 			this.setState({
 				container: {
 					height: this.divElement.clientHeight,
-					width: this.divElement.clientWidth
+					width: this.divElement.clientWidth,
+					originalHeight: this.imgElement
+						? this.imgElement.naturalHeight
+						: undefined,
+					originalWidth: this.imgElement
+						? this.imgElement.naturalWidth
+						: undefined
 				}
 			});
 		}
@@ -134,11 +139,11 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		transformation: Transformation
 	): HeatmapDataPoint[] {
 		return readings.reduce(function(transformedReadings, reading) {
-			const targetWidth =
-				transformation.targetWidth != null
-					? transformation.targetWidth
+			const originalWidth =
+				container.originalWidth != null
+					? container.originalWidth
 					: container.width;
-			const elementScaleFactor = container.width / targetWidth;
+			const elementScaleFactor = container.width / originalWidth;
 			const x = Math.round(
 				(reading.xposition * transformation.scaleFactor +
 					transformation.xOffset) *
@@ -166,6 +171,8 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		return (
 			<div ref={divElement => (this.divElement = divElement)}>
 				<img
+					onLoad={this.setContainerState}
+					ref={imgElement => (this.imgElement = imgElement)}
 					src={this.props.backgroundImage}
 					alt={"heatmap"}
 					style={{ display: "block", maxWidth: "100%" }}

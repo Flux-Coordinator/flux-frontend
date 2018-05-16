@@ -16,5 +16,7 @@ export type HeatmapDataPoint = {
 
 export type Container = {
 	height: number,
-	width: number
+	width: number,
+	originalHeight?: number,
+	originalWidth?: number
 };
