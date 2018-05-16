@@ -13,12 +13,16 @@ import Projects from "../../components/projects/Projects";
 import Layout from "../layout/Layout";
 import Project from "../../components/projects/Project";
 import ImportExportContainer from "../importexport/ImportExportContainer";
+import EditProject from "./../../containers/projects/EditProject";
+
+import type { ToastMetadata } from "./../../components/toast/Toast";
 
 type Prop = {};
 
 type State = {
 	projects: ProjectModel[],
-	loading: boolean
+	loading: boolean,
+	toast?: ToastMetadata
 };
 
 export default class App extends React.Component<Prop, State> {
@@ -113,6 +117,8 @@ export default class App extends React.Component<Prop, State> {
 					<Router>
 						<Layout projects={this.state.projects}>
 							<Switch>
+								<Route path="/editProject/:projectId" component={EditProject} />
+								<Route path="/editProject" component={EditProject} />
 								<Route
 									path="/projects/:projectId"
 									exact
