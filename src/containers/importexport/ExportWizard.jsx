@@ -4,7 +4,6 @@ import axios, { CancelToken, CancelTokenSource } from "axios";
 import fileDownload from "js-file-download";
 
 import Project from "./../../models/Project";
-import Measurement from "./../../models/Measurement";
 import SelectProjectsStep from "./wizard/SelectProjectsStep";
 import SelectRoomsStep from "./wizard/SelectRoomsStep";
 import SelectMeasurementsStep from "./wizard/SelectMeasurementsStep";
