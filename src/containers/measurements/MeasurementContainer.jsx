@@ -3,9 +3,11 @@ import axios, { CancelToken } from "axios";
 
 import MeasurementSummary from "../../components/measurements/MeasurementSummary";
 import ReadingModel from "../../models/Reading";
+import RoomModel from "../../models/Room";
 import MeasurementModel from "../../models/Measurement";
 
 type Props = {
+	room: RoomModel,
 	measurement: MeasurementModel
 };
 
@@ -48,7 +50,15 @@ export default class MeasurementContainer extends React.Component<
 			})
 			.then(result => {
 				const tmp: ReadingModel[] = result.data.readings.map(
-					reading => new ReadingModel(reading.readingId, reading.luxValue, reading.timestamp, reading.xposition, reading.yposition, reading.zposition)
+					reading =>
+						new ReadingModel(
+							reading.readingId,
+							reading.luxValue,
+							reading.timestamp,
+							reading.xposition,
+							reading.yposition,
+							reading.zposition
+						)
 				);
 				this.setState(({ readings: tmp }: State));
 			})
@@ -92,6 +102,7 @@ export default class MeasurementContainer extends React.Component<
 	render() {
 		return (
 			<MeasurementSummary
+				room={this.props.room}
 				currentMeasurement={this.props.measurement}
 				onStartMeasurement={this.startMeasurement}
 				readings={this.state.readings}

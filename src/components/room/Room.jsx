@@ -29,18 +29,16 @@ export default function Room({ match, room, parentProject }: Props) {
 						{room.name}
 					</Heading>
 				</Header>
-                <Box>
-                    <Header size="small">
-                        <Heading tag="h4">{room.description}</Heading>
-                    </Header>
-                    <div>Name: {room.name ? room.name : "Raum hat keinen Namen"}</div>
-                    <div>
-                        Länge: {room.length ? room.length : "Keine Länge vorhanden"}
-                    </div>
-                    <div>
-                        Breite: {room.width ? room.width : "Keine Breite vorhanden"}
-                    </div>
-                </Box>
+				<Box>
+					<Header size="small">
+						<Heading tag="h4">{room.description}</Heading>
+					</Header>
+					<div>Name: {room.name ? room.name : "Raum hat keinen Namen"}</div>
+					<div>
+						Fläche:{" "}
+						{room.floorSpace ? room.floorSpace : "Keine Fläche definiert"}
+					</div>
+				</Box>
 			</Section>
 			<Route
 				path={`${match.url}/measurements/:measurementId`}
@@ -71,7 +69,9 @@ function ShowMeasurement({ room, match }) {
 			measurement =>
 				measurement.measurementId === parseInt(match.params.measurementId, 10)
 		);
-		return <MeasurementContainer measurement={currentMeasurement} />;
+		return (
+			<MeasurementContainer measurement={currentMeasurement} room={room} />
+		);
 	}
 	return null;
 }

@@ -1,12 +1,16 @@
 // @flow
 import Measurement from "./Measurement";
+import Transformation from "./Transformation";
 
 type ConstructorType = {
 	name: string,
 	description: string,
 	measurements: Measurement[] | any,
-	length: number,
-	width: number,
+	floorPlan: ?string,
+	floorSpace: ?number,
+	xOffset: ?number,
+	yOffset: ?number,
+	scaleFactor: ?number,
 	roomId: ?number
 };
 
@@ -15,22 +19,27 @@ export default class Room {
 	name: string;
 	description: string;
 	measurements: Measurement[];
-	length: number;
-	width: number;
+	floorPlan: ?string;
+	floorSpace: ?number;
+	transformation: Transformation;
 
 	constructor(
 		name: string,
 		description: string,
-		measurements: Measurement[],
-		length: number,
-		width: number,
+		measurements: Measurement[] | any,
+		floorPlan: ?string,
+		floorSpace: ?number,
+		xOffset: ?number,
+		yOffset: ?number,
+		scaleFactor: ?number,
 		roomId: ?number
 	) {
 		this.name = name;
 		this.description = description;
 		this.measurements = measurements;
-		this.length = length;
-		this.width = width;
+		this.floorPlan = floorPlan;
+		this.floorSpace = floorSpace;
+		this.transformation = new Transformation(xOffset, yOffset, scaleFactor);
 		this.roomId = roomId;
 	}
 
@@ -38,8 +47,11 @@ export default class Room {
 		name,
 		description,
 		measurements,
-		length,
-		width,
+		floorPlan,
+		floorSpace,
+		xOffset,
+		yOffset,
+		scaleFactor,
 		roomId
 	}: ConstructorType) {
 		const typedMeasurements: Measurement[] = [];
@@ -53,8 +65,11 @@ export default class Room {
 			name,
 			description,
 			typedMeasurements,
-			length,
-			width,
+			floorPlan,
+			floorSpace,
+			xOffset,
+			yOffset,
+			scaleFactor,
 			roomId
 		);
 	}

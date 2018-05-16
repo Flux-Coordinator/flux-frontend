@@ -8,17 +8,18 @@
 		"cross-env": "^5.1.4",
 		"grommet": "^1.10.1",
 		"grommet-addons": "^0.6.0",
+		"heatmapjs": "git+https://github.com/JonathanWi/heatmap.js.git",
 		"js-file-download": "^0.4.1",
 		"node-sass-chokidar": "^1.2.0",
 		"npm-run-all": "^4.1.2",
 		"react": "^16.3.1",
 		"react-dom": "^16.3.1",
 		"react-dropzone": "^4.2.9",
+		"react-resize-detector": "^2.3.0",
 		"react-router": "^4.2.0",
 		"react-router-dom": "^4.2.2",
 		"react-scripts": "^1.1.4",
-		"typeface-roboto": "^0.0.54",
-		"heatmapjs": "git+https://github.com/JonathanWi/heatmap.js.git"
+		"typeface-roboto": "^0.0.54"
 	},
 	"scripts": {
 		"build-css":

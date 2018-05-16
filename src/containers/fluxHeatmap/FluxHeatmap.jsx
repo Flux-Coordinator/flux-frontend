@@ -3,31 +3,13 @@ import * as React from "react";
 import ReactDOM from "react-dom";
 import Heatmap from "heatmapjs/build/heatmap.js";
 import ReadingModel from "../../models/Reading";
-
-type ConfigObject = {
-	container?: ?Element | Text,
-	radius: ?number,
-	maxOpacity: ?number,
-	minOpacity: ?number,
-	blur: ?number
-};
-
-type HeatmapDataPoint = {
-	x: number,
-	y: number,
-	value: number
-};
-
-type Container = {
-	height: number,
-	width: number
-};
-
-type Transformation = {
-	xOffset: number,
-	yOffset: number,
-	scaleFactor: number
-};
+import ReactResizeDetector from "react-resize-detector";
+import Transformation from "../../models/Transformation";
+import type {
+	ConfigObject,
+	HeatmapDataPoint,
+	Container
+} from "../../types/Heatmap";
 
 type Props = {
 	readings: ReadingModel[],
@@ -53,39 +35,33 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			minOpacity: 0,
 			blur: 0.75
 		},
-		transformation: {
-			xOffset: 0,
-			yOffset: 0,
-			scaleFactor: 1
-		}
+		transformation: new Transformation()
 	};
 
 	state = {
 		container: {
-			height: 0,
-			width: 0
+			height: 1,
+			width: 1
 		}
 	};
 
 	heatmap: Heatmap;
 	divElement: ?HTMLDivElement;
+	imgElement: ?HTMLImageElement;
 	setData: (ReadingModel[]) => void;
+	setConfig: ConfigObject => void;
+	setContainerState: () => void;
+	updateFromContainerState: () => void;
 
 	constructor(props: Props) {
 		super(props);
 		this.setData = this.setData.bind(this);
+		this.setConfig = this.setConfig.bind(this);
+		this.setContainerState = this.setContainerState.bind(this);
+		this.updateFromContainerState = this.updateFromContainerState.bind(this);
 	}
 
 	componentDidMount() {
-		if (this.divElement !== undefined && this.divElement !== null) {
-			this.setState({
-				container: {
-					height: this.divElement.clientHeight,
-					width: this.divElement.clientWidth
-				}
-			});
-		}
-
 		const configObject: ConfigObject = Object.assign(
 			{},
 			{
@@ -96,24 +72,41 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 
 		this.heatmap = Heatmap.create(configObject);
 
-		this.setData(this.props.readings);
+		this.updateFromContainerState();
 	}
 
 	componentDidUpdate(prevProps: Props, prevState: State) {
-		this.setData(this.props.readings);
+		if (
+			this.divElement != null &&
+			this.divElement.clientWidth !== prevState.container.width
+		) {
+			this.updateFromContainerState();
+		} else {
+			this.setData(this.props.readings);
+		}
 		this.setConfig(this.props.configObject);
 	}
 
-	shouldComponentUpdate(nextProps: Props, nextState: State) {
-		return (
-			this.props.readings.length !== nextProps.readings.length ||
-			this.props.configObject.radius !== nextProps.configObject.radius ||
-			this.props.configObject.maxOpacity !==
-				nextProps.configObject.maxOpacity ||
-			this.props.configObject.minOpacity !==
-				nextProps.configObject.minOpacity ||
-			this.props.configObject.blur !== nextProps.configObject.blur
-		);
+	updateFromContainerState() {
+		this.setContainerState();
+		this.setData(this.props.readings);
+	}
+
+	setContainerState() {
+		if (this.divElement != null) {
+			this.setState({
+				container: {
+					height: this.divElement.clientHeight,
+					width: this.divElement.clientWidth,
+					originalHeight: this.imgElement
+						? this.imgElement.naturalHeight
+						: undefined,
+					originalWidth: this.imgElement
+						? this.imgElement.naturalWidth
+						: undefined
+				}
+			});
+		}
 	}
 
 	setData(readings: ReadingModel[]) {
@@ -125,6 +118,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			);
 			const max = this.computeMax(dataPoints);
 			this.heatmap.setData({
+				min: 0,
 				max: max,
 				data: dataPoints
 			});
@@ -145,14 +139,22 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		transformation: Transformation
 	): HeatmapDataPoint[] {
 		return readings.reduce(function(transformedReadings, reading) {
+			const originalWidth =
+				container.originalWidth != null
+					? container.originalWidth
+					: container.width;
+			const elementScaleFactor = container.width / originalWidth;
 			const x = Math.round(
-				reading.xposition * transformation.scaleFactor + transformation.xOffset
+				(reading.xposition * transformation.scaleFactor +
+					transformation.xOffset) *
+					elementScaleFactor
 			);
 			const y =
 				container.height -
 				Math.round(
-					reading.yposition * transformation.scaleFactor +
-						transformation.yOffset
+					(reading.yposition * transformation.scaleFactor +
+						transformation.yOffset) *
+						elementScaleFactor
 				);
 			if (x >= 0 && y >= 0 && x <= container.width && y <= container.height) {
 				transformedReadings.push({
@@ -167,14 +169,19 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 
 	render() {
 		return (
-			<div
-				ref={divElement => (this.divElement = divElement)}
-				style={{ float: "left" }}
-			>
+			<div ref={divElement => (this.divElement = divElement)}>
 				<img
+					onLoad={this.setContainerState}
+					ref={imgElement => (this.imgElement = imgElement)}
 					src={this.props.backgroundImage}
 					alt={"heatmap"}
 					style={{ display: "block", maxWidth: "100%" }}
+				/>
+				<ReactResizeDetector
+					skipOnMount
+					handleWidth
+					handleHeight
+					onResize={this.updateFromContainerState}
 				/>
 			</div>
 		);
