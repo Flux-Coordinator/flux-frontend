@@ -43,7 +43,10 @@ export default class LoginContainer extends React.Component<Props, State> {
 				},
 				{ cancelToken: this.source.token }
 			)
-			.then(result => this.setState({ shouldRedirect: true }))
+			.then(result => {
+				localStorage.setItem("TOKEN", result.data);
+				this.setState({ shouldRedirect: true });
+			})
 			.catch(error => {
 				if (!axios.isCancel(error)) {
 					// TODO: What do we want to do if there was an error fetching the projects?
