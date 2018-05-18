@@ -10,6 +10,7 @@ import type {
 	HeatmapDataPoint,
 	Container
 } from "../../types/Heatmap";
+import Box from "grommet/components/Box";
 
 type Props = {
 	readings: ReadingModel[],
@@ -76,8 +77,10 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	}
 
 	componentDidUpdate(prevProps: Props, prevState: State) {
-		this.setData(this.props.readings);
+		console.log("update");
+		console.log(this.props.configObject);
 		this.setConfig(this.props.configObject);
+		this.setData(this.props.readings);
 	}
 
 	setContainerState() {
@@ -150,7 +153,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 
 	render() {
 		return (
-			<div>
+			<Box size="xlarge">
 				<img
 					onLoad={this.setContainerState}
 					ref={imgElement => (this.imgElement = imgElement)}
@@ -164,7 +167,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 					handleHeight
 					onResize={this.setContainerState}
 				/>
-			</div>
+			</Box>
 		);
 	}
 }
