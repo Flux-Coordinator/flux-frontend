@@ -14,6 +14,7 @@ import Layout from "../layout/Layout";
 import Project from "../../components/projects/Project";
 import ImportExportContainer from "../importexport/ImportExportContainer";
 import EditProject from "./../../containers/projects/EditProject";
+import Login from "../login/LoginContainer";
 
 import type { ToastMetadata } from "./../../components/toast/Toast";
 
@@ -134,6 +135,7 @@ export default class App extends React.Component<Prop, State> {
 									component={this.renderRoomPage}
 								/>
 								<Route path="/import" exact component={ImportExportContainer} />
+								<Route path="/login" component={Login} />
 								<Route path="/" exact component={Dashboard} />
 								<Route path="/" component={NotFound} />
 							</Switch>
