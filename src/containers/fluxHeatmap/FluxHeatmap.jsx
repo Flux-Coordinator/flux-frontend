@@ -67,15 +67,15 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		this.setData(this.props.readings);
 	}
 
-	createHeatmap(currentConfigObject: ConfigObject) {
-		const configObject: ConfigObject = Object.assign(
+	createHeatmap(configObject: ConfigObject) {
+		const extendedConfigObject: ConfigObject = Object.assign(
 			{},
 			{
 				container: ReactDOM.findDOMNode(this)
 			},
-			currentConfigObject
+			configObject
 		);
-		this.heatmap = Heatmap.create(configObject);
+		this.heatmap = Heatmap.create(extendedConfigObject);
 	}
 
 	destroyHeatmap(): HeatmapDataPoint[] {
