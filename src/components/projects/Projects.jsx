@@ -12,7 +12,6 @@ import ItemsList from "./../list/ItemsList";
 import Project from "../../models/Project";
 import AddProjectButton from "./AddProjectButton";
 import AnchorProjectItemRenderer from "./AnchorProjectItemRenderer";
-import Toast from "./../toast/Toast";
 
 import type { ToastMetadata } from "./../toast/Toast";
 

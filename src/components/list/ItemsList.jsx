@@ -1,5 +1,6 @@
 // @flow
 import * as React from "react";
+import Box from "grommet/components/Box";
 import List from "grommet/components/List";
 import ListItem from "grommet/components/ListItem";
 import ListPlaceholder from "grommet-addons/components/ListPlaceholder";
@@ -37,7 +38,11 @@ export default function ItemsList<T>({
 	listItemProperties
 }: Props<T>) {
 	if (loading) {
-		return <Spinning size="large" />;
+		return (
+			<Box align="center" full="vertical" alignContent="center">
+				<Spinning size="large" />
+			</Box>
+		);
 	}
 
 	const unfilteredTotal = items ? items.length : 0;
