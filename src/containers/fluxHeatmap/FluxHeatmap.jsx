@@ -63,22 +63,32 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	}
 
 	componentDidMount() {
+		this.createHeatmap(this.props.configObject);
+		this.setData(this.props.readings);
+	}
+
+	createHeatmap(currentConfigObject: ConfigObject) {
 		const configObject: ConfigObject = Object.assign(
 			{},
 			{
 				container: ReactDOM.findDOMNode(this)
 			},
-			this.props.configObject
+			currentConfigObject
 		);
-
 		this.heatmap = Heatmap.create(configObject);
+	}
 
-		this.setData(this.props.readings);
+	destroyHeatmap(): HeatmapDataPoint[] {
+		// destroy function not supported from Heatmap.js, but needed due to a bug on config change:
+		// https://github.com/pa7/heatmap.js/issues/209
+		const currentData = this.heatmap.getData();
+		let canvas = this.heatmap._renderer.canvas;
+		canvas.remove();
+		this.heatmap = null;
+		return currentData;
 	}
 
 	componentDidUpdate(prevProps: Props, prevState: State) {
-		console.log("update");
-		console.log(this.props.configObject);
 		this.setConfig(this.props.configObject);
 		this.setData(this.props.readings);
 	}
@@ -114,7 +124,9 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	}
 
 	setConfig(configObject: ConfigObject) {
-		this.heatmap.configure(configObject);
+		const currentData = this.destroyHeatmap();
+		this.createHeatmap(configObject);
+		this.heatmap.setData(currentData);
 	}
 
 	computeMax(dataPoints: HeatmapDataPoint[]) {
