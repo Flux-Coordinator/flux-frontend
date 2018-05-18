@@ -14,7 +14,7 @@ export default class Transformation {
 	constructor(xOffset: ?number, yOffset: ?number, scaleFactor: ?number) {
 		this.xOffset = xOffset != null ? xOffset : 0;
 		this.yOffset = yOffset != null ? yOffset : 0;
-		this.scaleFactor = scaleFactor != null ? scaleFactor : 0;
+		this.scaleFactor = scaleFactor != null ? scaleFactor : 1;
 	}
 
 	static fromObject({ xOffset, yOffset, scaleFactor }: ConstructorType) {
