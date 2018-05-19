@@ -4,10 +4,11 @@ import { shallow } from "enzyme";
 
 import TransformationForm from "./TransformationForm";
 import Transformation from "../../models/Transformation";
+import type { allInputTypes } from "../../utils/InputHandler";
 
 describe("<TransformationForm />", () => {
 	const onSubmit = () => {};
-	const onChange = (event: SyntheticEvent<HTMLInputElement>) => {};
+	const onChange = (key: string, value: allInputTypes) => {};
 
 	it("should render", () => {
 		const wrapper = shallow(
