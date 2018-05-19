@@ -43,17 +43,6 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 		transformation: new Transformation()
 	};
 
-	handleTransformationChange: () => void;
-	handleHeatmapConfigChange: () => void;
-
-	constructor(props: Props) {
-		super(props);
-		this.handleTransformationChange = this.handleTransformationChange.bind(
-			this
-		);
-		this.handleHeatmapConfigChange = this.handleHeatmapConfigChange.bind(this);
-	}
-
 	componentDidMount() {
 		this.setState({
 			transformation: this.props.room.transformation
