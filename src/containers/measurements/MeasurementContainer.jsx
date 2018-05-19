@@ -14,7 +14,8 @@ type Props = {
 
 type State = {
 	loading: boolean,
-	readings: ?(ReadingModel[])
+	readings?: ReadingModel[],
+	currentMeasurement: MeasurementModel
 };
 
 export default class MeasurementContainer extends React.Component<
@@ -25,7 +26,7 @@ export default class MeasurementContainer extends React.Component<
 
 	state = {
 		loading: false,
-		readings: []
+		currentMeasurement: this.props.measurement
 	};
 
 	getReadings = () => {
@@ -37,18 +38,25 @@ export default class MeasurementContainer extends React.Component<
 				const typedReadings: ReadingModel[] = result.data.readings.map(
 					reading => ReadingModel.fromObject(reading)
 				);
-				this.setState({ readings: typedReadings });
+				const currentMeasurement = this.state.currentMeasurement;
+				currentMeasurement.readings = typedReadings;
+				this.setState({ currentMeasurement: currentMeasurement });
 			})
 			.catch(error => {
 				if (!axios.isCancel(error)) {
-					this.setState(({ readings: [], loading: false }: State));
+					this.setState(
+						({
+							currentMeasurement: this.props.measurement,
+							loading: false
+						}: State)
+					);
 				}
 			});
 	};
 
 	startMeasurement = () => {
 		axios
-			.put("${/measurements/active/" + this.props.measurement.measurementId, {
+			.put("/measurements/active/" + this.props.measurement.measurementId, {
 				cancelToken: this.source.token
 			})
 			.then(
@@ -75,9 +83,8 @@ export default class MeasurementContainer extends React.Component<
 		return (
 			<MeasurementSummary
 				room={this.props.room}
-				currentMeasurement={this.props.measurement}
+				currentMeasurement={this.state.currentMeasurement}
 				onStartMeasurement={this.startMeasurement}
-				readings={this.state.readings}
 			/>
 		);
 	}

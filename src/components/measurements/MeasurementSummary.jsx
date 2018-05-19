@@ -4,12 +4,12 @@ import Header from "grommet/components/Header";
 import Heading from "grommet/components/Heading";
 import Box from "grommet/components/Box";
 import Section from "grommet/components/Section";
-import Paragraph from "grommet/components/Paragraph";
 import Button from "grommet/components/Button";
+import PlayIcon from "grommet/components/icons/base/Play";
+import PauseIcon from "grommet/components/icons/base/Pause";
 
 import RoomModel from "../../models/Room";
 import MeasurementModel from "../../models/Measurement";
-import ReadingModel from "../../models/Reading";
 import Transformation from "../../models/Transformation";
 import FluxHeatmap from "../../containers/fluxHeatmap/FluxHeatmap";
 import type { ConfigObject } from "../../types/Heatmap";
@@ -20,8 +20,7 @@ import { EXAMPLE_IMAGE } from "../../images/ImagesBase64";
 type Props = {
 	room: RoomModel,
 	currentMeasurement: MeasurementModel,
-	onStartMeasurement: () => void,
-	readings: ?(ReadingModel[])
+	onStartMeasurement: () => void
 };
 
 type State = {
@@ -96,19 +95,29 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 	};
 
 	render() {
+		let icon: React.Node;
+		if (this.props.currentMeasurement.state === "RUNNING") {
+			icon = <PauseIcon colorIndex="warning" />;
+		} else {
+			icon = <PlayIcon colorIndex="ok" />;
+		}
+
 		return (
-			<Section>
+			<Section margin="none">
 				<Header size="small">
-					<Heading tag="h3">Aktuelle Messung</Heading>
+					<Heading margin="none" tag="h3">
+						Aktuelle Messung ({this.props.currentMeasurement.measurementId})
+					</Heading>
+					<Button icon={icon} onClick={this.props.onStartMeasurement} />
 				</Header>
 				<Box>
 					<Header size="small">
 						<Heading tag="h3">Grundriss</Heading>
 					</Header>
-					{this.props.readings && (
+					{this.props.currentMeasurement.readings && (
 						<Box direction="row">
 							<FluxHeatmap
-								readings={this.props.readings}
+								readings={this.props.currentMeasurement.readings}
 								backgroundImage={EXAMPLE_IMAGE}
 								transformation={this.state.transformation}
 								configObject={this.state.configObject}
@@ -128,17 +137,6 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 						</Box>
 					)}
 				</Box>
-				<Box>
-					<Paragraph>
-						Messung ID: {this.props.currentMeasurement.measurementId}
-					</Paragraph>
-					{this.props.readings && (
-						<Paragraph>
-							Anzahl Messungen: {this.props.readings.length}
-						</Paragraph>
-					)}
-				</Box>
-				<Button label="Start/Stopp" onClick={this.props.onStartMeasurement} />
 			</Section>
 		);
 	}
