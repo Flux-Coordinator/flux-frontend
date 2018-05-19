@@ -19,6 +19,7 @@ import TransformationForm from "../transformationForm/TransformationForm";
 import HeatmapConfigForm from "../heatmapConfigForm/HeatmapConfigForm";
 import { EXAMPLE_IMAGE } from "../../images/ImagesBase64";
 import HeatmapModeForm from "../heatmapModeForm/HeatmapModeForm";
+import type { allInputTypes } from "../../utils/InputHandler";
 
 type Props = {
 	room: RoomModel,
@@ -50,49 +51,28 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 		});
 	}
 
-	handleTransformationChange = (event: SyntheticEvent<HTMLInputElement>) => {
-		if (
-			event.currentTarget != null &&
-			event.currentTarget.name != null &&
-			event.currentTarget.value != null
-		) {
-			const { name, value } = event.currentTarget;
-			this.setState((prevState, props) => ({
-				transformation: Object.assign(prevState.transformation, {
-					[name]: parseFloat(value)
-				})
-			}));
-		}
+	handleTransformationChange = (key: string, value: allInputTypes) => {
+		this.setState((prevState, props) => ({
+			transformation: Object.assign(prevState.transformation, {
+				[key]: parseFloat(value)
+			})
+		}));
 	};
 
-	handleModeChange = (event: SyntheticEvent<HTMLInputElement>) => {
-		if (
-			event.currentTarget != null &&
-			event.currentTarget.name != null &&
-			event.currentTarget.checked != null
-		) {
-			const { name, checked } = event.currentTarget;
-			this.setState((prevState, props) => ({
-				configObject: Object.assign(prevState.configObject, {
-					[name]: checked
-				})
-			}));
-		}
+	handleModeChange = (key: string, value: allInputTypes) => {
+		this.setState((prevState, props) => ({
+			configObject: Object.assign(prevState.configObject, {
+				[key]: value
+			})
+		}));
 	};
 
-	handleHeatmapConfigChange = (event: SyntheticEvent<HTMLInputElement>) => {
-		if (
-			event.currentTarget != null &&
-			event.currentTarget.name != null &&
-			event.currentTarget.value != null
-		) {
-			const { name, value } = event.currentTarget;
-			this.setState((prevState, props) => ({
-				configObject: Object.assign(prevState.configObject, {
-					[name]: parseFloat(value)
-				})
-			}));
-		}
+	handleHeatmapConfigChange = (key: string, value: allInputTypes) => {
+		this.setState((prevState, props) => ({
+			configObject: Object.assign(prevState.configObject, {
+				[key]: parseFloat(value)
+			})
+		}));
 	};
 
 	onTransformationSubmit = () => {

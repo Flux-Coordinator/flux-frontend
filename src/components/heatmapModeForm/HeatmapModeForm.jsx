@@ -5,10 +5,12 @@ import FormField from "grommet/components/FormField";
 import FormFields from "grommet/components/FormFields";
 import CheckBox from "grommet/components/CheckBox";
 import type { ConfigObject } from "../../types/Heatmap";
+import { inputHandler } from "../../utils/InputHandler";
+import type { allInputTypes } from "../../utils/InputHandler";
 
 type Props = {
 	configObject: ConfigObject,
-	onChange: (event: SyntheticEvent<HTMLInputElement>) => void
+	onChange: (string, allInputTypes) => void
 };
 
 export default function HeatmapModeForm({
@@ -25,7 +27,7 @@ export default function HeatmapModeForm({
 							name={"fixedValue"}
 							toggle={true}
 							checked={configObject.fixedValue}
-							onChange={onChange}
+							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
 				</fieldset>

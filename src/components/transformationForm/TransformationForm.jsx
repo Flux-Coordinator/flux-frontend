@@ -5,11 +5,13 @@ import FormField from "grommet/components/FormField";
 import FormFields from "grommet/components/FormFields";
 import NumberInput from "grommet/components/NumberInput";
 import Transformation from "../../models/Transformation";
+import { inputHandler } from "../../utils/InputHandler";
+import type { allInputTypes } from "../../utils/InputHandler";
 
 type Props = {
 	transformation: Transformation,
 	onSubmit: () => void,
-	onChange: (event: SyntheticEvent<HTMLInputElement>) => void
+	onChange: (string, allInputTypes) => void
 };
 
 export default function TransformationForm({
@@ -26,7 +28,7 @@ export default function TransformationForm({
 							name={"scaleFactor"}
 							value={transformation.scaleFactor}
 							step={0.01}
-							onChange={onChange}
+							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
 					<FormField label="Horizontaler Versatz">
@@ -34,7 +36,7 @@ export default function TransformationForm({
 							name={"xOffset"}
 							value={transformation.xOffset}
 							step={5}
-							onChange={onChange}
+							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
 					<FormField label="Vertikaler Versatz">
@@ -42,7 +44,7 @@ export default function TransformationForm({
 							name={"yOffset"}
 							value={transformation.yOffset}
 							step={5}
-							onChange={onChange}
+							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
 				</fieldset>
