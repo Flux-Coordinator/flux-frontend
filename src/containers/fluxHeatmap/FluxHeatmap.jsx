@@ -49,23 +49,13 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 
 	heatmap: Heatmap;
 	imgElement: ?HTMLImageElement;
-	setData: (ReadingModel[]) => void;
-	setConfig: ConfigObject => void;
-	setContainerState: () => void;
-
-	constructor(props: Props) {
-		super(props);
-		this.setData = this.setData.bind(this);
-		this.setConfig = this.setConfig.bind(this);
-		this.setContainerState = this.setContainerState.bind(this);
-	}
 
 	componentDidMount() {
 		this.createHeatmap(this.props.configObject);
 		this.setData(this.props.readings);
 	}
 
-	createHeatmap(configObject: ConfigObject) {
+	createHeatmap = (configObject: ConfigObject) => {
 		const extendedConfigObject: ConfigObject = Object.assign(
 			{},
 			{
@@ -74,24 +64,24 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			configObject
 		);
 		this.heatmap = Heatmap.create(extendedConfigObject);
-	}
+	};
 
-	destroyHeatmap(): HeatmapDataPoint[] {
+	destroyHeatmap = (): HeatmapDataPoint[] => {
 		// destroy function not supported from Heatmap.js, but needed due to a bug on config change:
 		// https://github.com/pa7/heatmap.js/issues/209
 		const currentData = this.heatmap.getData();
-		let canvas = this.heatmap._renderer.canvas;
+		const canvas = this.heatmap._renderer.canvas;
 		canvas.remove();
 		this.heatmap = null;
 		return currentData;
-	}
+	};
 
 	componentDidUpdate(prevProps: Props, prevState: State) {
 		this.setConfig(this.props.configObject);
 		this.setData(this.props.readings);
 	}
 
-	setContainerState() {
+	setContainerState = () => {
 		if (this.imgElement != null) {
 			this.setState({
 				container: {
@@ -103,9 +93,9 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 				}
 			});
 		}
-	}
+	};
 
-	setData(readings: ReadingModel[]) {
+	setData = (readings: ReadingModel[]) => {
 		if (readings.length > 0 && this.state.container.loaded) {
 			const dataPoints = this.transformData(
 				readings,
@@ -119,23 +109,23 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 				data: dataPoints
 			});
 		}
-	}
+	};
 
-	setConfig(configObject: ConfigObject) {
+	setConfig = (configObject: ConfigObject) => {
 		const currentData = this.destroyHeatmap();
 		this.createHeatmap(configObject);
 		this.heatmap.setData(currentData);
-	}
+	};
 
-	computeMax(dataPoints: HeatmapDataPoint[]) {
+	computeMax = (dataPoints: HeatmapDataPoint[]) => {
 		return Math.max(...dataPoints.map(d => d.value));
-	}
+	};
 
-	transformData(
+	transformData = (
 		readings: ReadingModel[],
 		container: Container,
 		transformation: Transformation
-	): HeatmapDataPoint[] {
+	): HeatmapDataPoint[] => {
 		return readings.reduce(function(transformedReadings, reading) {
 			const elementScaleFactor = container.width / container.originalWidth;
 			const x = Math.round(
@@ -159,7 +149,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			}
 			return transformedReadings;
 		}, []);
-	}
+	};
 
 	render() {
 		return (
