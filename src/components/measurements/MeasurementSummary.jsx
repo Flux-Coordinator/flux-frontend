@@ -18,6 +18,7 @@ import type { ConfigObject } from "../../types/Heatmap";
 import TransformationForm from "../transformationForm/TransformationForm";
 import HeatmapConfigForm from "../heatmapConfigForm/HeatmapConfigForm";
 import { EXAMPLE_IMAGE } from "../../images/ImagesBase64";
+import HeatmapModeForm from "../heatmapModeForm/HeatmapModeForm";
 
 type Props = {
 	room: RoomModel,
@@ -51,9 +52,9 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 
 	handleTransformationChange = (event: SyntheticEvent<HTMLInputElement>) => {
 		if (
-			event.currentTarget &&
-			event.currentTarget.name &&
-			event.currentTarget.value
+			event.currentTarget != null &&
+			event.currentTarget.name != null &&
+			event.currentTarget.value != null
 		) {
 			const { name, value } = event.currentTarget;
 			this.setState((prevState, props) => ({
@@ -64,11 +65,26 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 		}
 	};
 
+	handleModeChange = (event: SyntheticEvent<HTMLInputElement>) => {
+		if (
+			event.currentTarget != null &&
+			event.currentTarget.name != null &&
+			event.currentTarget.checked != null
+		) {
+			const { name, checked } = event.currentTarget;
+			this.setState((prevState, props) => ({
+				configObject: Object.assign(prevState.configObject, {
+					[name]: checked
+				})
+			}));
+		}
+	};
+
 	handleHeatmapConfigChange = (event: SyntheticEvent<HTMLInputElement>) => {
 		if (
-			event.currentTarget &&
-			event.currentTarget.name &&
-			event.currentTarget.value
+			event.currentTarget != null &&
+			event.currentTarget.name != null &&
+			event.currentTarget.value != null
 		) {
 			const { name, value } = event.currentTarget;
 			this.setState((prevState, props) => ({
@@ -112,6 +128,12 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 											transformation={this.state.transformation}
 											onSubmit={this.onTransformationSubmit}
 											onChange={this.handleTransformationChange}
+										/>
+									</AccordionPanel>
+									<AccordionPanel heading="Heatmap Modi">
+										<HeatmapModeForm
+											configObject={this.state.configObject}
+											onChange={this.handleModeChange}
 										/>
 									</AccordionPanel>
 									<AccordionPanel heading="Konfiguration">
