@@ -32,6 +32,7 @@ type State = {
 export default class MeasurementSummary extends React.Component<Props, State> {
 	state = {
 		configObject: {
+			fixedValue: false,
 			radius: 10,
 			maxOpacity: 0.5,
 			minOpacity: 0,
