@@ -18,7 +18,7 @@ export default function TransformationForm({
 	onChange
 }: Props) {
 	return (
-		<Form heading="Transformation bearbeiten" onSubmit={onSubmit}>
+		<Form heading="Heatmap transformieren" onSubmit={onSubmit}>
 			<FormFields>
 				<fieldset>
 					<FormField label="Skalierungsfaktor">

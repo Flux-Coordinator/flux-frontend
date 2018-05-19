@@ -3,6 +3,8 @@ import * as React from "react";
 import Header from "grommet/components/Header";
 import Heading from "grommet/components/Heading";
 import Box from "grommet/components/Box";
+import Accordion from "grommet/components/Accordion";
+import AccordionPanel from "grommet/components/AccordionPanel";
 import Section from "grommet/components/Section";
 import Paragraph from "grommet/components/Paragraph";
 import Button from "grommet/components/Button";
@@ -115,16 +117,22 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 								configObject={this.state.configObject}
 							/>
 							<Box>
-								<TransformationForm
-									transformation={this.state.transformation}
-									onSubmit={this.onTransformationSubmit}
-									onChange={this.handleTransformationChange}
-								/>
-								<HeatmapConfigForm
-									configObject={this.state.configObject}
-									onSubmit={this.onHeatmapConfigSubmit}
-									onChange={this.handleHeatmapConfigChange}
-								/>
+								<Accordion active={0}>
+									<AccordionPanel heading="Transformation">
+										<TransformationForm
+											transformation={this.state.transformation}
+											onSubmit={this.onTransformationSubmit}
+											onChange={this.handleTransformationChange}
+										/>
+									</AccordionPanel>
+									<AccordionPanel heading="Konfiguration">
+										<HeatmapConfigForm
+											configObject={this.state.configObject}
+											onSubmit={this.onHeatmapConfigSubmit}
+											onChange={this.handleHeatmapConfigChange}
+										/>
+									</AccordionPanel>
+								</Accordion>
 							</Box>
 						</Box>
 					)}
