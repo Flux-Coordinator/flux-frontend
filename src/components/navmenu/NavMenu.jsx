@@ -22,7 +22,9 @@ export default function NavMenu({ onNavigate }: Props) {
 			<Anchor path="/settings" onClick={onNavigate}>
 				Einstellungen
 			</Anchor>
-			<Anchor onClick={onNavigate}>Abmelden</Anchor>
+			<Anchor path="/login" onClick={onNavigate}>
+				Abmelden
+			</Anchor>
 		</Menu>
 	);
 }
