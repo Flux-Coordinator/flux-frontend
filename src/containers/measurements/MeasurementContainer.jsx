@@ -1,3 +1,4 @@
+// @flow
 import * as React from "react";
 import axios, { CancelToken } from "axios";
 
@@ -22,22 +23,6 @@ export default class MeasurementContainer extends React.Component<
 > {
 	source: any = CancelToken.source();
 
-	static getDerivedStateFromProps(nextProps, prevState) {
-		if (
-			this &&
-			this.props &&
-			this.props.measurement.measurementId ===
-				nextProps.measurement.measurementId
-		) {
-			return null;
-		}
-
-		return {
-			loading: false,
-			readings: []
-		};
-	}
-
 	state = {
 		loading: false,
 		readings: []
@@ -49,18 +34,10 @@ export default class MeasurementContainer extends React.Component<
 				cancelToken: this.source.token
 			})
 			.then(result => {
-				const tmp: ReadingModel[] = result.data.readings.map(
-					reading =>
-						new ReadingModel(
-							reading.readingId,
-							reading.luxValue,
-							reading.timestamp,
-							reading.xposition,
-							reading.yposition,
-							reading.zposition
-						)
+				const typedReadings: ReadingModel[] = result.data.readings.map(
+					reading => ReadingModel.fromObject(reading)
 				);
-				this.setState(({ readings: tmp }: State));
+				this.setState({ readings: typedReadings });
 			})
 			.catch(error => {
 				if (!axios.isCancel(error)) {
@@ -71,14 +48,9 @@ export default class MeasurementContainer extends React.Component<
 
 	startMeasurement = () => {
 		axios
-			.put(
-				`${this.apiUrl}/measurements/active/${
-					this.props.measurement.measurementId
-				}`,
-				{
-					cancelToken: this.source.token
-				}
-			)
+			.put("${/measurements/active/" + this.props.measurement.measurementId, {
+				cancelToken: this.source.token
+			})
 			.then(
 				alert("Started measurement " + this.props.measurement.measurementId)
 			);
@@ -88,7 +60,7 @@ export default class MeasurementContainer extends React.Component<
 		this.getReadings();
 	}
 
-	componentDidUpdate(prevProps, prevState, snapshot) {
+	componentDidUpdate(prevProps: Props, prevState: State) {
 		if (
 			this &&
 			prevProps &&
