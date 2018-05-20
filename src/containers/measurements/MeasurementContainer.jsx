@@ -51,16 +51,39 @@ export default class MeasurementContainer extends React.Component<
 	};
 
 	startMeasurement = () => {
-		axios
-			.put("/measurements/active/" + this.props.measurement.measurementId, {
-				cancelToken: this.source.token
-			})
-			.then(result => {
-				alert(result.data);
-			})
-			.catch(error => {
-				alert(error.response.data);
-			});
+		if (this.state.currentMeasurement.state === "RUNNING") {
+			axios
+				.delete("/measurements/active", { cancelToken: this.source.token })
+				.then(result => {
+					this.setState(prevState => {
+						const measurement = prevState.currentMeasurement;
+						measurement.state = "OK";
+						return {
+							currentMeasurement: measurement
+						};
+					});
+				})
+				.catch(error => {
+					alert(error.response.data);
+				});
+		} else {
+			axios
+				.put("/measurements/active/" + this.props.measurement.measurementId, {
+					cancelToken: this.source.token
+				})
+				.then(result => {
+					this.setState(prevState => {
+						const measurement = prevState.currentMeasurement;
+						measurement.state = "RUNNING";
+						return {
+							currentMeasurement: measurement
+						};
+					});
+				})
+				.catch(error => {
+					alert(error.response.data);
+				});
+		}
 	};
 
 	componentDidMount() {
