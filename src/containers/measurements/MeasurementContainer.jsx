@@ -30,13 +30,14 @@ export default class MeasurementContainer extends React.Component<
 	};
 
 	getReadings = () => {
+		this.setState({ loading: true });
 		axios
 			.get(`/measurements/${this.props.measurement.measurementId}`, {
 				cancelToken: this.source.token
 			})
 			.then(result => {
 				const measurement = MeasurementModel.fromObject(result.data);
-				this.setState({ currentMeasurement: measurement });
+				this.setState({ currentMeasurement: measurement, loading: false });
 			})
 			.catch(error => {
 				if (!axios.isCancel(error)) {
@@ -107,6 +108,7 @@ export default class MeasurementContainer extends React.Component<
 				room={this.props.room}
 				currentMeasurement={this.state.currentMeasurement}
 				onStartMeasurement={this.startMeasurement}
+				isLoading={this.state.loading}
 			/>
 		);
 	}
