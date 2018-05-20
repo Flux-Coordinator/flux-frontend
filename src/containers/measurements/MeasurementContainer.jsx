@@ -131,7 +131,7 @@ export default class MeasurementContainer extends React.Component<
 		this.setState(prevState => {
 			const receivedObjects = JSON.parse((event.data: any));
 			const newReadings = receivedObjects.map(o => Reading.fromObject(o));
-			prevState.currentMeasurement.readings.push(newReadings);
+			prevState.currentMeasurement.readings.push(...newReadings);
 			return prevState;
 		});
 	};
