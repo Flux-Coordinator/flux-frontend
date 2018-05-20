@@ -15,7 +15,6 @@ type Props = {
 
 type State = {
 	loading: boolean,
-	readings?: ReadingModel[],
 	currentMeasurement: MeasurementModel,
 	websocket?: WebSocket
 };
