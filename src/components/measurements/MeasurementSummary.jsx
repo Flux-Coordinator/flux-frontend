@@ -14,34 +14,40 @@ import RoomModel from "../../models/Room";
 import MeasurementModel from "../../models/Measurement";
 import Transformation from "../../models/Transformation";
 import FluxHeatmap from "../../containers/fluxHeatmap/FluxHeatmap";
-import type { ConfigObject } from "../../types/Heatmap";
+import type { ConfigObject, HeatmapModes } from "../../types/Heatmap";
 import TransformationForm from "../transformationForm/TransformationForm";
 import HeatmapConfigForm from "../heatmapConfigForm/HeatmapConfigForm";
 import { EXAMPLE_IMAGE } from "../../images/ImagesBase64";
 import HeatmapModeForm from "../heatmapModeForm/HeatmapModeForm";
 import type { allInputTypes } from "../../utils/InputHandler";
+import Loading from "../loading/Loading";
 
 type Props = {
 	room: RoomModel,
 	currentMeasurement: MeasurementModel,
-	onStartMeasurement: () => void
+	onStartMeasurement: () => void,
+	isLoading?: boolean
 };
 
 type State = {
 	transformation: Transformation,
-	configObject: ConfigObject
+	configObject: ConfigObject,
+	heatmapModes: HeatmapModes
 };
 
 export default class MeasurementSummary extends React.Component<Props, State> {
 	state = {
 		configObject: {
-			fixedValue: false,
 			radius: 10,
 			maxOpacity: 0.5,
 			minOpacity: 0,
 			blur: 0.75
 		},
-		transformation: new Transformation()
+		transformation: new Transformation(),
+		heatmapModes: {
+			showCoverage: false,
+			showAnchors: false
+		}
 	};
 
 	componentDidMount() {
@@ -60,7 +66,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 
 	handleModeChange = (key: string, value: allInputTypes) => {
 		this.setState((prevState, props) => ({
-			configObject: Object.assign(prevState.configObject, {
+			heatmapModes: Object.assign(prevState.heatmapModes, {
 				[key]: value
 			})
 		}));
@@ -83,6 +89,10 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 	};
 
 	render() {
+		if (this.props.isLoading) {
+			return <Loading />;
+		}
+
 		let icon: React.Node;
 		if (this.props.currentMeasurement.state === "RUNNING") {
 			icon = <PauseIcon colorIndex="warning" />;
@@ -106,9 +116,11 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 						<Box direction="row">
 							<FluxHeatmap
 								readings={this.props.currentMeasurement.readings}
+								anchors={this.props.currentMeasurement.anchors}
 								backgroundImage={EXAMPLE_IMAGE}
 								transformation={this.state.transformation}
 								configObject={this.state.configObject}
+								heatmapModes={this.state.heatmapModes}
 							/>
 							<Box>
 								<Accordion active={0}>
@@ -121,7 +133,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 									</AccordionPanel>
 									<AccordionPanel heading="Heatmap Modi">
 										<HeatmapModeForm
-											configObject={this.state.configObject}
+											heatmapModes={this.state.heatmapModes}
 											onChange={this.handleModeChange}
 										/>
 									</AccordionPanel>

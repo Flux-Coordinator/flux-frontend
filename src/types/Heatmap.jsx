@@ -1,12 +1,16 @@
 // @flow
 
 export type ConfigObject = {
-	fixedValue?: boolean,
 	container?: ?Element | Text,
 	radius?: number,
 	maxOpacity?: number,
 	minOpacity?: number,
 	blur?: number
+};
+
+export type HeatmapModes = {
+	showCoverage: boolean,
+	showAnchors: boolean
 };
 
 export type HeatmapDataPoint = {

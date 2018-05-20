@@ -3,10 +3,13 @@ import * as React from "react";
 import ReactDOM from "react-dom";
 import Heatmap from "heatmapjs/build/heatmap.js";
 import ReadingModel from "../../models/Reading";
+import AnchorModel from "../../models/Anchor";
+import { Positionable } from "../../types/Positionable";
 import ReactResizeDetector from "react-resize-detector";
 import Transformation from "../../models/Transformation";
 import type {
 	ConfigObject,
+	HeatmapModes,
 	HeatmapDataPoint,
 	Container
 } from "../../types/Heatmap";
@@ -15,9 +18,11 @@ import { PLACEHOLDER_IMAGE } from "../../images/ImagesBase64";
 
 type Props = {
 	readings: ReadingModel[],
+	anchors: AnchorModel[],
 	backgroundImage: string,
 	configObject: ConfigObject,
-	transformation: Transformation
+	transformation: Transformation,
+	heatmapModes: HeatmapModes
 };
 
 type State = {
@@ -27,15 +32,19 @@ type State = {
 export default class FluxHeatmap extends React.Component<Props, State> {
 	static defaultProps = {
 		readings: [],
+		anchors: [],
 		backgroundImage: PLACEHOLDER_IMAGE,
 		configObject: {
-			fixedValue: false,
 			radius: 10,
 			maxOpacity: 0.5,
 			minOpacity: 0,
 			blur: 0.75
 		},
-		transformation: new Transformation()
+		transformation: new Transformation(),
+		heatmapModes: {
+			showCoverage: false,
+			showAnchors: false
+		}
 	};
 
 	state = {
@@ -52,11 +61,11 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	imgElement: ?HTMLImageElement;
 
 	componentDidMount() {
-		this.createHeatmap(this.props.configObject);
-		this.setData(this.props.readings);
+		this.heatmap = this.createHeatmapInstance(this.props.configObject);
+		this.setData();
 	}
 
-	createHeatmap = (configObject: ConfigObject) => {
+	createHeatmapInstance = (configObject: ConfigObject): Heatmap => {
 		const extendedConfigObject: ConfigObject = Object.assign(
 			{},
 			{
@@ -64,22 +73,21 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			},
 			configObject
 		);
-		this.heatmap = Heatmap.create(extendedConfigObject);
+		return Heatmap.create(extendedConfigObject);
 	};
 
-	destroyHeatmap = (): HeatmapDataPoint[] => {
+	destroyHeatmapInstance = (heatmapInstance: Heatmap): HeatmapDataPoint[] => {
 		// destroy function not supported from Heatmap.js, but needed due to a bug on config change:
 		// https://github.com/pa7/heatmap.js/issues/209
-		const currentData = this.heatmap.getData();
-		const canvas = this.heatmap._renderer.canvas;
+		const currentData = heatmapInstance.getData();
+		const canvas = heatmapInstance._renderer.canvas;
 		canvas.remove();
-		this.heatmap = null;
 		return currentData;
 	};
 
-	componentDidUpdate(prevProps: Props, prevState: State) {
-		this.setConfig(this.props.configObject);
-		this.setData(this.props.readings);
+	componentDidUpdate() {
+		this.setConfig();
+		this.setData();
 	}
 
 	setContainerState = () => {
@@ -96,18 +104,25 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		}
 	};
 
-	setData = (readings: ReadingModel[]) => {
-		if (readings.length > 0 && this.state.container.loaded) {
-			const fixedValue =
-				this.props.configObject.fixedValue != null
-					? this.props.configObject.fixedValue
-					: false;
-			const dataPoints = this.transformData(
-				readings,
-				this.state.container,
-				this.props.transformation,
-				fixedValue
-			);
+	setData = () => {
+		if (this.state.container.loaded) {
+			let dataPoints: HeatmapDataPoint[];
+			if (this.props.heatmapModes.showAnchors) {
+				dataPoints = this.transformData(
+					this.props.anchors,
+					this.state.container,
+					this.props.transformation,
+					true
+				);
+			} else if (this.props.readings.length > 0) {
+				dataPoints = this.transformData(
+					this.props.readings,
+					this.state.container,
+					this.props.transformation,
+					this.props.heatmapModes.showCoverage
+				);
+			}
+
 			const max = this.computeMax(dataPoints);
 			this.heatmap.setData({
 				min: 0,
@@ -117,9 +132,9 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		}
 	};
 
-	setConfig = (configObject: ConfigObject) => {
-		const currentData = this.destroyHeatmap();
-		this.createHeatmap(configObject);
+	setConfig = () => {
+		const currentData = this.destroyHeatmapInstance(this.heatmap);
+		this.heatmap = this.createHeatmapInstance(this.props.configObject);
 		this.heatmap.setData(currentData);
 	};
 
@@ -128,26 +143,29 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	};
 
 	transformData = (
-		readings: ReadingModel[],
+		elements: Positionable[],
 		container: Container,
 		transformation: Transformation,
 		fixedValue: boolean
 	): HeatmapDataPoint[] => {
-		return readings.reduce(function(transformedReadings, reading) {
-			const elementScaleFactor = container.width / container.originalWidth;
+		return elements.reduce(function(transformedReadings, element) {
+			const containerScaleFactor = container.width / container.originalWidth;
 			const x = Math.round(
-				(reading.xposition * transformation.scaleFactor +
+				(element.position.xposition * transformation.scaleFactor +
 					transformation.xOffset) *
-					elementScaleFactor
+					containerScaleFactor
 			);
 			const y =
 				container.height -
 				Math.round(
-					(reading.yposition * transformation.scaleFactor +
+					(element.position.yposition * transformation.scaleFactor +
 						transformation.yOffset) *
-						elementScaleFactor
+						containerScaleFactor
 				);
-			const value = fixedValue ? 1 : reading.luxValue;
+			let value = 1;
+			if (!fixedValue) {
+				value = ((element: any): ReadingModel).luxValue;
+			}
 			if (x >= 0 && y >= 0 && x <= container.width && y <= container.height) {
 				transformedReadings.push({
 					x: x,

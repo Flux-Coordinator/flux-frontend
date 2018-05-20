@@ -56,9 +56,7 @@ export default class Room {
 	}: ConstructorType) {
 		const typedMeasurements: Measurement[] = [];
 		measurements.forEach(m => {
-			typedMeasurements.push(
-				new Measurement(m.measurementId, m.description, m.startDate, m.endDate)
-			);
+			typedMeasurements.push(Measurement.fromObject(m));
 		});
 
 		return new Room(
