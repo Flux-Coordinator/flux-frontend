@@ -166,7 +166,6 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			if (!fixedValue) {
 				value = ((element: any): ReadingModel).luxValue;
 			}
-			console.log(x + " " + y);
 			if (x >= 0 && y >= 0 && x <= container.width && y <= container.height) {
 				transformedReadings.push({
 					x: x,
