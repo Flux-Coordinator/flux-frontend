@@ -20,11 +20,13 @@ import HeatmapConfigForm from "../heatmapConfigForm/HeatmapConfigForm";
 import { EXAMPLE_IMAGE } from "../../images/ImagesBase64";
 import HeatmapModeForm from "../heatmapModeForm/HeatmapModeForm";
 import type { allInputTypes } from "../../utils/InputHandler";
+import Loading from "../loading/Loading";
 
 type Props = {
 	room: RoomModel,
 	currentMeasurement: MeasurementModel,
-	onStartMeasurement: () => void
+	onStartMeasurement: () => void,
+	isLoading?: boolean
 };
 
 type State = {
@@ -87,6 +89,10 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 	};
 
 	render() {
+		if (this.props.isLoading) {
+			return <Loading />;
+		}
+
 		let icon: React.Node;
 		if (this.props.currentMeasurement.state === "RUNNING") {
 			icon = <PauseIcon colorIndex="warning" />;
