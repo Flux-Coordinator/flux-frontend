@@ -29,6 +29,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		readings: [],
 		backgroundImage: PLACEHOLDER_IMAGE,
 		configObject: {
+			fixedValue: false,
 			radius: 10,
 			maxOpacity: 0.5,
 			minOpacity: 0,
@@ -97,10 +98,15 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 
 	setData = (readings: ReadingModel[]) => {
 		if (readings.length > 0 && this.state.container.loaded) {
+			const fixedValue =
+				this.props.configObject.fixedValue != null
+					? this.props.configObject.fixedValue
+					: false;
 			const dataPoints = this.transformData(
 				readings,
 				this.state.container,
-				this.props.transformation
+				this.props.transformation,
+				fixedValue
 			);
 			const max = this.computeMax(dataPoints);
 			this.heatmap.setData({
@@ -124,7 +130,8 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	transformData = (
 		readings: ReadingModel[],
 		container: Container,
-		transformation: Transformation
+		transformation: Transformation,
+		fixedValue: boolean
 	): HeatmapDataPoint[] => {
 		return readings.reduce(function(transformedReadings, reading) {
 			const elementScaleFactor = container.width / container.originalWidth;
@@ -140,11 +147,12 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 						transformation.yOffset) *
 						elementScaleFactor
 				);
+			const value = fixedValue ? 1 : reading.luxValue;
 			if (x >= 0 && y >= 0 && x <= container.width && y <= container.height) {
 				transformedReadings.push({
 					x: x,
 					y: y,
-					value: reading.luxValue
+					value: value
 				});
 			}
 			return transformedReadings;

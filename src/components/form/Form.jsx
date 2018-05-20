@@ -10,7 +10,7 @@ import Button from "grommet/components/Button";
 type Props = {
 	heading: React.Node,
 	children: React.Node,
-	onSubmit: () => void
+	onSubmit?: () => void
 };
 
 export default function Form({ heading, children, onSubmit }: Props) {
@@ -18,8 +18,10 @@ export default function Form({ heading, children, onSubmit }: Props) {
 		<GrommetForm
 			pad="medium"
 			onSubmit={event => {
-				event.preventDefault();
-				onSubmit();
+				if (onSubmit) {
+					event.preventDefault();
+					onSubmit();
+				}
 			}}
 		>
 			<Header justify="between">
@@ -28,9 +30,11 @@ export default function Form({ heading, children, onSubmit }: Props) {
 				</Heading>
 			</Header>
 			<Box>{children}</Box>
-			<Footer pad={{ vertical: "medium" }}>
-				<Button label="Übermitteln" type="submit" primary />
-			</Footer>
+			{onSubmit && (
+				<Footer pad={{ vertical: "medium" }}>
+					<Button label="Übermitteln" type="submit" primary />
+				</Footer>
+			)}
 		</GrommetForm>
 	);
 }

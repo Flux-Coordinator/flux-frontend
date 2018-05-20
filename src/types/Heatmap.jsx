@@ -1,6 +1,7 @@
 // @flow
 
 export type ConfigObject = {
+	fixedValue?: boolean,
 	container?: ?Element | Text,
 	radius?: number,
 	maxOpacity?: number,

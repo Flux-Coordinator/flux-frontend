@@ -5,11 +5,13 @@ import FormField from "grommet/components/FormField";
 import FormFields from "grommet/components/FormFields";
 import NumberInput from "grommet/components/NumberInput";
 import type { ConfigObject } from "../../types/Heatmap";
+import { inputHandler } from "../../utils/InputHandler";
+import type { allInputTypes } from "../../utils/InputHandler";
 
 type Props = {
 	configObject: ConfigObject,
 	onSubmit: () => void,
-	onChange: (event: SyntheticEvent<HTMLInputElement>) => void
+	onChange: (string, allInputTypes) => void
 };
 
 export default function HeatmapConfigForm({
@@ -27,7 +29,7 @@ export default function HeatmapConfigForm({
 							value={configObject.radius}
 							min={1}
 							step={1}
-							onChange={onChange}
+							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
 					<FormField label="Maximale Deckkraft">
@@ -37,7 +39,7 @@ export default function HeatmapConfigForm({
 							min={0}
 							max={1}
 							step={0.05}
-							onChange={onChange}
+							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
 					<FormField label="Minimale Deckkraft">
@@ -47,7 +49,7 @@ export default function HeatmapConfigForm({
 							min={0}
 							max={1}
 							step={0.05}
-							onChange={onChange}
+							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
 					<FormField label="Glättung">
@@ -57,7 +59,7 @@ export default function HeatmapConfigForm({
 							min={0}
 							max={1}
 							step={0.05}
-							onChange={onChange}
+							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
 				</fieldset>
