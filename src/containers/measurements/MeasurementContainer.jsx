@@ -35,12 +35,8 @@ export default class MeasurementContainer extends React.Component<
 				cancelToken: this.source.token
 			})
 			.then(result => {
-				const typedReadings: ReadingModel[] = result.data.readings.map(
-					reading => ReadingModel.fromObject(reading)
-				);
-				const currentMeasurement = this.state.currentMeasurement;
-				currentMeasurement.readings = typedReadings;
-				this.setState({ currentMeasurement: currentMeasurement });
+				const measurement = MeasurementModel.fromObject(result.data);
+				this.setState({ currentMeasurement: measurement });
 			})
 			.catch(error => {
 				if (!axios.isCancel(error)) {
@@ -59,9 +55,12 @@ export default class MeasurementContainer extends React.Component<
 			.put("/measurements/active/" + this.props.measurement.measurementId, {
 				cancelToken: this.source.token
 			})
-			.then(
-				alert("Started measurement " + this.props.measurement.measurementId)
-			);
+			.then(result => {
+				alert(result.data);
+			})
+			.catch(error => {
+				alert(error.response.data);
+			});
 	};
 
 	componentDidMount() {
