@@ -57,7 +57,13 @@ export default class Room {
 		const typedMeasurements: Measurement[] = [];
 		measurements.forEach(m => {
 			typedMeasurements.push(
-				new Measurement(m.measurementId, m.description, m.startDate, m.endDate)
+				new Measurement(
+					m.measurementId,
+					m.description,
+					m.startDate,
+					m.endDate,
+					m.state
+				)
 			);
 		});
 

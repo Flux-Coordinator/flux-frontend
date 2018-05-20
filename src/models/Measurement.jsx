@@ -1,5 +1,6 @@
 // @flow
 import Reading from "./Reading";
+import Anchor from "./Anchor";
 
 type ConstructorType = {
 	measurementId: number,
@@ -7,7 +8,8 @@ type ConstructorType = {
 	startDate: Date,
 	endDate: Date,
 	measurementState: string,
-	readings?: Reading[]
+	readings?: Reading[],
+	anchors?: Anchor[]
 };
 
 export default class Measurement {
@@ -17,6 +19,7 @@ export default class Measurement {
 	endDate: Date;
 	state: string;
 	readings: Reading[];
+	anchors: Anchor[];
 
 	constructor(
 		measurementId: number,
@@ -24,7 +27,8 @@ export default class Measurement {
 		startDate: Date,
 		endDate: Date,
 		state: string,
-		readings?: Reading[]
+		readings?: Reading[],
+		anchors?: Anchor[]
 	) {
 		this.measurementId = measurementId;
 		this.description = description;
@@ -32,6 +36,14 @@ export default class Measurement {
 
 		if (readings) {
 			this.readings = readings;
+		} else {
+			this.readings = [];
+		}
+
+		if (anchors) {
+			this.anchors = anchors;
+		} else {
+			this.anchors = [];
 		}
 
 		if (typeof startDate === "number" || typeof startDate === "string") {
@@ -53,7 +65,8 @@ export default class Measurement {
 		startDate,
 		endDate,
 		measurementState,
-		readings
+		readings,
+		anchors
 	}: ConstructorType) {
 		return new Measurement(
 			measurementId,
@@ -61,7 +74,8 @@ export default class Measurement {
 			startDate,
 			endDate,
 			measurementState,
-			readings
+			readings,
+			anchors
 		);
 	}
 }
