@@ -6,6 +6,7 @@ import MeasurementSummary from "../../components/measurements/MeasurementSummary
 import ReadingModel from "../../models/Reading";
 import RoomModel from "../../models/Room";
 import MeasurementModel from "../../models/Measurement";
+import Reading from "../../models/Reading";
 
 type Props = {
 	room: RoomModel,
@@ -15,14 +16,18 @@ type Props = {
 type State = {
 	loading: boolean,
 	readings?: ReadingModel[],
-	currentMeasurement: MeasurementModel
+	currentMeasurement: MeasurementModel,
+	websocket?: WebSocket
 };
+
+const KEEP_ALIVE_INTERVAL = 5000;
 
 export default class MeasurementContainer extends React.Component<
 	Props,
 	State
 > {
 	source: any = CancelToken.source();
+	keepAliveTimer = null;
 
 	state = {
 		loading: false,
@@ -87,8 +92,59 @@ export default class MeasurementContainer extends React.Component<
 		}
 	};
 
+	openWebsocket = (url: string) => {
+		this.setState(prevState => {
+			if (prevState.websocket) {
+				prevState.websocket.close();
+			}
+
+			const websocket = new WebSocket(url);
+			websocket.onmessage = this.onReadingReceived;
+
+			prevState.websocket = websocket;
+			this.keepAliveTimer = setTimeout(this.onKeepAlive, KEEP_ALIVE_INTERVAL);
+			return prevState;
+		});
+	};
+
+	onKeepAlive = () => {
+		if (
+			this.state.websocket &&
+			this.state.websocket.readyState === this.state.websocket.OPEN
+		) {
+			this.state.websocket.send(0);
+		}
+		this.keepAliveTimer = setTimeout(this.onKeepAlive, KEEP_ALIVE_INTERVAL);
+	};
+
+	closeWebsocket = () => {
+		if (this.state.websocket) {
+			this.state.websocket.close();
+		}
+
+		if (this.keepAliveTimer) {
+			clearTimeout(this.keepAliveTimer);
+		}
+	};
+
+	onReadingReceived = (event: MessageEvent) => {
+		console.log(event);
+		this.setState(prevState => {
+			const receivedObjects = JSON.parse((event.data: any));
+			const newReadings = receivedObjects.map(o => Reading.fromObject(o));
+			prevState.currentMeasurement.readings.push(newReadings);
+			return prevState;
+		});
+	};
+
 	componentDidMount() {
 		this.getReadings();
+
+		let serverUri = process.env.REACT_APP_SERVICE_URI;
+		if (serverUri) {
+			serverUri = serverUri.replace(/(http(s?))/gi, "ws");
+			this.openWebsocket(`${serverUri}/streamMeasurements`);
+		}
 	}
 
 	componentDidUpdate(prevProps: Props, prevState: State) {
@@ -100,6 +156,11 @@ export default class MeasurementContainer extends React.Component<
 		) {
 			this.getReadings();
 		}
+	}
+
+	componentWillUnmount() {
+		this.source.cancel();
+		this.closeWebsocket();
 	}
 
 	render() {
