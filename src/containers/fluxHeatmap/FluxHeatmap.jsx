@@ -7,6 +7,7 @@ import ReactResizeDetector from "react-resize-detector";
 import Transformation from "../../models/Transformation";
 import type {
 	ConfigObject,
+	HeatmapModes,
 	HeatmapDataPoint,
 	Container
 } from "../../types/Heatmap";
@@ -17,7 +18,8 @@ type Props = {
 	readings: ReadingModel[],
 	backgroundImage: string,
 	configObject: ConfigObject,
-	transformation: Transformation
+	transformation: Transformation,
+	heatmapModes: HeatmapModes
 };
 
 type State = {
@@ -29,13 +31,16 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		readings: [],
 		backgroundImage: PLACEHOLDER_IMAGE,
 		configObject: {
-			fixedValue: false,
 			radius: 10,
 			maxOpacity: 0.5,
 			minOpacity: 0,
 			blur: 0.75
 		},
-		transformation: new Transformation()
+		transformation: new Transformation(),
+		heatmapModes: {
+			showCoverage: false,
+			showAnchors: false
+		}
 	};
 
 	state = {
@@ -97,15 +102,15 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 
 	setData = (readings: ReadingModel[]) => {
 		if (readings.length > 0 && this.state.container.loaded) {
-			const fixedValue =
-				this.props.configObject.fixedValue != null
-					? this.props.configObject.fixedValue
+			const showCoverage =
+				this.props.heatmapModes.showCoverage != null
+					? this.props.heatmapModes.showCoverage
 					: false;
 			const dataPoints = this.transformData(
 				readings,
 				this.state.container,
 				this.props.transformation,
-				fixedValue
+				showCoverage
 			);
 			const max = this.computeMax(dataPoints);
 			this.heatmap.setData({
@@ -130,7 +135,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		readings: ReadingModel[],
 		container: Container,
 		transformation: Transformation,
-		fixedValue: boolean
+		showCoverage: boolean
 	): HeatmapDataPoint[] => {
 		return readings.reduce(function(transformedReadings, reading) {
 			const elementScaleFactor = container.width / container.originalWidth;
@@ -146,7 +151,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 						transformation.yOffset) *
 						elementScaleFactor
 				);
-			const value = fixedValue ? 1 : reading.luxValue;
+			const value = showCoverage ? 1 : reading.luxValue;
 			if (x >= 0 && y >= 0 && x <= container.width && y <= container.height) {
 				transformedReadings.push({
 					x: x,

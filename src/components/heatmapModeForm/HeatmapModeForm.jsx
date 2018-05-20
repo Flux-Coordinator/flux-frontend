@@ -4,25 +4,25 @@ import Form from "./../../components/form/Form";
 import FormField from "grommet/components/FormField";
 import FormFields from "grommet/components/FormFields";
 import CheckBox from "grommet/components/CheckBox";
-import type { ConfigObject } from "../../types/Heatmap";
+import type { HeatmapModes } from "../../types/Heatmap";
 import { inputHandler } from "../../utils/InputHandler";
 import type { allInputTypes } from "../../utils/InputHandler";
 
 type Props = {
-	configObject: ConfigObject,
+	heatmapModes: HeatmapModes,
 	onChange: (string, allInputTypes) => void
 };
 
-export default function HeatmapModeForm({ configObject, onChange }: Props) {
+export default function HeatmapModeForm({ heatmapModes, onChange }: Props) {
 	return (
 		<Form heading="Modi aktivieren">
 			<FormFields>
 				<fieldset>
 					<FormField label="Messabdeckung feststellen">
 						<CheckBox
-							name={"fixedValue"}
+							name={"showCoverage"}
 							toggle={true}
-							checked={configObject.fixedValue}
+							checked={heatmapModes.showCoverage}
 							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
