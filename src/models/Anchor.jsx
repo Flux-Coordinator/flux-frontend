@@ -1,4 +1,6 @@
 // @flow
+import PositionModel from "./Position";
+import { Positionable } from "../types/Positionable";
 
 type ConstructorType = {
 	anchorId: ?number,
@@ -8,12 +10,10 @@ type ConstructorType = {
 	zposition: number
 };
 
-export default class Anchor {
+export default class Anchor implements Positionable {
 	anchorId: ?number;
 	networkId: string;
-	xposition: number;
-	yposition: number;
-	zposition: number;
+	position: PositionModel;
 
 	constructor(
 		anchorId: ?number,
@@ -24,9 +24,7 @@ export default class Anchor {
 	) {
 		this.anchorId = anchorId;
 		this.networkId = networkId;
-		this.xposition = xposition;
-		this.yposition = yposition;
-		this.zposition = zposition;
+		this.position = new PositionModel(xposition, yposition, zposition);
 	}
 
 	static fromObject({

@@ -116,6 +116,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 						<Box direction="row">
 							<FluxHeatmap
 								readings={this.props.currentMeasurement.readings}
+								anchors={this.props.currentMeasurement.anchors}
 								backgroundImage={EXAMPLE_IMAGE}
 								transformation={this.state.transformation}
 								configObject={this.state.configObject}

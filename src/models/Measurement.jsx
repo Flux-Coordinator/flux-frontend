@@ -9,7 +9,7 @@ type ConstructorType = {
 	endDate: Date,
 	measurementState: string,
 	readings?: Reading[],
-	anchors?: Anchor[]
+	anchorPositions?: Anchor[]
 };
 
 export default class Measurement {
@@ -66,16 +66,38 @@ export default class Measurement {
 		endDate,
 		measurementState,
 		readings,
-		anchors
+		anchorPositions
 	}: ConstructorType) {
+		const typedReadings: Reading[] = [];
+		if (readings != null) {
+			readings.forEach(r => {
+				typedReadings.push(Reading.fromObject(r));
+			});
+		}
+
+		const typedAnchors: Anchor[] = [];
+		if (anchorPositions != null) {
+			anchorPositions.forEach((a: any) => {
+				typedAnchors.push(
+					new Anchor(
+						a.anchorPositionId,
+						a.anchor.networkId,
+						a.xposition,
+						a.yposition,
+						a.zposition
+					)
+				);
+			});
+		}
+
 		return new Measurement(
 			measurementId,
 			description,
 			startDate,
 			endDate,
 			measurementState,
-			readings,
-			anchors
+			typedReadings,
+			typedAnchors
 		);
 	}
 }

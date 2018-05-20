@@ -3,6 +3,8 @@ import * as React from "react";
 import ReactDOM from "react-dom";
 import Heatmap from "heatmapjs/build/heatmap.js";
 import ReadingModel from "../../models/Reading";
+import AnchorModel from "../../models/Anchor";
+import { Positionable } from "../../types/Positionable";
 import ReactResizeDetector from "react-resize-detector";
 import Transformation from "../../models/Transformation";
 import type {
@@ -16,6 +18,7 @@ import { PLACEHOLDER_IMAGE } from "../../images/ImagesBase64";
 
 type Props = {
 	readings: ReadingModel[],
+	anchors: AnchorModel[],
 	backgroundImage: string,
 	configObject: ConfigObject,
 	transformation: Transformation,
@@ -29,6 +32,7 @@ type State = {
 export default class FluxHeatmap extends React.Component<Props, State> {
 	static defaultProps = {
 		readings: [],
+		anchors: [],
 		backgroundImage: PLACEHOLDER_IMAGE,
 		configObject: {
 			radius: 10,
@@ -58,7 +62,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 
 	componentDidMount() {
 		this.heatmap = this.createHeatmapInstance(this.props.configObject);
-		this.setData(this.props.readings);
+		this.setData();
 	}
 
 	createHeatmapInstance = (configObject: ConfigObject): Heatmap => {
@@ -82,8 +86,8 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	};
 
 	componentDidUpdate(prevProps: Props, prevState: State) {
-		this.setConfig(this.props.configObject);
-		this.setData(this.props.readings);
+		this.setConfig();
+		this.setData();
 	}
 
 	setContainerState = () => {
@@ -100,18 +104,25 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		}
 	};
 
-	setData = (readings: ReadingModel[]) => {
-		if (readings.length > 0 && this.state.container.loaded) {
-			const showCoverage =
-				this.props.heatmapModes.showCoverage != null
-					? this.props.heatmapModes.showCoverage
-					: false;
-			const dataPoints = this.transformData(
-				readings,
-				this.state.container,
-				this.props.transformation,
-				showCoverage
-			);
+	setData = () => {
+		if (this.state.container.loaded) {
+			let dataPoints: HeatmapDataPoint[];
+			if (this.props.heatmapModes.showAnchors) {
+				dataPoints = this.transformData(
+					this.props.anchors,
+					this.state.container,
+					this.props.transformation,
+					true
+				);
+			} else if (this.props.readings.length > 0) {
+				dataPoints = this.transformData(
+					this.props.readings,
+					this.state.container,
+					this.props.transformation,
+					this.props.heatmapModes.showCoverage
+				);
+			}
+
 			const max = this.computeMax(dataPoints);
 			this.heatmap.setData({
 				min: 0,
@@ -121,9 +132,9 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		}
 	};
 
-	setConfig = (configObject: ConfigObject) => {
+	setConfig = () => {
 		const currentData = this.destroyHeatmapInstance(this.heatmap);
-		this.heatmap = this.createHeatmapInstance(configObject);
+		this.heatmap = this.createHeatmapInstance(this.props.configObject);
 		this.heatmap.setData(currentData);
 	};
 
@@ -132,26 +143,30 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	};
 
 	transformData = (
-		readings: ReadingModel[],
+		elements: Positionable[],
 		container: Container,
 		transformation: Transformation,
-		showCoverage: boolean
+		fixedValue: boolean
 	): HeatmapDataPoint[] => {
-		return readings.reduce(function(transformedReadings, reading) {
-			const elementScaleFactor = container.width / container.originalWidth;
+		return elements.reduce(function(transformedReadings, element) {
+			const containerScaleFactor = container.width / container.originalWidth;
 			const x = Math.round(
-				(reading.xposition * transformation.scaleFactor +
+				(element.position.xposition * transformation.scaleFactor +
 					transformation.xOffset) *
-					elementScaleFactor
+					containerScaleFactor
 			);
 			const y =
 				container.height -
 				Math.round(
-					(reading.yposition * transformation.scaleFactor +
+					(element.position.yposition * transformation.scaleFactor +
 						transformation.yOffset) *
-						elementScaleFactor
+						containerScaleFactor
 				);
-			const value = showCoverage ? 1 : reading.luxValue;
+			let value = 1;
+			if (!fixedValue) {
+				value = ((element: any): ReadingModel).luxValue;
+			}
+			console.log(x + " " + y);
 			if (x >= 0 && y >= 0 && x <= container.width && y <= container.height) {
 				transformedReadings.push({
 					x: x,
