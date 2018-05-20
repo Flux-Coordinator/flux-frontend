@@ -4,17 +4,20 @@ import ReactDOM from "react-dom";
 import Heatmap from "heatmapjs/build/heatmap.js";
 import ReadingModel from "../../models/Reading";
 import AnchorModel from "../../models/Anchor";
+import HeatmapDataPoint from "../../models/HeatmapDataPoint";
+import HeatmapData from "../../models/HeatmapData";
 import { Positionable } from "../../types/Positionable";
 import ReactResizeDetector from "react-resize-detector";
 import Transformation from "../../models/Transformation";
 import type {
 	ConfigObject,
-	HeatmapModes,
-	HeatmapDataPoint,
-	Container
+	Container,
+	HeatmapModes
 } from "../../types/Heatmap";
 import Box from "grommet/components/Box";
 import { PLACEHOLDER_IMAGE } from "../../images/ImagesBase64";
+
+const FIXED_HEATMAP_VALUE = 1;
 
 type Props = {
 	readings: ReadingModel[],
@@ -106,29 +109,17 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 
 	setData = () => {
 		if (this.state.container.loaded) {
-			let dataPoints: HeatmapDataPoint[];
 			if (this.props.heatmapModes.showAnchors) {
-				dataPoints = this.transformData(
-					this.props.anchors,
-					this.state.container,
-					this.props.transformation,
-					true
-				);
+				const dataPoints = this.transformData(this.props.anchors, true);
+				this.heatmap.setData(new HeatmapData(0, 1, dataPoints));
 			} else if (this.props.readings.length > 0) {
-				dataPoints = this.transformData(
+				const dataPoints = this.transformData(
 					this.props.readings,
-					this.state.container,
-					this.props.transformation,
 					this.props.heatmapModes.showCoverage
 				);
+				const max = this.computeMax(dataPoints);
+				this.heatmap.setData(new HeatmapData(0, max, dataPoints));
 			}
-
-			const max = this.computeMax(dataPoints);
-			this.heatmap.setData({
-				min: 0,
-				max: max,
-				data: dataPoints
-			});
 		}
 	};
 
@@ -144,12 +135,12 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 
 	transformData = (
 		elements: Positionable[],
-		container: Container,
-		transformation: Transformation,
 		fixedValue: boolean
 	): HeatmapDataPoint[] => {
+		const container = this.state.container;
+		const transformation = this.props.transformation;
+		const containerScaleFactor = container.width / container.originalWidth;
 		return elements.reduce(function(transformedReadings, element) {
-			const containerScaleFactor = container.width / container.originalWidth;
 			const x = Math.round(
 				(element.position.xposition * transformation.scaleFactor +
 					transformation.xOffset) *
@@ -162,16 +153,12 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 						transformation.yOffset) *
 						containerScaleFactor
 				);
-			let value = 1;
-			if (!fixedValue) {
-				value = ((element: any): ReadingModel).luxValue;
+			let value = FIXED_HEATMAP_VALUE;
+			if (!fixedValue && element.getValue != null) {
+				value = element.getValue();
 			}
 			if (x >= 0 && y >= 0 && x <= container.width && y <= container.height) {
-				transformedReadings.push({
-					x: x,
-					y: y,
-					value: value
-				});
+				transformedReadings.push(new HeatmapDataPoint(x, y, value));
 			}
 			return transformedReadings;
 		}, []);

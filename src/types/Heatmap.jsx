@@ -13,12 +13,6 @@ export type HeatmapModes = {
 	showAnchors: boolean
 };
 
-export type HeatmapDataPoint = {
-	x: number,
-	y: number,
-	value: number
-};
-
 export type Container = {
 	height: number,
 	width: number,
