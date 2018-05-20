@@ -26,6 +26,14 @@ export default function HeatmapModeForm({ heatmapModes, onChange }: Props) {
 							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
+					<FormField label="Pozyx Anchors anzeigen">
+						<CheckBox
+							name={"showAnchors"}
+							toggle={true}
+							checked={heatmapModes.showAnchors}
+							onChange={inputHandler(onChange)}
+						/>
+					</FormField>
 				</fieldset>
 			</FormFields>
 		</Form>
