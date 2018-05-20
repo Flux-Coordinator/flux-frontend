@@ -1,3 +1,4 @@
+// @flow
 import * as React from "react";
 import axios, { CancelToken } from "axios";
 
@@ -13,7 +14,8 @@ type Props = {
 
 type State = {
 	loading: boolean,
-	readings: ?(ReadingModel[])
+	readings?: ReadingModel[],
+	currentMeasurement: MeasurementModel
 };
 
 export default class MeasurementContainer extends React.Component<
@@ -22,25 +24,9 @@ export default class MeasurementContainer extends React.Component<
 > {
 	source: any = CancelToken.source();
 
-	static getDerivedStateFromProps(nextProps, prevState) {
-		if (
-			this &&
-			this.props &&
-			this.props.measurement.measurementId ===
-				nextProps.measurement.measurementId
-		) {
-			return null;
-		}
-
-		return {
-			loading: false,
-			readings: []
-		};
-	}
-
 	state = {
 		loading: false,
-		readings: []
+		currentMeasurement: this.props.measurement
 	};
 
 	getReadings = () => {
@@ -49,36 +35,30 @@ export default class MeasurementContainer extends React.Component<
 				cancelToken: this.source.token
 			})
 			.then(result => {
-				const tmp: ReadingModel[] = result.data.readings.map(
-					reading =>
-						new ReadingModel(
-							reading.readingId,
-							reading.luxValue,
-							reading.timestamp,
-							reading.xposition,
-							reading.yposition,
-							reading.zposition
-						)
+				const typedReadings: ReadingModel[] = result.data.readings.map(
+					reading => ReadingModel.fromObject(reading)
 				);
-				this.setState(({ readings: tmp }: State));
+				const currentMeasurement = this.state.currentMeasurement;
+				currentMeasurement.readings = typedReadings;
+				this.setState({ currentMeasurement: currentMeasurement });
 			})
 			.catch(error => {
 				if (!axios.isCancel(error)) {
-					this.setState(({ readings: [], loading: false }: State));
+					this.setState(
+						({
+							currentMeasurement: this.props.measurement,
+							loading: false
+						}: State)
+					);
 				}
 			});
 	};
 
 	startMeasurement = () => {
 		axios
-			.put(
-				`${this.apiUrl}/measurements/active/${
-					this.props.measurement.measurementId
-				}`,
-				{
-					cancelToken: this.source.token
-				}
-			)
+			.put("/measurements/active/" + this.props.measurement.measurementId, {
+				cancelToken: this.source.token
+			})
 			.then(
 				alert("Started measurement " + this.props.measurement.measurementId)
 			);
@@ -88,7 +68,7 @@ export default class MeasurementContainer extends React.Component<
 		this.getReadings();
 	}
 
-	componentDidUpdate(prevProps, prevState, snapshot) {
+	componentDidUpdate(prevProps: Props, prevState: State) {
 		if (
 			this &&
 			prevProps &&
@@ -103,9 +83,8 @@ export default class MeasurementContainer extends React.Component<
 		return (
 			<MeasurementSummary
 				room={this.props.room}
-				currentMeasurement={this.props.measurement}
+				currentMeasurement={this.state.currentMeasurement}
 				onStartMeasurement={this.startMeasurement}
-				readings={this.state.readings}
 			/>
 		);
 	}

@@ -2,7 +2,6 @@
 import * as React from "react";
 import Header from "grommet/components/Header";
 import Heading from "grommet/components/Heading";
-import Box from "grommet/components/Box";
 import Section from "grommet/components/Section";
 import Article from "grommet/components/Article";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -24,21 +23,10 @@ export default function Room({ match, room, parentProject }: Props) {
 	return (
 		<Article pad="medium">
 			<Section pad="none">
-				<Header justify="between">
-					<Heading tag="h2" margin="none" pad="medium">
-						{room.name}
-					</Heading>
-				</Header>
-				<Box>
-					<Header size="small">
-						<Heading tag="h4">{room.description}</Heading>
-					</Header>
-					<div>Name: {room.name ? room.name : "Raum hat keinen Namen"}</div>
-					<div>
-						Fläche:{" "}
-						{room.floorSpace ? room.floorSpace : "Keine Fläche definiert"}
-					</div>
-				</Box>
+				<Heading tag="h2" margin="none" pad="medium">
+					{room.name}
+				</Heading>
+				<Heading tag="h4">{room.description}</Heading>
 			</Section>
 			<Route
 				path={`${match.url}/measurements/:measurementId`}
