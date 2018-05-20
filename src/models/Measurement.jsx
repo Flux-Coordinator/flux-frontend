@@ -1,10 +1,13 @@
 // @flow
+import Reading from "./Reading";
 
 type ConstructorType = {
 	measurementId: number,
 	description: string,
 	startDate: Date,
-	endDate: Date
+	endDate: Date,
+	measurementState: string,
+	readings?: Reading[]
 };
 
 export default class Measurement {
@@ -12,15 +15,24 @@ export default class Measurement {
 	description: string;
 	startDate: Date;
 	endDate: Date;
+	state: string;
+	readings: Reading[];
 
 	constructor(
 		measurementId: number,
 		description: string,
 		startDate: Date,
-		endDate: Date
+		endDate: Date,
+		state: string,
+		readings?: Reading[]
 	) {
 		this.measurementId = measurementId;
 		this.description = description;
+		this.state = state;
+
+		if (readings) {
+			this.readings = readings;
+		}
 
 		if (typeof startDate === "number" || typeof startDate === "string") {
 			this.startDate = new Date(startDate);
@@ -39,8 +51,17 @@ export default class Measurement {
 		measurementId,
 		description,
 		startDate,
-		endDate
+		endDate,
+		measurementState,
+		readings
 	}: ConstructorType) {
-		return new Measurement(measurementId, description, startDate, endDate);
+		return new Measurement(
+			measurementId,
+			description,
+			startDate,
+			endDate,
+			measurementState,
+			readings
+		);
 	}
 }
