@@ -85,7 +85,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		return currentData;
 	};
 
-	componentDidUpdate(prevProps: Props, prevState: State) {
+	componentDidUpdate() {
 		this.setConfig();
 		this.setData();
 	}
