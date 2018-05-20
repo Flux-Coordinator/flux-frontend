@@ -124,8 +124,19 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	};
 
 	setConfig = () => {
+		let configObject = this.props.configObject;
+		if (this.props.heatmapModes.showAnchors) {
+			configObject = {
+				radius: 3,
+				opacity: 1,
+				blur: 0,
+				gradient: {
+					"1": "red"
+				}
+			};
+		}
 		const currentData = this.destroyHeatmapInstance(this.heatmap);
-		this.heatmap = this.createHeatmapInstance(this.props.configObject);
+		this.heatmap = this.createHeatmapInstance(configObject);
 		this.heatmap.setData(currentData);
 	};
 

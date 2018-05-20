@@ -5,7 +5,9 @@ export type ConfigObject = {
 	radius?: number,
 	maxOpacity?: number,
 	minOpacity?: number,
-	blur?: number
+	opacity?: number,
+	blur?: number,
+	gradient?: Object
 };
 
 export type HeatmapModes = {
