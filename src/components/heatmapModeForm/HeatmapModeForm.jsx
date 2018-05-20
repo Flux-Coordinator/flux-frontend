@@ -13,13 +13,9 @@ type Props = {
 	onChange: (string, allInputTypes) => void
 };
 
-export default function HeatmapModeForm({
-	configObject,
-	onSubmit,
-	onChange
-}: Props) {
+export default function HeatmapModeForm({ configObject, onChange }: Props) {
 	return (
-		<Form heading="Modi aktivieren" onSubmit={() => {}}>
+		<Form heading="Modi aktivieren">
 			<FormFields>
 				<fieldset>
 					<FormField label="Messabdeckung feststellen">
