@@ -116,7 +116,7 @@ export default class App extends React.Component<Prop, State> {
 			<div>
 				<GrommetApp centered={false}>
 					<Router>
-						<Layout projects={this.state.projects}>
+						<Layout loading={this.state.loading} projects={this.state.projects}>
 							<Switch>
 								<Route path="/editProject/:projectId" component={EditProject} />
 								<Route path="/editProject" component={EditProject} />
