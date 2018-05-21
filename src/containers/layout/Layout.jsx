@@ -10,10 +10,12 @@ import Project from "../../models/Project";
 import Header from "../../components/header/Header";
 import NavMenu from "../../components/navmenu/NavMenu";
 import Sidebar from "../../components/sidebar/Sidebar";
+import Loading from "../../components/loading/Loading";
 
 type Prop = {
 	children?: React.Node,
-	projects: Project[]
+	projects: Project[],
+	loading: boolean
 };
 
 type State = {
@@ -61,7 +63,7 @@ export default class Layout extends React.Component<Prop, State> {
 	};
 
 	render() {
-		const { children, projects } = this.props;
+		const { children, projects, loading } = this.props;
 		const title = "Flux-Coordinator";
 
 		const sidebarToggler: React.Node = this.state.isMobileScreen ? (
@@ -78,6 +80,8 @@ export default class Layout extends React.Component<Prop, State> {
 			}
 		};
 
+		const loadingOrChildren: React.Node = loading ? <Loading /> : children;
+
 		return (
 			<Split
 				flex="right"
@@ -89,7 +93,7 @@ export default class Layout extends React.Component<Prop, State> {
 				</Sidebar>
 				<Box colorIndex="light-2" basis="full" full primary>
 					{this.state.isMobileScreen && header}
-					<Box>{children}</Box>
+					{loadingOrChildren}
 				</Box>
 			</Split>
 		);

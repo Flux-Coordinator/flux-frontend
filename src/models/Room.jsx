@@ -1,23 +1,74 @@
 // @flow
 import Measurement from "./Measurement";
+import Transformation from "./Transformation";
+
+type ConstructorType = {
+	name: string,
+	description: string,
+	measurements: Measurement[] | any,
+	floorPlan: ?string,
+	floorSpace: ?number,
+	xOffset: ?number,
+	yOffset: ?number,
+	scaleFactor: ?number,
+	roomId: ?number
+};
 
 export default class Room {
-	id: string;
+	roomId: ?number;
 	name: string;
 	description: string;
 	measurements: Measurement[];
-	length: number;
-	width: number;
+	floorPlan: ?string;
+	floorSpace: ?number;
+	transformation: Transformation;
 
 	constructor(
-		id: string,
 		name: string,
-		description: string = "",
-		measurements: Measurement[] = []
+		description: string,
+		measurements: Measurement[] | any,
+		floorPlan: ?string,
+		floorSpace: ?number,
+		xOffset: ?number,
+		yOffset: ?number,
+		scaleFactor: ?number,
+		roomId: ?number
 	) {
-		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.measurements = measurements;
+		this.floorPlan = floorPlan;
+		this.floorSpace = floorSpace;
+		this.transformation = new Transformation(xOffset, yOffset, scaleFactor);
+		this.roomId = roomId;
+	}
+
+	static fromObject({
+		name,
+		description,
+		measurements,
+		floorPlan,
+		floorSpace,
+		xOffset,
+		yOffset,
+		scaleFactor,
+		roomId
+	}: ConstructorType) {
+		const typedMeasurements: Measurement[] = [];
+		measurements.forEach(m => {
+			typedMeasurements.push(Measurement.fromObject(m));
+		});
+
+		return new Room(
+			name,
+			description,
+			typedMeasurements,
+			floorPlan,
+			floorSpace,
+			xOffset,
+			yOffset,
+			scaleFactor,
+			roomId
+		);
 	}
 }

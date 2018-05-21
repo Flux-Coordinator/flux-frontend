@@ -2,7 +2,6 @@
 import * as React from "react";
 import { shallow } from "enzyme";
 import Title from "grommet/components/Title";
-import Anchor from "grommet/components/Anchor";
 
 import Header from "./Header";
 

@@ -1,5 +1,5 @@
-// flow-typed signature: 25e4ee422b9f0108f151f2c05dd2471d
-// flow-typed version: 107feb8c45/react-router-dom_v4.x.x/flow_>=v0.53.x
+// flow-typed signature: 60904532a0b2eae42e097223d1999f8e
+// flow-typed version: f821d89401/react-router-dom_v4.x.x/flow_>=v0.53.x
 
 declare module "react-router-dom" {
 	declare export class BrowserRouter extends React$Component<{
@@ -18,6 +18,7 @@ declare module "react-router-dom" {
 	}> {}
 
 	declare export class Link extends React$Component<{
+		className?: string,
 		to: string | LocationShape,
 		replace?: boolean,
 		children?: React$Node
@@ -85,7 +86,8 @@ declare module "react-router-dom" {
 	declare export type ContextRouter = {|
 		history: RouterHistory,
 		location: Location,
-		match: Match
+		match: Match,
+		staticContext?: StaticRouterContext
 	|};
 
 	declare export type GetUserConfirmation = (

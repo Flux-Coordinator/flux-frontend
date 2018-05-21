@@ -2,9 +2,9 @@
 import React from "react";
 import GrommetApp from "grommet/components/App";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import axios, { CancelToken, CancelTokenSource } from "axios";
 
 import RoomModel from "../../models/Room";
-import Measurement from "../../models/Measurement";
 import ProjectModel from "../../models/Project";
 import Room from "../../components/room/Room";
 import Dashboard from "../../components/dashboard/Dashboard";
@@ -12,88 +12,137 @@ import NotFound from "../../components/notfound/NotFound";
 import Projects from "../../components/projects/Projects";
 import Layout from "../layout/Layout";
 import Project from "../../components/projects/Project";
+import ImportExportContainer from "../importexport/ImportExportContainer";
+import EditProject from "./../../containers/projects/EditProject";
+import Login from "../login/LoginContainer";
 
-const measurements: Measurement[] = [
-	new Measurement("15564564564", "Erste Messung", new Date()),
-	new Measurement("45648994884", "Zweite Messung", new Date()),
-	new Measurement("16455161566", "Dritte Messung", new Date())
-];
+import type { ToastMetadata } from "./../../components/toast/Toast";
 
-const rooms: RoomModel[] = [
-	new RoomModel(
-		"1234564",
-		"Aula",
-		"Ein grosser Saal mit Plätzen für 200 Personen und in der Mitte eine Absenkung.",
-		measurements
-	),
-	new RoomModel(
-		"7542213",
-		"Mensa",
-		"Platz für 400 Personen und eine Glasfassade.",
-		measurements
-	)
-];
+type Prop = {};
 
-const currentProjects: ProjectModel[] = [
-	new ProjectModel("583492902", "Hochschule Rapperswil", rooms),
-	new ProjectModel("120991323", "Hochschule St. Gallen", rooms)
-];
+type State = {
+	projects: ProjectModel[],
+	loading: boolean,
+	toast?: ToastMetadata
+};
 
-const RenderRoomPage = ({ match }: { match: Object }) => {
-	for (const project of currentProjects) {
-		const foundRoom = project.rooms.find(
-			room => room.id === match.params.roomId
+export default class App extends React.Component<Prop, State> {
+	source: CancelTokenSource = CancelToken.source();
+
+	constructor() {
+		super();
+		(axios.defaults: Object).baseURL = process.env.REACT_APP_SERVICE_URI; // Sets the default URL for the rest of the applications lifetime.
+	}
+
+	state = {
+		projects: [],
+		loading: true
+	};
+
+	componentDidMount() {
+		this.getProjects();
+	}
+
+	componentWillUnmount() {
+		this.source.cancel();
+	}
+
+	getProjects = () => {
+		this.setState({ loading: true });
+		axios
+			.get(`/projects?limit=0`, {
+				cancelToken: this.source.token
+			})
+			.then(result => {
+				const projs: ProjectModel[] = [];
+				result.data.forEach(d => {
+					projs.push(ProjectModel.fromObject(d));
+				});
+				this.setState({ projects: projs, loading: false });
+			})
+			.catch(error => {
+				if (!axios.isCancel(error)) {
+					this.setState({ projects: [], loading: false });
+				}
+			});
+	};
+
+	renderProjectsPage = () => (
+		<Projects loading={this.state.loading} projects={this.state.projects} />
+	);
+
+	renderProjectPage = ({ match }: { match: any }) => {
+		const { projects } = this.state;
+
+		const foundProject = projects.find(
+			project => project.projectId === parseInt(match.params.projectId, 10)
 		);
 
-		if (foundRoom) {
-			return <Room room={foundRoom} />;
+		if (foundProject) {
+			return <Project project={foundProject} match={match} />;
 		}
+		const infoMessage = `Das Projekt mit der ID ${
+			match.params.projectId
+		} konnte nicht gefunden werden.`;
+		return <NotFound info={infoMessage} />;
+	};
+
+	renderRoomPage = ({ match }: any) => {
+		const foundProject: ?ProjectModel = this.state.projects.find(
+			(project: ProjectModel) =>
+				project.projectId === parseInt(match.params.projectId, 10)
+		);
+
+		if (foundProject) {
+			const foundRoom: ?RoomModel = foundProject.rooms.find(
+				(room: RoomModel) => room.roomId === parseInt(match.params.roomId, 10)
+			);
+
+			if (foundRoom) {
+				return (
+					<Room match={match} parentProject={foundProject} room={foundRoom} />
+				);
+			}
+		}
+
+		const infoMessage = `Der Raum mit der ID ${
+			match.params.roomId
+		} konnte nicht gefunden werden.`;
+		return <NotFound info={infoMessage} />;
+	};
+
+	render() {
+		return (
+			<div>
+				<GrommetApp centered={false}>
+					<Router>
+						<Layout loading={this.state.loading} projects={this.state.projects}>
+							<Switch>
+								<Route path="/editProject/:projectId" component={EditProject} />
+								<Route path="/editProject" component={EditProject} />
+								<Route
+									path="/projects/:projectId"
+									exact
+									component={this.renderProjectPage}
+								/>
+								<Route
+									path="/projects"
+									exact
+									component={this.renderProjectsPage}
+								/>
+								<Route
+									path="/projects/:projectId/rooms/:roomId"
+									component={this.renderRoomPage}
+								/>
+								<Route path="/import" exact component={ImportExportContainer} />
+								<Route path="/login" component={Login} />
+								<Route path="/" exact component={Dashboard} />
+								<Route path="/" component={NotFound} />
+							</Switch>
+						</Layout>
+					</Router>
+				</GrommetApp>
+			</div>
+		);
 	}
-	const infoMessage = `Das Projekt mit der ID ${
-		match.params.roomId
-	} konnte nicht gefunden werden.`;
-	return <NotFound info={infoMessage} />;
-};
-
-const RenderProjectsPage = () => {
-	return <Projects projects={currentProjects} />;
-};
-
-const RenderProjectPage = ({ match }: { match: Object }) => {
-	const foundProject = currentProjects.find(
-		project => project.id === match.params.projectId
-	);
-
-	if (foundProject) {
-		return <Project project={foundProject} />;
-	}
-	const infoMessage = `Das Projekt mit der ID ${
-		match.params.projectId
-	} konnte nicht gefunden werden.`;
-	return <NotFound info={infoMessage} />;
-};
-
-function App() {
-	return (
-		<div>
-			<GrommetApp centered={false}>
-				<Router>
-					<Layout projects={currentProjects}>
-						<Switch>
-							<Route
-								path="/projects/:projectId"
-								component={RenderProjectPage}
-							/>
-							<Route path="/projects" component={RenderProjectsPage} />
-							<Route path="/rooms/:roomId" component={RenderRoomPage} />
-							<Route path="/" exact component={Dashboard} />
-							<Route path="/" component={NotFound} />
-						</Switch>
-					</Layout>
-				</Router>
-			</GrommetApp>
-		</div>
-	);
 }
-
-export default App;

@@ -20,6 +20,7 @@
   ],
   "rules": {
     "linebreak-style": 0,
-    "jsx-a11y/href-no-hash": "off"
+    "jsx-a11y/href-no-hash": "off",
+    "react/sort-comp": 0
   }
 }

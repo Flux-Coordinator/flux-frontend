@@ -1,13 +1,22 @@
 // @flow
 import * as React from "react";
 import { shallow } from "enzyme";
+import { MemoryRouter, Route } from "react-router";
 
-import RoomModel from "../../models/Room";
+import DataGenerator from "../../utils/DataGenerator";
 import Room from "./Room";
 
 describe("<Room />", () => {
 	it("should render", () => {
-		const room = new RoomModel("asdodmp", "First Room", "Description");
-		shallow(<Room room={room} />);
+		const project = DataGenerator.createProject(2);
+		shallow(
+			<MemoryRouter>
+				<Route
+					component={props => (
+						<Room parentProject={project} room={project.rooms[0]} {...props} />
+					)}
+				/>
+			</MemoryRouter>
+		);
 	});
 });
