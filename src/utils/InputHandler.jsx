@@ -1,5 +1,4 @@
 // @flow
-
 export type allInputTypes = string | number | boolean;
 
 export const inputHandler = (callback: (string, allInputTypes) => void) => (
@@ -18,6 +17,8 @@ export const inputHandler = (callback: (string, allInputTypes) => void) => (
 			case "text":
 			case "number":
 				callback(name, event.currentTarget.value);
+				break;
+			default:
 				break;
 		}
 	}
