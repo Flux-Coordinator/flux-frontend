@@ -16,6 +16,7 @@ export default class Reading implements Positionable {
 	luxValue: number;
 	timestamp: Date;
 	position: PositionModel;
+	getValue = () => this.luxValue;
 
 	constructor(
 		readingId: ?number,

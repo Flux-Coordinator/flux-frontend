@@ -5,18 +5,14 @@ export type ConfigObject = {
 	radius?: number,
 	maxOpacity?: number,
 	minOpacity?: number,
-	blur?: number
+	opacity?: number,
+	blur?: number,
+	gradient?: Object
 };
 
 export type HeatmapModes = {
 	showCoverage: boolean,
 	showAnchors: boolean
-};
-
-export type HeatmapDataPoint = {
-	x: number,
-	y: number,
-	value: number
 };
 
 export type Container = {
