@@ -4,6 +4,7 @@ import Header from "grommet/components/Header";
 import Heading from "grommet/components/Heading";
 import Section from "grommet/components/Section";
 import Article from "grommet/components/Article";
+// eslint-disable-next-line
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import ProjectModel from "../../models/Project";

@@ -1,13 +1,14 @@
 // @flow
 import Reading from "./Reading";
 import Anchor from "./Anchor";
+import type { MeasurementState } from "./../types/MeasurementState";
 
 type ConstructorType = {
 	measurementId: number,
 	description: string,
 	startDate: Date,
 	endDate: Date,
-	measurementState: string,
+	measurementState: MeasurementState,
 	readings?: Reading[],
 	anchorPositions?: Anchor[]
 };
@@ -17,7 +18,7 @@ export default class Measurement {
 	description: string;
 	startDate: Date;
 	endDate: Date;
-	state: string;
+	state: MeasurementState;
 	readings: Reading[];
 	anchors: Anchor[];
 
@@ -26,7 +27,7 @@ export default class Measurement {
 		description: string,
 		startDate: Date,
 		endDate: Date,
-		state: string,
+		state: MeasurementState,
 		readings?: Reading[],
 		anchors?: Anchor[]
 	) {

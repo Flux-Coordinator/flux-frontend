@@ -61,7 +61,7 @@ export default class MeasurementContainer extends React.Component<
 				.then(result => {
 					this.setState(prevState => {
 						const measurement = prevState.currentMeasurement;
-						measurement.state = "OK";
+						measurement.state = "DONE";
 						return {
 							currentMeasurement: measurement
 						};
