@@ -6,7 +6,6 @@ import MeasurementSummary from "../../components/measurements/MeasurementSummary
 import ReadingModel from "../../models/Reading";
 import RoomModel from "../../models/Room";
 import MeasurementModel from "../../models/Measurement";
-import Reading from "../../models/Reading";
 
 type Props = {
 	room: RoomModel,
@@ -97,11 +96,13 @@ export default class MeasurementContainer extends React.Component<
 				prevState.websocket.close();
 			}
 
-			const websocket = new WebSocket(url);
-			websocket.onmessage = this.onReadingReceived;
+			if (window.WebSocket) {
+				const websocket = new WebSocket(url);
+				websocket.onmessage = this.onReadingReceived;
 
-			prevState.websocket = websocket;
-			this.keepAliveTimer = setTimeout(this.onKeepAlive, KEEP_ALIVE_INTERVAL);
+				prevState.websocket = websocket;
+				this.keepAliveTimer = setTimeout(this.onKeepAlive, KEEP_ALIVE_INTERVAL);
+			}
 			return prevState;
 		});
 	};
@@ -129,7 +130,7 @@ export default class MeasurementContainer extends React.Component<
 	onReadingReceived = (event: MessageEvent) => {
 		this.setState(prevState => {
 			const receivedObjects = JSON.parse((event.data: any));
-			const newReadings = receivedObjects.map(o => Reading.fromObject(o));
+			const newReadings = receivedObjects.map(o => ReadingModel.fromObject(o));
 			prevState.currentMeasurement.readings.push(...newReadings);
 			return prevState;
 		});
