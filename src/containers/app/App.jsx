@@ -11,6 +11,8 @@ import Layout from "../layout/Layout";
 import ImportExportContainer from "../importexport/ImportExportContainer";
 import EditProject from "./../../containers/projects/EditProject";
 import Login from "../login/LoginContainer";
+import Toast from "./../../components/toast/Toast";
+import { ToastContext } from "./../../components/toast/ToastContext";
 
 import type { ToastMetadata } from "./../../components/toast/Toast";
 
@@ -26,9 +28,15 @@ export default class App extends React.Component<Prop, State> {
 		(axios.defaults: Object).baseURL = process.env.REACT_APP_SERVICE_URI; // Sets the default URL for the rest of the applications lifetime.
 	}
 
+	state = {};
+
+	showToast = (metadata: ToastMetadata) => {
+		this.setState({ toast: metadata });
+	};
+
 	render() {
 		return (
-			<div>
+			<ToastContext.Provider value={this.showToast}>
 				<GrommetApp centered={false}>
 					<Router>
 						<Layout>
@@ -43,8 +51,12 @@ export default class App extends React.Component<Prop, State> {
 							</Switch>
 						</Layout>
 					</Router>
+					<Toast
+						metadata={this.state.toast}
+						onClose={() => this.setState({ toast: undefined })}
+					/>
 				</GrommetApp>
-			</div>
+			</ToastContext.Provider>
 		);
 	}
 }
