@@ -1,7 +1,6 @@
 // @flow
 import * as React from "react";
 import Button from "grommet/components/Button";
-import Anchor from "grommet/components/Anchor";
 
 import Project from "../../models/Project";
 

@@ -109,5 +109,5 @@ export default class SelectRoomsStep extends React.Component<StepProps, State> {
 }
 
 function RoomItemRenderer({ item }: { item: Room }) {
-	return item.name;
+	return <div className="custom-list-anchor">{item.name}</div>;
 }
