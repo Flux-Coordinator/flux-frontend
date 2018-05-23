@@ -53,7 +53,7 @@ export default class EditProject extends React.Component<Props, State> {
 		});
 	};
 
-	onSubmit = (showToast: () => void) => {
+	onSubmit = (showToast: (toast: ToastMetadata) => void) => {
 		this.saveProject(this.state.project)
 			.then(result => {
 				if (result.status === 201) {
@@ -61,12 +61,8 @@ export default class EditProject extends React.Component<Props, State> {
 						status: "ok",
 						children: "Projekt abgespeichert"
 					};
-					this.setState({ toast: toast, shouldRedirect: true });
 					if (showToast) {
-						showToast({
-							status: "ok",
-							children: "Projekt gespeichert"
-						});
+						showToast(toast);
 					}
 				}
 			})
@@ -75,7 +71,9 @@ export default class EditProject extends React.Component<Props, State> {
 					status: "critical",
 					children: "Projekt konnte nicht gespeichert werden"
 				};
-				this.setState({ toast: toast });
+				if (showToast) {
+					showToast(toast);
+				}
 			});
 	};
 
