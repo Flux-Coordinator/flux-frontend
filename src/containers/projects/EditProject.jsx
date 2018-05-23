@@ -9,7 +9,9 @@ import { Redirect } from "react-router-dom";
 import Form from "./../../components/form/Form";
 import Project from "../../models/Project";
 import { ToastContext } from "./../../components/toast/ToastContext";
+import { inputHandler } from "../../utils/InputHandler";
 
+import type { AllInputTypes } from "../../utils/InputHandler";
 import type { ToastMetadata } from "./../../components/toast/Toast";
 
 type Props = {
@@ -26,7 +28,11 @@ type State = {
 export default class EditProject extends React.Component<Props, State> {
 	source: CancelTokenSource = CancelToken.source();
 	state = {
-		project: new Project("uninitialized project", []),
+		project: new Project(
+			"uninitialized project",
+			"This project is uninitialized. Probably an error!",
+			[]
+		),
 		loading: true,
 		shouldRedirect: false
 	};
@@ -43,12 +49,11 @@ export default class EditProject extends React.Component<Props, State> {
 		});
 	};
 
-	onTitleChanged = (event: SyntheticEvent<HTMLInputElement>) => {
-		const target = event.currentTarget;
-		const value = target.value;
-
-		this.setState(prevState => {
-			prevState.project.name = value;
+	onProjectChanged = (key: string, value: AllInputTypes) => {
+		this.setState((prevState, props) => {
+			prevState.project = Object.assign(prevState.project, {
+				[key]: value
+			});
 			return prevState;
 		});
 	};
@@ -80,12 +85,11 @@ export default class EditProject extends React.Component<Props, State> {
 
 	componentDidMount() {
 		const projectId = this.props.match.params.projectId;
-
 		let project: Project;
 
 		if (typeof projectId === "undefined") {
 			this.setState({
-				project: new Project("", []),
+				project: new Project("", "", []),
 				loading: false
 			});
 		} else {
@@ -119,7 +123,15 @@ export default class EditProject extends React.Component<Props, State> {
 								name="name"
 								placeholder="Projektname eingeben"
 								value={this.state.project.name}
-								onDOMChange={this.onTitleChanged}
+								onDOMChange={inputHandler(this.onProjectChanged)}
+							/>
+						</FormField>
+						<FormField label="Beschreibung">
+							<TextInput
+								name="description"
+								placeholder="Beschreibung des Projektes"
+								value={this.state.project.description}
+								onDOMChange={inputHandler(this.onProjectChanged)}
 							/>
 						</FormField>
 						{this.state.shouldRedirect && <Redirect to="/projects" />}

@@ -1,7 +1,7 @@
 // @flow
-export type allInputTypes = string | number | boolean;
+export type AllInputTypes = string | number | boolean;
 
-export const inputHandler = (callback: (string, allInputTypes) => void) => (
+export const inputHandler = (callback: (string, AllInputTypes) => void) => (
 	event: SyntheticEvent<HTMLInputElement>
 ) => {
 	if (

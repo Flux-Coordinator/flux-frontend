@@ -4,10 +4,10 @@ import { shallow } from "enzyme";
 
 import HeatmapModeForm from "./HeatmapModeForm";
 import type { HeatmapModes } from "../../types/Heatmap";
-import type { allInputTypes } from "../../utils/InputHandler";
+import type { AllInputTypes } from "../../utils/InputHandler";
 
 describe("<HeatmapModeForm />", () => {
-	const onChange = (key: string, value: allInputTypes) => {};
+	const onChange = (key: string, value: AllInputTypes) => {};
 	const heatmapModes: HeatmapModes = {
 		showCoverage: false,
 		showAnchors: false

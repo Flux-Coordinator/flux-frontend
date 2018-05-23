@@ -6,12 +6,12 @@ import FormFields from "grommet/components/FormFields";
 import NumberInput from "grommet/components/NumberInput";
 import type { ConfigObject } from "../../types/Heatmap";
 import { inputHandler } from "../../utils/InputHandler";
-import type { allInputTypes } from "../../utils/InputHandler";
+import type { AllInputTypes } from "../../utils/InputHandler";
 
 type Props = {
 	configObject: ConfigObject,
 	onSubmit: () => void,
-	onChange: (string, allInputTypes) => void
+	onChange: (string, AllInputTypes) => void
 };
 
 export default function HeatmapConfigForm({

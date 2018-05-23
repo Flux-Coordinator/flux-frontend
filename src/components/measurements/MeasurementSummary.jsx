@@ -19,7 +19,7 @@ import TransformationForm from "../transformationForm/TransformationForm";
 import HeatmapConfigForm from "../heatmapConfigForm/HeatmapConfigForm";
 import { EXAMPLE_IMAGE } from "../../images/ImagesBase64";
 import HeatmapModeForm from "../heatmapModeForm/HeatmapModeForm";
-import type { allInputTypes } from "../../utils/InputHandler";
+import type { AllInputTypes } from "../../utils/InputHandler";
 import Loading from "../loading/Loading";
 
 type Props = {
@@ -56,7 +56,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 		});
 	}
 
-	handleTransformationChange = (key: string, value: allInputTypes) => {
+	handleTransformationChange = (key: string, value: AllInputTypes) => {
 		this.setState((prevState, props) => ({
 			transformation: Object.assign(prevState.transformation, {
 				[key]: parseFloat(value)
@@ -64,7 +64,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 		}));
 	};
 
-	handleModeChange = (key: string, value: allInputTypes) => {
+	handleModeChange = (key: string, value: AllInputTypes) => {
 		this.setState((prevState, props) => ({
 			heatmapModes: Object.assign(prevState.heatmapModes, {
 				[key]: value
@@ -72,7 +72,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 		}));
 	};
 
-	handleHeatmapConfigChange = (key: string, value: allInputTypes) => {
+	handleHeatmapConfigChange = (key: string, value: AllInputTypes) => {
 		this.setState((prevState, props) => ({
 			configObject: Object.assign(prevState.configObject, {
 				[key]: parseFloat(value)
