@@ -67,6 +67,7 @@ export default class EditProject extends React.Component<Props, State> {
 					if (showToast) {
 						showToast(toast);
 					}
+					this.setState({ shouldRedirect: true });
 				}
 			})
 			.catch(error => {

@@ -36,7 +36,7 @@ export default class App extends React.Component<Prop, State> {
 
 	render() {
 		return (
-			<ToastContext.Provider value={this.showToast}>
+			<ToastContext.Provider value={(this.showToast: any)}>
 				<GrommetApp centered={false}>
 					<Router>
 						<Layout>

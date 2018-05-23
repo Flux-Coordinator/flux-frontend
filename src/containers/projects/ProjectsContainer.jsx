@@ -81,7 +81,7 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 			}
 
 			for (const p of project) {
-				const maybeRoom: Room = this.findRoomInProject(p, roomIdInt);
+				const maybeRoom: ?Room = this.findRoomInProject(p, roomIdInt);
 				if (maybeRoom) {
 					return maybeRoom;
 				}

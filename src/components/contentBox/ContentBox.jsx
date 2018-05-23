@@ -12,7 +12,7 @@ type Props = {
 	location: any
 };
 
-class ContentBox extends React.Component<Props, State> {
+class ContentBox extends React.Component<Props> {
 	render() {
 		return (
 			<Article pad="medium">
