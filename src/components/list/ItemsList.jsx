@@ -57,7 +57,7 @@ export default function ItemsList<T>({
 			<List selectable={selectable} onSelect={onSelect}>
 				{items &&
 					items.map(item => (
-						<ListItem key={keyFunc(item)} {...listItemProperties}>
+						<ListItem key={keyFunc(item)} {...listItemProperties} pad="none">
 							<ItemRenderer item={item} />
 						</ListItem>
 					))}

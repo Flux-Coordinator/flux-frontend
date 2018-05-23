@@ -1,6 +1,8 @@
 // @flow
 import * as React from "react";
-import Anchor from "grommet/components/Anchor";
+import Box from "grommet/components/Box";
+import Button from "grommet/components/Button";
+import Timestamp from "grommet/components/Timestamp";
 
 import Measurement from "../../models/Measurement";
 
@@ -12,10 +14,17 @@ type Props = {
 export default function AnchorMeasurementItemRenderer({ item, match }: Props) {
 	if (item.measurementId) {
 		return (
-			<Anchor path={`${match.url}/measurements/${item.measurementId}`}>
-				<span>{item.description}</span>
-				<span>{item.startDate.toLocaleString()}</span>
-			</Anchor>
+			<Button
+				path={`${match.url}/measurements/${item.measurementId}`}
+				className="custom-list-anchor"
+			>
+				<Box alignContent="around">
+					<span>
+						<strong>{item.description}</strong>
+					</span>
+					<Timestamp value={item.startDate} />
+				</Box>
+			</Button>
 		);
 	} else {
 		return null;
