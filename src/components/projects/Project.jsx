@@ -8,6 +8,7 @@ import NotFound from "../../components/notfound/NotFound";
 import ContentBox from "../contentBox/ContentBox";
 import ProjectModel from "../../models/Project";
 import ItemsList from "../list/ItemsList";
+import ItemListHeader from "./../list/ItemListHeader";
 import AnchorRoomItemRenderer from "../room/AnchorRoomItemRenderer";
 
 type Props = {
@@ -31,9 +32,7 @@ export default function Project({ projects, match }: Props) {
 	return (
 		<ContentBox heading={project.name}>
 			<Box>
-				<Header size="small">
-					<Heading tag="h3">Räume</Heading>
-				</Header>
+				<ItemListHeader header="Räume" path="/editRoom" />
 				<ItemsList
 					items={project.rooms}
 					keyFunc={item => item.roomId}
