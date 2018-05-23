@@ -58,7 +58,9 @@ export default function ItemsList<T>({
 				{items &&
 					items.map(item => (
 						<ListItem key={keyFunc(item)} {...listItemProperties} pad="none">
-							<ItemRenderer item={item} />
+							<Box pad="none" direction="row" size="full" flex="grow">
+								<ItemRenderer item={item} />
+							</Box>
 						</ListItem>
 					))}
 			</List>

@@ -1,8 +1,9 @@
 // @flow
 import * as React from "react";
-import Button from "grommet/components/Button";
 
 import Room from "../../models/Room";
+import ItemListAnchorButton from "../list/ItemListAnchorButton";
+import ItemListEditButton from "../list/ItemListEditButton";
 
 type Props = {
 	item: Room,
@@ -12,12 +13,12 @@ type Props = {
 export default function AnchorProjectItemRenderer({ item, match }: Props) {
 	if (item.roomId) {
 		return (
-			<Button
-				path={`${match.url}/rooms/${item.roomId}`}
-				className="custom-list-anchor"
-			>
-				{item.name}
-			</Button>
+			<React.Fragment>
+				<ItemListAnchorButton path={`${match.url}/rooms/${item.roomId}`}>
+					{item.name}
+				</ItemListAnchorButton>
+				<ItemListEditButton path={`/editRoom/${item.roomId}`} />
+			</React.Fragment>
 		);
 	} else {
 		return null;
