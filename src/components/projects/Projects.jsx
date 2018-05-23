@@ -1,13 +1,10 @@
 // @flow
 import * as React from "react";
 import Header from "grommet/components/Header";
-import Heading from "grommet/components/Heading";
-import Button from "grommet/components/Button";
 import Title from "grommet/components/Title";
 import Section from "grommet/components/Section";
 import Box from "grommet/components/Box";
 import Search from "grommet/components/Search";
-import AddIcon from "grommet/components/icons/base/Add";
 
 import ContentBox from "../contentBox/ContentBox";
 import ItemsList from "./../list/ItemsList";

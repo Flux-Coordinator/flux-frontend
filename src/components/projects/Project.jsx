@@ -1,8 +1,6 @@
 // @flow
 import * as React from "react";
 import Box from "grommet/components/Box";
-import Header from "grommet/components/Header";
-import Heading from "grommet/components/Heading";
 
 import NotFound from "../../components/notfound/NotFound";
 import ContentBox from "../contentBox/ContentBox";

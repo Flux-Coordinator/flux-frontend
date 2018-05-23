@@ -85,7 +85,6 @@ export default class EditProject extends React.Component<Props, State> {
 
 	componentDidMount() {
 		const projectId = this.props.match.params.projectId;
-		let project: Project;
 
 		if (typeof projectId === "undefined") {
 			this.setState({
@@ -101,10 +100,6 @@ export default class EditProject extends React.Component<Props, State> {
 				});
 			});
 		}
-
-		return {
-			project: project
-		};
 	}
 
 	render() {

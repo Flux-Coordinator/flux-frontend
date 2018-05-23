@@ -1,6 +1,5 @@
 // @flow
 import * as React from "react";
-import Header from "grommet/components/Header";
 import Heading from "grommet/components/Heading";
 import Section from "grommet/components/Section";
 import Article from "grommet/components/Article";
