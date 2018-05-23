@@ -16,7 +16,7 @@ export default function ItemListHeader({ header, path }: Props) {
 			<Heading tag="h3" pad="none" margin="none">
 				{header}
 			</Heading>
-			{path && <Button icon={<AddIcon />} path={{ path }} />}
+			{path && <Button icon={<AddIcon />} path={path} />}
 		</Header>
 	);
 }
