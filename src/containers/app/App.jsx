@@ -44,8 +44,14 @@ export default class App extends React.Component<Prop, State> {
 							<Switch>
 								<Route path="/editProject/:projectId" component={EditProject} />
 								<Route path="/editProject" component={EditProject} />
-								<Route path="/editRoom/:roomId" component={EditRoom} />
-								<Route path="/editRoom" component={EditRoom} />
+								<Route
+									path="/projects/:projectId/editRoom/:roomId"
+									component={EditRoom}
+								/>
+								<Route
+									path="/projects/:projectId/editRoom"
+									component={EditRoom}
+								/>
 								<Route path="/projects" component={ProjectsContainer} />
 								<Route path="/import" exact component={ImportExportContainer} />
 								<Route path="/login" component={Login} />

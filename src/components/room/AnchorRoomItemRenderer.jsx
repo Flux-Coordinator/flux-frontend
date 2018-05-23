@@ -17,7 +17,7 @@ export default function AnchorProjectItemRenderer({ item, match }: Props) {
 				<ItemListAnchorButton path={`${match.url}/rooms/${item.roomId}`}>
 					{item.name}
 				</ItemListAnchorButton>
-				<ItemListEditButton path={`/editRoom/${item.roomId}`} />
+				<ItemListEditButton path={`${match.url}/editRoom/${item.roomId}`} />
 			</React.Fragment>
 		);
 	} else {

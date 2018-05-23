@@ -4,6 +4,7 @@ import TextInput from "grommet/components/TextInput";
 import FormField from "grommet/components/FormField";
 import Loading from "../../components/loading/Loading";
 import axios, { CancelToken, CancelTokenSource } from "axios";
+import { Redirect } from "react-router-dom";
 
 import Measurement from "../../models/Measurement";
 import Room from "../../models/Room";
@@ -33,7 +34,7 @@ export default class EditRoom extends React.Component<Props, State> {
 			"Uninitialized Room (probably an error)",
 			([]: Measurement[])
 		),
-		isLoading: false,
+		isLoading: true,
 		shouldRedirect: false
 	};
 
@@ -43,7 +44,40 @@ export default class EditRoom extends React.Component<Props, State> {
 		});
 	};
 
-	onSubmit = (showToast?: (toast: ToastMetadata) => void) => {};
+	saveRoom = (room: Room) => {
+		return axios.post(
+			`/projects/${this.props.match.params.projectId}/rooms`,
+			room,
+			{
+				cancelToken: this.source.token
+			}
+		);
+	};
+
+	onSubmit = (showToast?: (toast: ToastMetadata) => void) => {
+		this.saveRoom(this.state.room)
+			.then(result => {
+				if (result.status === 201) {
+					const toast: ToastMetadata = {
+						status: "ok",
+						children: "Raum abgespeichert"
+					};
+					if (showToast) {
+						showToast(toast);
+					}
+					this.setState({ shouldRedirect: true });
+				}
+			})
+			.catch(error => {
+				const toast: ToastMetadata = {
+					status: "critical",
+					children: "Raum konnte nicht gespeichert werden"
+				};
+				if (showToast) {
+					showToast(toast);
+				}
+			});
+	};
 
 	onRoomChanged = (key: string, value: AllInputTypes) => {
 		this.setState((prevState, props) => {
@@ -96,10 +130,13 @@ export default class EditRoom extends React.Component<Props, State> {
 							<TextInput
 								name="description"
 								placeholder="Beschreibung eingeben"
-								value={this.state.room.name}
+								value={this.state.room.description}
 								onDOMChange={inputHandler(this.onRoomChanged)}
 							/>
 						</FormField>
+						{this.state.shouldRedirect && (
+							<Redirect to={"/projects/" + this.props.match.params.projectId} />
+						)}
 					</Form>
 				)}
 			</ToastContext.Consumer>

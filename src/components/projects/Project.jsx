@@ -30,7 +30,10 @@ export default function Project({ projects, match }: Props) {
 	return (
 		<ContentBox heading={project.name}>
 			<Box>
-				<ItemListHeader header="Räume" path="/editRoom" />
+				<ItemListHeader
+					header="Räume"
+					path={`/projects/${match.params.projectId}/editRoom`}
+				/>
 				<ItemsList
 					items={project.rooms}
 					keyFunc={item => item.roomId}
