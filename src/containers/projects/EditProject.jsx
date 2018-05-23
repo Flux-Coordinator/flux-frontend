@@ -109,10 +109,10 @@ export default class EditProject extends React.Component<Props, State> {
 		}
 		return (
 			<ToastContext.Consumer>
-				{showToast => (
+				{(showToast: any) => (
 					<Form
 						heading="Projekt bearbeiten"
-						onSubmit={() => this.onSubmit((showToast: any))}
+						onSubmit={() => this.onSubmit(showToast)}
 					>
 						<FormField label="Name">
 							<TextInput
