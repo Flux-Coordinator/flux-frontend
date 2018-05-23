@@ -7,7 +7,7 @@ import AddIcon from "grommet/components/icons/base/Add";
 
 type Props = {
 	header: React.Node,
-	path: string
+	path?: string
 };
 
 export default function ItemListHeader({ header, path }: Props) {
@@ -16,7 +16,7 @@ export default function ItemListHeader({ header, path }: Props) {
 			<Heading tag="h3" pad="none" margin="none">
 				{header}
 			</Heading>
-			<Button icon={<AddIcon />} path={{ path }} />
+			{path && <Button icon={<AddIcon />} path={{ path }} />}
 		</Header>
 	);
 }
