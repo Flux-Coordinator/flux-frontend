@@ -22,6 +22,9 @@ type State = {
 	shouldRedirect: boolean,
 	toast?: ToastMetadata
 };
+type Test = {
+	t?: () => void
+};
 
 export default class EditProject extends React.Component<Props, State> {
 	source: CancelTokenSource = CancelToken.source();
@@ -53,7 +56,7 @@ export default class EditProject extends React.Component<Props, State> {
 		});
 	};
 
-	onSubmit = (showToast: (toast: ToastMetadata) => void) => {
+	onSubmit = (showToast?: (toast: ToastMetadata) => void) => {
 		this.saveProject(this.state.project)
 			.then(result => {
 				if (result.status === 201) {
@@ -111,7 +114,7 @@ export default class EditProject extends React.Component<Props, State> {
 				{showToast => (
 					<Form
 						heading="Projekt bearbeiten"
-						onSubmit={() => this.onSubmit(showToast)}
+						onSubmit={() => this.onSubmit((showToast: any))}
 					>
 						<FormField label="Name">
 							<TextInput
