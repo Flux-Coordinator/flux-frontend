@@ -22,9 +22,6 @@ type State = {
 	shouldRedirect: boolean,
 	toast?: ToastMetadata
 };
-type Test = {
-	t?: () => void
-};
 
 export default class EditProject extends React.Component<Props, State> {
 	source: CancelTokenSource = CancelToken.source();
