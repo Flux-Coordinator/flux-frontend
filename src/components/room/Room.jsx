@@ -7,7 +7,6 @@ import Article from "grommet/components/Article";
 // eslint-disable-next-line
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import ProjectModel from "../../models/Project";
 import Measurement from "../../models/Measurement";
 import RoomModel from "../../models/Room";
 import ItemsList from "../list/ItemsList";
@@ -16,11 +15,10 @@ import AnchorMeasurementItemRenderer from "../measurements/AnchorMeasurementItem
 
 type Props = {
 	match: any,
-	room: RoomModel,
-	parentProject: ProjectModel
+	room: RoomModel
 };
 
-export default function Room({ match, room, parentProject }: Props) {
+export default function Room({ match, room }: Props) {
 	return (
 		<Article pad="medium">
 			<Section pad="none">
@@ -52,15 +50,18 @@ export default function Room({ match, room, parentProject }: Props) {
 }
 
 function ShowMeasurement({ room, match }) {
-	let currentMeasurement: ?Measurement = null;
+	let currentMeasurement;
 	if (match.params.measurementId) {
 		currentMeasurement = room.measurements.find(
 			measurement =>
 				measurement.measurementId === parseInt(match.params.measurementId, 10)
 		);
-		return (
-			<MeasurementContainer measurement={currentMeasurement} room={room} />
-		);
+
+		if (currentMeasurement) {
+			return (
+				<MeasurementContainer measurement={currentMeasurement} room={room} />
+			);
+		}
 	}
 	return null;
 }

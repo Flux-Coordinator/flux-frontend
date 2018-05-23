@@ -8,6 +8,7 @@ import { Redirect } from "react-router-dom";
 
 import Form from "./../../components/form/Form";
 import Project from "../../models/Project";
+import { ToastContext } from "./../../components/toast/ToastContext";
 
 import type { ToastMetadata } from "./../../components/toast/Toast";
 
@@ -52,7 +53,7 @@ export default class EditProject extends React.Component<Props, State> {
 		});
 	};
 
-	onSubmit = () => {
+	onSubmit = (showToast?: (toast: ToastMetadata) => void) => {
 		this.saveProject(this.state.project)
 			.then(result => {
 				if (result.status === 201) {
@@ -60,7 +61,10 @@ export default class EditProject extends React.Component<Props, State> {
 						status: "ok",
 						children: "Projekt abgespeichert"
 					};
-					this.setState({ toast: toast, shouldRedirect: true });
+					if (showToast) {
+						showToast(toast);
+					}
+					this.setState({ shouldRedirect: true });
 				}
 			})
 			.catch(error => {
@@ -68,7 +72,9 @@ export default class EditProject extends React.Component<Props, State> {
 					status: "critical",
 					children: "Projekt konnte nicht gespeichert werden"
 				};
-				this.setState({ toast: toast });
+				if (showToast) {
+					showToast(toast);
+				}
 			});
 	};
 
@@ -102,24 +108,24 @@ export default class EditProject extends React.Component<Props, State> {
 			return <Loading />;
 		}
 		return (
-			<Form heading="Projekt bearbeiten" onSubmit={this.onSubmit}>
-				<FormField label="Name">
-					<TextInput
-						name="name"
-						placeholder="Projektname eingeben"
-						value={this.state.project.name}
-						onDOMChange={this.onTitleChanged}
-					/>
-				</FormField>
-				{this.state.shouldRedirect && (
-					<Redirect
-						to={{
-							pathname: "/projects",
-							state: { toast: this.state.toast }
-						}}
-					/>
+			<ToastContext.Consumer>
+				{(showToast: any) => (
+					<Form
+						heading="Projekt bearbeiten"
+						onSubmit={() => this.onSubmit(showToast)}
+					>
+						<FormField label="Name">
+							<TextInput
+								name="name"
+								placeholder="Projektname eingeben"
+								value={this.state.project.name}
+								onDOMChange={this.onTitleChanged}
+							/>
+						</FormField>
+						{this.state.shouldRedirect && <Redirect to="/projects" />}
+					</Form>
 				)}
-			</Form>
+			</ToastContext.Consumer>
 		);
 	}
 }

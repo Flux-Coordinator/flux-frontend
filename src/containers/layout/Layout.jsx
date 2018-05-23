@@ -6,16 +6,12 @@ import Box from "grommet/components/Box";
 import Button from "grommet/components/Button";
 import SidebarIcon from "grommet/components/icons/base/Sidebar";
 
-import Project from "../../models/Project";
 import Header from "../../components/header/Header";
 import NavMenu from "../../components/navmenu/NavMenu";
 import Sidebar from "../../components/sidebar/Sidebar";
-import Loading from "../../components/loading/Loading";
 
 type Prop = {
-	children?: React.Node,
-	projects: Project[],
-	loading: boolean
+	children?: React.Node
 };
 
 type State = {
@@ -63,7 +59,7 @@ export default class Layout extends React.Component<Prop, State> {
 	};
 
 	render() {
-		const { children, projects, loading } = this.props;
+		const { children } = this.props;
 		const title = "Flux-Coordinator";
 
 		const sidebarToggler: React.Node = this.state.isMobileScreen ? (
@@ -80,8 +76,6 @@ export default class Layout extends React.Component<Prop, State> {
 			}
 		};
 
-		const loadingOrChildren: React.Node = loading ? <Loading /> : children;
-
 		return (
 			<Split
 				flex="right"
@@ -89,11 +83,11 @@ export default class Layout extends React.Component<Prop, State> {
 				separator={false}
 			>
 				<Sidebar header={header}>
-					<NavMenu projects={projects} onNavigate={onNavigateCallback} />
+					<NavMenu onNavigate={onNavigateCallback} />
 				</Sidebar>
 				<Box colorIndex="light-2" basis="full" full primary>
 					{this.state.isMobileScreen && header}
-					{loadingOrChildren}
+					{children}
 				</Box>
 			</Split>
 		);
