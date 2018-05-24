@@ -32,20 +32,20 @@ export default function HeatmapConfigForm({
 							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
-					<FormField label="Maximale Deckkraft [0;1]">
+					<FormField label="Minimale Deckkraft [0;1]">
 						<NumberInput
-							name={"maxOpacity"}
-							value={configObject.maxOpacity}
+							name={"minOpacity"}
+							value={configObject.minOpacity}
 							min={0}
 							max={1}
 							step={0.05}
 							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
-					<FormField label="Minimale Deckkraft [0;1]">
+					<FormField label="Maximale Deckkraft [0;1]">
 						<NumberInput
-							name={"minOpacity"}
-							value={configObject.minOpacity}
+							name={"maxOpacity"}
+							value={configObject.maxOpacity}
 							min={0}
 							max={1}
 							step={0.05}
