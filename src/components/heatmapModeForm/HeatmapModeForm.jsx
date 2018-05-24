@@ -6,11 +6,11 @@ import FormFields from "grommet/components/FormFields";
 import CheckBox from "grommet/components/CheckBox";
 import type { HeatmapModes } from "../../types/Heatmap";
 import { inputHandler } from "../../utils/InputHandler";
-import type { allInputTypes } from "../../utils/InputHandler";
+import type { AllInputTypes } from "../../utils/InputHandler";
 
 type Props = {
 	heatmapModes: HeatmapModes,
-	onChange: (string, allInputTypes) => void
+	onChange: (string, AllInputTypes) => void
 };
 
 export default function HeatmapModeForm({ heatmapModes, onChange }: Props) {

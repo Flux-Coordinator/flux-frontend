@@ -1,13 +1,14 @@
 // @flow
 import * as React from "react";
-import FormField from "grommet/components/FormField";
 import TextInput from "grommet/components/TextInput";
+import FormField from "grommet/components/FormField";
 import Loading from "../../components/loading/Loading";
 import axios, { CancelToken, CancelTokenSource } from "axios";
 import { Redirect } from "react-router-dom";
 
+import Measurement from "../../models/Measurement";
+import Room from "../../models/Room";
 import Form from "./../../components/form/Form";
-import Project from "../../models/Project";
 import { ToastContext } from "./../../components/toast/ToastContext";
 import { inputHandler } from "../../utils/InputHandler";
 
@@ -19,52 +20,47 @@ type Props = {
 };
 
 type State = {
-	project: Project,
-	loading: boolean,
-	shouldRedirect: boolean,
-	toast?: ToastMetadata
+	room: Room,
+	isLoading: boolean,
+	shouldRedirect: boolean
 };
 
-export default class EditProject extends React.Component<Props, State> {
+export default class EditRoom extends React.Component<Props, State> {
 	source: CancelTokenSource = CancelToken.source();
+
 	state = {
-		project: new Project(
-			"Nicht initialisiertes Projekt",
-			"Wahrscheinlich gab es einen Fehler in der Anwendung!",
-			[]
+		room: new Room(
+			"Uninitialized Room",
+			"Uninitialized Room (probably an error)",
+			([]: Measurement[])
 		),
-		loading: true,
+		isLoading: true,
 		shouldRedirect: false
 	};
 
-	fetchProject = (projectId: number) => {
-		return axios.get(`/projects/${projectId}`, {
+	fetchRoom = (roomId: number) => {
+		return axios.get("/rooms/" + roomId, {
 			cancelToken: this.source.token
 		});
 	};
 
-	saveProject = (project: Project) => {
-		return axios.post("/projects", project, {
-			cancelToken: this.source.token
-		});
-	};
-
-	onProjectChanged = (key: string, value: AllInputTypes) => {
-		this.setState((prevState, props) => {
-			prevState.project = Object.assign(prevState.project, {
-				[key]: value
-			});
-			return prevState;
-		});
+	saveRoom = (room: Room) => {
+		return axios.post(
+			`/projects/${this.props.match.params.projectId}/rooms`,
+			room,
+			{
+				cancelToken: this.source.token
+			}
+		);
 	};
 
 	onSubmit = (showToast?: (toast: ToastMetadata) => void) => {
-		this.saveProject(this.state.project)
+		this.saveRoom(this.state.room)
 			.then(result => {
 				if (result.status === 201) {
 					const toast: ToastMetadata = {
 						status: "ok",
-						children: "Projekt abgespeichert"
+						children: "Raum abgespeichert"
 					};
 					if (showToast) {
 						showToast(toast);
@@ -75,7 +71,7 @@ export default class EditProject extends React.Component<Props, State> {
 			.catch(error => {
 				const toast: ToastMetadata = {
 					status: "critical",
-					children: "Projekt konnte nicht gespeichert werden"
+					children: "Raum konnte nicht gespeichert werden"
 				};
 				if (showToast) {
 					showToast(toast);
@@ -83,53 +79,64 @@ export default class EditProject extends React.Component<Props, State> {
 			});
 	};
 
-	componentDidMount() {
-		const { projectId } = this.props.match.params;
+	onRoomChanged = (key: string, value: AllInputTypes) => {
+		this.setState((prevState, props) => {
+			prevState.room = Object.assign(prevState.room, {
+				[key]: value
+			});
+			return prevState;
+		});
+	};
 
-		if (typeof projectId === "undefined") {
+	componentDidMount() {
+		const roomId = this.props.match.params.roomId;
+
+		if (typeof roomId === "undefined") {
 			this.setState({
-				project: new Project("", "", []),
-				loading: false
+				room: new Room("", "", ([]: Measurement[])),
+				isLoading: false
 			});
 		} else {
-			this.fetchProject(projectId).then(result => {
-				const project = Project.fromObject(result.data);
+			this.fetchRoom(roomId).then(result => {
+				const room = Room.fromObject(result.data);
 				this.setState({
-					project: project,
-					loading: false
+					room: room,
+					isLoading: false
 				});
 			});
 		}
 	}
 
 	render() {
-		if (this.state.loading) {
+		if (this.state.isLoading) {
 			return <Loading />;
 		}
 		return (
 			<ToastContext.Consumer>
 				{(showToast: any) => (
 					<Form
-						heading="Projekt bearbeiten"
+						heading="Raum bearbeiten"
 						onSubmit={() => this.onSubmit(showToast)}
 					>
 						<FormField label="Name">
 							<TextInput
 								name="name"
-								placeholder="Projektname eingeben"
-								value={this.state.project.name}
-								onDOMChange={inputHandler(this.onProjectChanged)}
+								placeholder="Raumname eingeben"
+								value={this.state.room.name}
+								onDOMChange={inputHandler(this.onRoomChanged)}
 							/>
 						</FormField>
 						<FormField label="Beschreibung">
 							<TextInput
 								name="description"
-								placeholder="Beschreibung des Projektes"
-								value={this.state.project.description}
-								onDOMChange={inputHandler(this.onProjectChanged)}
+								placeholder="Beschreibung eingeben"
+								value={this.state.room.description}
+								onDOMChange={inputHandler(this.onRoomChanged)}
 							/>
 						</FormField>
-						{this.state.shouldRedirect && <Redirect to="/projects" />}
+						{this.state.shouldRedirect && (
+							<Redirect to={"/projects/" + this.props.match.params.projectId} />
+						)}
 					</Form>
 				)}
 			</ToastContext.Consumer>

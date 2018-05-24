@@ -41,7 +41,12 @@ export default class DataGenerator {
 			rooms.push(DataGenerator.createRoom(amountOfMeasurementPerRoom));
 		}
 
-		return new Project("My First Project", rooms, DataGenerator.getRandomInt());
+		return new Project(
+			"My First Project",
+			"Project description",
+			rooms,
+			DataGenerator.getRandomInt()
+		);
 	}
 
 	static createProjects(

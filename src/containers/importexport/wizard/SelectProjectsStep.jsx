@@ -76,5 +76,5 @@ export default class SelectProjectsStep extends React.Component<
 }
 
 function ProjectItemRenderer({ item }: { item: Project }) {
-	return item.name;
+	return <div className="custom-list-anchor">{item.name}</div>;
 }

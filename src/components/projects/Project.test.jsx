@@ -8,7 +8,12 @@ import Project from "./Project";
 
 describe("<Project />", () => {
 	it("should render", () => {
-		const project = new ProjectModel("First Project", [], 5234);
+		const project = new ProjectModel(
+			"First Project",
+			"First Project",
+			[],
+			5234
+		);
 		shallow(
 			<MemoryRouter>
 				<Route component={props => <Project project={project} {...props} />} />

@@ -5,12 +5,11 @@ import Title from "grommet/components/Title";
 import Section from "grommet/components/Section";
 import Box from "grommet/components/Box";
 import Search from "grommet/components/Search";
-import Heading from "grommet/components/Heading";
 
 import ContentBox from "../contentBox/ContentBox";
 import ItemsList from "./../list/ItemsList";
+import ItemListHeader from "./../list/ItemListHeader";
 import Project from "../../models/Project";
-import AddProjectButton from "./AddProjectButton";
 import AnchorProjectItemRenderer from "./AnchorProjectItemRenderer";
 
 import type { ToastMetadata } from "./../toast/Toast";
@@ -45,10 +44,7 @@ export default class Projects extends React.Component<Props, State> {
 					</Header>
 				</Section>
 				<Section>
-					<Header size="small">
-						<Heading tag="h3">Projekte</Heading>
-						<AddProjectButton />
-					</Header>
+					<ItemListHeader header="Projekte" path="/editProject" />
 					<ItemsList
 						items={projects}
 						keyFunc={project => project.projectId}
