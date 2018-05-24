@@ -184,11 +184,10 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			const container = this.state.container;
 			const transformation = this.props.transformation;
 			const containerScaleFactor = container.width / container.originalWidth;
-			let radius = Math.round(
-				configObject.radius * transformation.scaleFactor * containerScaleFactor
-			);
-			if (radius <= 0) {
-				radius = 1;
+			let radius =
+				configObject.radius * transformation.scaleFactor * containerScaleFactor;
+			if (radius <= 0.5) {
+				radius = 0.5;
 			}
 			return Object.assign({}, configObject, { radius: radius });
 		}
