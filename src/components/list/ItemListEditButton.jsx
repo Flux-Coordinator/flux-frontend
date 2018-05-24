@@ -7,7 +7,7 @@ type Props = {
 	path: string
 };
 
-export default function ItemListAnchoButton({ path }: Props) {
+export default function ItemListEditButton({ path }: Props) {
 	return (
 		<Button
 			flex

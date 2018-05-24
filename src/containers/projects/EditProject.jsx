@@ -29,8 +29,8 @@ export default class EditProject extends React.Component<Props, State> {
 	source: CancelTokenSource = CancelToken.source();
 	state = {
 		project: new Project(
-			"uninitialized project",
-			"This project is uninitialized. Probably an error!",
+			"Nicht initialisiertes Projekt",
+			"Wahrscheinlich gab es einen Fehler in der Anwendung!",
 			[]
 		),
 		loading: true,
@@ -38,7 +38,7 @@ export default class EditProject extends React.Component<Props, State> {
 	};
 
 	fetchProject = (projectId: number) => {
-		return axios.get("/projects/" + projectId, {
+		return axios.get(`/projects/${projectId}`, {
 			cancelToken: this.source.token
 		});
 	};
@@ -84,7 +84,7 @@ export default class EditProject extends React.Component<Props, State> {
 	};
 
 	componentDidMount() {
-		const projectId = this.props.match.params.projectId;
+		const { projectId } = this.props.match.params;
 
 		if (typeof projectId === "undefined") {
 			this.setState({

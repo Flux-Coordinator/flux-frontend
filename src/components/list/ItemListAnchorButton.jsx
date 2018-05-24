@@ -8,7 +8,7 @@ type Props = {
 	children: React.Node
 };
 
-export default function ItemListAnchoButton({ path, children }: Props) {
+export default function ItemListAnchorButton({ path, children }: Props) {
 	return (
 		<Button className="custom-list-anchor" fill path={path}>
 			<Box alignContent="around">{children}</Box>
