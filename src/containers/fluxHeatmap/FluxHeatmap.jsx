@@ -1,6 +1,5 @@
 // @flow
 import * as React from "react";
-import ReactDOM from "react-dom";
 import Heatmap from "heatmapjs/build/heatmap.js";
 import ReadingModel from "../../models/Reading";
 import AnchorModel from "../../models/Anchor";
@@ -41,7 +40,13 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			radius: 1000,
 			maxOpacity: 0.5,
 			minOpacity: 0,
-			blur: 0.75
+			blur: 0.75,
+			gradient: {
+				"0.25": "rgb(0,0,255)",
+				"0.55": "rgb(0,255,0)",
+				"0.85": "yellow",
+				"1.0": "rgb(255,0,0)"
+			}
 		},
 		transformation: new Transformation(),
 		heatmapModes: {
@@ -60,10 +65,20 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		}
 	};
 
+	gradientCfg = {};
+	legendCanvas;
+	legendContext;
 	heatmap: Heatmap;
+	heatmapContainer: ?HTMLDivElement;
+	heatmapTooltip: ?HTMLDivElement;
+	heatmapLegend: ?HTMLDivElement;
+	heatmapLegendMin: ?HTMLSpanElement;
+	heatmapLegendMax: ?HTMLSpanElement;
+	heatmapGradient: ?HTMLImageElement;
 	imgElement: ?HTMLImageElement;
 
 	componentDidMount() {
+		this.createLegend();
 		this.heatmap = this.createHeatmapInstance(
 			this.transformConfig(this.props.configObject)
 		);
@@ -74,7 +89,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		const extendedConfigObject: ConfigObject = Object.assign(
 			{},
 			{
-				container: ReactDOM.findDOMNode(this)
+				container: this.heatmapContainer
 			},
 			configObject
 		);
@@ -120,7 +135,9 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 					this.props.heatmapModes.showCoverage
 				);
 				const max = this.computeMax(dataPoints);
-				this.heatmap.setData(new HeatmapData(0, max, dataPoints));
+				const heatmapData = new HeatmapData(0, max, dataPoints);
+				this.heatmap.setData(heatmapData);
+				this.updateLegend(heatmapData);
 			}
 		}
 	};
@@ -189,27 +206,85 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			if (radius <= 0.5) {
 				radius = 0.5;
 			}
-			return Object.assign({}, configObject, { radius: radius });
+			return Object.assign(
+				{},
+				FluxHeatmap.defaultProps.configObject,
+				configObject,
+				{ radius: radius }
+			);
 		}
 		return configObject;
+	};
+
+	createLegend = () => {
+		this.legendCanvas = document.createElement("canvas");
+		this.legendCanvas.width = 100;
+		this.legendCanvas.height = 10;
+		this.legendContext = this.legendCanvas.getContext("2d");
+	};
+
+	updateLegend = (data: HeatmapData) => {
+		this.heatmapLegendMin.innerHTML = "0";
+		this.heatmapLegendMax.innerHTML =
+			data.max != null ? Math.round(data.max).toString() : "1000";
+		const configObject = this.transformConfig(this.props.configObject);
+		if (configObject.gradient !== this.gradientCfg) {
+			this.gradientCfg = configObject.gradient;
+			let gradient = this.legendContext.createLinearGradient(0, 0, 100, 1);
+			for (let key in this.gradientCfg) {
+				gradient.addColorStop(key, this.gradientCfg[key]);
+			}
+			this.legendContext.fillStyle = gradient;
+			this.legendContext.fillRect(0, 0, 100, 10);
+			this.heatmapGradient.src = this.legendCanvas.toDataURL();
+		}
 	};
 
 	render() {
 		return (
 			<Box size="xlarge">
-				<img
-					onLoad={this.setContainerState}
-					ref={imgElement => (this.imgElement = imgElement)}
-					src={this.props.backgroundImage}
-					alt={"heatmap"}
-					style={{ display: "block", maxWidth: "100%" }}
-				/>
-				<ReactResizeDetector
-					skipOnMount
-					handleWidth
-					handleHeight
-					onResize={this.setContainerState}
-				/>
+				<div
+					ref={heatmapContainer => (this.heatmapContainer = heatmapContainer)}
+				>
+					<img
+						onLoad={this.setContainerState}
+						ref={imgElement => (this.imgElement = imgElement)}
+						src={this.props.backgroundImage}
+						alt={"heatmap"}
+						style={{ display: "block", maxWidth: "100%" }}
+					/>
+					<ReactResizeDetector
+						skipOnMount
+						handleWidth
+						handleHeight
+						onResize={this.setContainerState}
+					/>
+				</div>
+				<div
+					ref={heatmapTooltip => (this.heatmapTooltip = heatmapTooltip)}
+					style={{ display: "none" }}
+				>
+					0
+				</div>
+				<div ref={heatmapLegend => (this.heatmapLegend = heatmapLegend)}>
+					<span
+						ref={heatmapLegendMin => (this.heatmapLegendMin = heatmapLegendMin)}
+						style={{ float: "left" }}
+					>
+						0
+					</span>
+					<span
+						ref={heatmapLegendMax => (this.heatmapLegendMax = heatmapLegendMax)}
+						style={{ float: "right" }}
+					>
+						1
+					</span>
+					<img
+						alt={""}
+						ref={heatmapGradient => (this.heatmapGradient = heatmapGradient)}
+						style={{ width: "100%", height: "15px" }}
+					/>
+				</div>
 			</Box>
 		);
 	}
