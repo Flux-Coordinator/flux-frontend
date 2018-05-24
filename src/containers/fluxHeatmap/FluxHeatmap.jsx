@@ -38,7 +38,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		anchors: [],
 		backgroundImage: PLACEHOLDER_IMAGE,
 		configObject: {
-			radius: 10,
+			radius: 1000,
 			maxOpacity: 0.5,
 			minOpacity: 0,
 			blur: 0.75
@@ -64,7 +64,9 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	imgElement: ?HTMLImageElement;
 
 	componentDidMount() {
-		this.heatmap = this.createHeatmapInstance(this.props.configObject);
+		this.heatmap = this.createHeatmapInstance(
+			this.transformConfig(this.props.configObject)
+		);
 		this.setData();
 	}
 
@@ -124,20 +126,22 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	};
 
 	setConfig = () => {
-		let configObject = this.props.configObject;
-		if (this.props.heatmapModes.showAnchors) {
-			configObject = {
-				radius: 3,
-				opacity: 1,
-				blur: 0,
-				gradient: {
-					"1": "red"
-				}
-			};
+		if (this.state.container.loaded) {
+			let configObject = this.transformConfig(this.props.configObject);
+			if (this.props.heatmapModes.showAnchors) {
+				configObject = {
+					radius: 3,
+					opacity: 1,
+					blur: 0,
+					gradient: {
+						"1": "red"
+					}
+				};
+			}
+			const currentData = this.destroyHeatmapInstance(this.heatmap);
+			this.heatmap = this.createHeatmapInstance(configObject);
+			this.heatmap.setData(currentData);
 		}
-		const currentData = this.destroyHeatmapInstance(this.heatmap);
-		this.heatmap = this.createHeatmapInstance(configObject);
-		this.heatmap.setData(currentData);
 	};
 
 	computeMax = (dataPoints: HeatmapDataPoint[]) => {
@@ -173,6 +177,20 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			}
 			return transformedReadings;
 		}, []);
+	};
+
+	transformConfig = (configObject: ConfigObject): ConfigObject => {
+		if (configObject.radius != null) {
+			const container = this.state.container;
+			const transformation = this.props.transformation;
+			const containerScaleFactor = container.width / container.originalWidth;
+
+			const radius = Math.round(
+				configObject.radius * transformation.scaleFactor * containerScaleFactor
+			);
+			return Object.assign({}, configObject, { radius: radius });
+		}
+		return configObject;
 	};
 
 	render() {
