@@ -1,5 +1,6 @@
 // @flow
 import * as React from "react";
+import Heading from "grommet/components/Heading";
 
 import Room from "../../models/Room";
 import ItemListAnchorButton from "../list/ItemListAnchorButton";
@@ -15,10 +16,10 @@ export default function AnchorProjectItemRenderer({ item, match }: Props) {
 		return (
 			<React.Fragment>
 				<ItemListAnchorButton path={`${match.url}/rooms/${item.roomId}`}>
-					<span>
-						<strong>{item.name}</strong>
-					</span>
-					<span>{item.description}</span>
+					<Heading tag="h4" strong>
+						{item.name}
+					</Heading>
+					<Heading tag="h5">{item.description}</Heading>
 				</ItemListAnchorButton>
 				<ItemListEditButton path={`${match.url}/editRoom/${item.roomId}`} />
 			</React.Fragment>
