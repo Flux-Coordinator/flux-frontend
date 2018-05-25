@@ -2,7 +2,6 @@
 import * as React from "react";
 import Heading from "grommet/components/Heading";
 import Paragraph from "grommet/components/Paragraph";
-import Timestamp from "grommet/components/Timestamp";
 
 import Measurement from "../../models/Measurement";
 import ItemListAnchorButton from "../list/ItemListAnchorButton";

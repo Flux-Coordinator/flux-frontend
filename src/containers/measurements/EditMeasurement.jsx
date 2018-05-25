@@ -2,7 +2,6 @@
 import * as React from "react";
 import Paragraph from "grommet/components/Paragraph";
 import FormField from "grommet/components/FormField";
-import NumberInput from "grommet/components/NumberInput";
 import TextInput from "grommet/components/TextInput";
 import Loading from "../../components/loading/Loading";
 import axios, { CancelToken, CancelTokenSource } from "axios";
