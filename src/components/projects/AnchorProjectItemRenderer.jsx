@@ -14,7 +14,10 @@ export default function AnchorProjectItemRenderer({ item, onEdit }: Props) {
 		return (
 			<React.Fragment>
 				<ItemListAnchorButton path={`/projects/${item.projectId}`}>
-					{item.name}
+					<span>
+						<strong>{item.name}</strong>
+					</span>
+					<span>{item.description}</span>
 				</ItemListAnchorButton>
 				<ItemListEditButton path={`/editProject/${item.projectId}`} />
 			</React.Fragment>
