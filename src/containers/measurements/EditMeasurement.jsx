@@ -1,6 +1,8 @@
 // @flow
 import * as React from "react";
+import Paragraph from "grommet/components/Paragraph";
 import FormField from "grommet/components/FormField";
+import NumberInput from "grommet/components/NumberInput";
 import TextInput from "grommet/components/TextInput";
 import Loading from "../../components/loading/Loading";
 import axios, { CancelToken, CancelTokenSource } from "axios";
@@ -24,6 +26,21 @@ type State = {
 	shouldRedirect: boolean,
 	toast?: ToastMetadata
 };
+
+function RenderSingleAnchor({ anchorNumber }: { anchorNumber: number }) {
+	return (
+		<fieldset>
+			<Paragraph>Anker {anchorNumber}</Paragraph>
+			<FormField label="Anker ID">
+				<TextInput
+					name={`anchor${anchorNumber}Id`}
+					placeHolder={`Identifikation von Anker ${anchorNumber}`}
+					value=""
+				/>
+			</FormField>
+		</fieldset>
+	);
+}
 
 export default class EditMeasurement extends React.Component<Props, State> {
 	source: CancelTokenSource = CancelToken.source();
@@ -103,6 +120,16 @@ export default class EditMeasurement extends React.Component<Props, State> {
 		}
 	}
 
+	renderAnchorEditForm = () => {
+		return (
+			<React.Fragment>
+				<RenderSingleAnchor anchorNumber={1} />
+				<RenderSingleAnchor anchorNumber={2} />
+				<RenderSingleAnchor anchorNumber={3} />
+			</React.Fragment>
+		);
+	};
+
 	render() {
 		const { match } = this.props;
 		if (this.state.shouldRedirect) {
@@ -123,33 +150,37 @@ export default class EditMeasurement extends React.Component<Props, State> {
 						heading="Messung bearbeiten"
 						onSubmit={() => this.onSubmit(showToast)}
 					>
-						<FormField label="Name">
-							<TextInput
-								name="name"
-								placeHolder="Namen eingeben"
-								value={measurement.name}
-								onDOMChange={inputHandler(this.onMeasurementChanged)}
-							/>
-						</FormField>
-						<FormField label="Beschreibung">
-							<TextInput
-								name="description"
-								placeHolder="Beschreibung eingeben"
-								value={measurement.description}
-								onDOMChange={inputHandler(this.onMeasurementChanged)}
-							/>
-						</FormField>
-						<FormField
-							label="Vermesser"
-							help="Name der Person, die die Messung durchführt"
-						>
-							<TextInput
-								name="creator"
-								placeHolder="Name des Vermessers"
-								value={measurement.creator}
-								onDOMChange={inputHandler(this.onMeasurementChanged)}
-							/>
-						</FormField>
+						<fieldset>
+							<Paragraph>Messungsinformationen</Paragraph>
+							<FormField label="Name">
+								<TextInput
+									name="name"
+									placeHolder="Namen eingeben"
+									value={measurement.name}
+									onDOMChange={inputHandler(this.onMeasurementChanged)}
+								/>
+							</FormField>
+							<FormField label="Beschreibung">
+								<TextInput
+									name="description"
+									placeHolder="Beschreibung eingeben"
+									value={measurement.description}
+									onDOMChange={inputHandler(this.onMeasurementChanged)}
+								/>
+							</FormField>
+							<FormField
+								label="Vermesser"
+								help="Name der Person, die die Messung durchführt"
+							>
+								<TextInput
+									name="creator"
+									placeHolder="Name des Vermessers"
+									value={measurement.creator}
+									onDOMChange={inputHandler(this.onMeasurementChanged)}
+								/>
+							</FormField>
+						</fieldset>
+						{measurement.state === "READY" && this.renderAnchorEditForm()}
 					</Form>
 				)}
 			</ToastContext.Consumer>
