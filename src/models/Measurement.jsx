@@ -14,7 +14,7 @@ type ConstructorType = {
 };
 
 export default class Measurement {
-	measurementId: number;
+	measurementId: ?number;
 	description: string;
 	startDate: Date;
 	endDate: Date;
@@ -23,7 +23,7 @@ export default class Measurement {
 	anchors: Anchor[];
 
 	constructor(
-		measurementId: number,
+		measurementId?: number,
 		description: string,
 		startDate: Date,
 		endDate: Date,
