@@ -32,7 +32,7 @@ export default class Measurement {
 		description: string,
 		startDate?: Date = new Date(),
 		endDate?: Date = new Date(),
-		state?: MeasurementState = "READY",
+		measurementState?: MeasurementState = "READY",
 		creator?: string = "",
 		readings?: Reading[] = [],
 		anchors?: Anchor[] = []
@@ -40,7 +40,7 @@ export default class Measurement {
 		this.measurementId = measurementId;
 		this.name = name;
 		this.description = description;
-		this.state = state;
+		this.state = measurementState;
 		this.creator = creator;
 		this.readings = readings;
 		this.anchors = anchors;
@@ -72,7 +72,7 @@ export default class Measurement {
 		const typedReadings: Reading[] = [];
 		if (readings != null) {
 			readings.forEach(r => {
-				typedReadings.push(Reading.fromObject(r));
+				typedReadings.push(Reading.fromObject((r: any)));
 			});
 		}
 
