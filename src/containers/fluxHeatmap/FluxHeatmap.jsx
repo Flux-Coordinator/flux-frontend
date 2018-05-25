@@ -15,8 +15,11 @@ import type {
 } from "../../types/Heatmap";
 import Box from "grommet/components/Box";
 import { PLACEHOLDER_IMAGE } from "../../images/ImagesBase64";
+import { mousePositionHandler } from "../../utils/MousePositionHandler";
+import BrowserPosition from "../../models/BrowserPosition";
 
 const FIXED_HEATMAP_VALUE = 1;
+const TOOLTIP_CURSOR_DISTANCE = 15;
 
 type Props = {
 	readings: ReadingModel[],
@@ -232,7 +235,9 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			this.gradientCfg = configObject.gradient;
 			let gradient = this.legendContext.createLinearGradient(0, 0, 100, 1);
 			for (let key in this.gradientCfg) {
-				gradient.addColorStop(key, this.gradientCfg[key]);
+				if (this.gradientCfg.hasOwnProperty(key)) {
+					gradient.addColorStop(key, this.gradientCfg[key]);
+				}
 			}
 			this.legendContext.fillStyle = gradient;
 			this.legendContext.fillRect(0, 0, 100, 10);
@@ -240,11 +245,50 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		}
 	};
 
+	onMouseMove = (mousePosition: BrowserPosition) => {
+		let value = this.heatmap.getValueAt({
+			x: mousePosition.xposition,
+			y: mousePosition.yposition
+		});
+		this.showTooltip();
+		this.updateTooltip(
+			new HeatmapDataPoint(
+				mousePosition.xposition,
+				mousePosition.yposition,
+				value
+			)
+		);
+	};
+
+	onMouseOut = () => {
+		this.hideTooltip();
+	};
+
+	updateTooltip = (dataPoint: HeatmapDataPoint) => {
+		this.heatmapTooltip.style.webkitTransform =
+			"translate(" +
+			(dataPoint.x + TOOLTIP_CURSOR_DISTANCE) +
+			"px, " +
+			(dataPoint.y + TOOLTIP_CURSOR_DISTANCE) +
+			"px)";
+		this.heatmapTooltip.innerHTML = dataPoint.value;
+	};
+
+	showTooltip = () => {
+		this.heatmapTooltip.style.display = "block";
+	};
+
+	hideTooltip = () => {
+		this.heatmapTooltip.style.display = "none";
+	};
+
 	render() {
 		return (
 			<Box size="xlarge">
 				<div
 					ref={heatmapContainer => (this.heatmapContainer = heatmapContainer)}
+					onMouseMove={mousePositionHandler(this.onMouseMove)}
+					onMouseOut={this.onMouseOut}
 				>
 					<img
 						onLoad={this.setContainerState}
@@ -262,7 +306,13 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 				</div>
 				<div
 					ref={heatmapTooltip => (this.heatmapTooltip = heatmapTooltip)}
-					style={{ display: "none" }}
+					style={{
+						display: "none",
+						position: "absolute",
+						background: "rgba(0,0,0,.8)",
+						color: "#fff",
+						padding: "5px"
+					}}
 				>
 					0
 				</div>
