@@ -20,7 +20,7 @@ type Props = {
 
 type State = {
 	measurement: Measurement,
-	loading: boolean,
+	isLoading: boolean,
 	shouldRedirect: boolean,
 	toast?: ToastMetadata
 };
@@ -29,13 +29,13 @@ export default class EditMeasurement extends React.Component<Props, State> {
 	source: CancelTokenSource = CancelToken.source();
 	state = {
 		measurement: new Measurement(
-			-1,
+			undefined,
 			"Nicht initialisierte Messung",
 			new Date(),
 			new Date(),
 			"READY"
 		),
-		loading: true,
+		isLoading: true,
 		shouldRedirect: false
 	};
 
@@ -52,7 +52,30 @@ export default class EditMeasurement extends React.Component<Props, State> {
 		});
 	};
 
-	onSubmit = (showToast?: (toast: ToastMetadata) => void) => {};
+	onSubmit = (showToast?: (toast: ToastMetadata) => void) => {
+		this.setState({ isLoading: true });
+		this.saveMeasurement(this.state.measurement)
+			.then(result => {
+				if (result.status === 201) {
+					if (showToast) {
+						showToast({
+							status: "ok",
+							children: "Messung abgespeichert"
+						});
+					}
+					this.setState({ shouldRedirect: true });
+				}
+			})
+			.catch(error => {
+				this.setState({ isLoading: false });
+				if (showToast) {
+					showToast({
+						status: "critical",
+						children: "Messung konnte nicht gespeichert werden"
+					});
+				}
+			});
+	};
 
 	onMeasurementChanged = (key: string, value: AllInputTypes) => {
 		this.setState((prevState, props) => {
@@ -75,23 +98,30 @@ export default class EditMeasurement extends React.Component<Props, State> {
 					new Date(),
 					"READY"
 				),
-				loading: false
+				isLoading: false
 			});
 		} else {
 			this.fetchMeasurement(measurementId).then(result => {
 				const measurement = Measurement.fromObject(result.data);
 				this.setState({
 					measurement: measurement,
-					loading: false
+					isLoading: false
 				});
 			});
 		}
 	}
 
 	render() {
-		if (this.state.loading) {
+		const { match } = this.props;
+		if (this.state.shouldRedirect) {
+			const { projectId, roomId } = match.params;
+			return <Redirect to={`/projects/${projectId}/rooms/${roomId}`} />;
+		}
+
+		if (this.state.isLoading) {
 			return <Loading />;
 		}
+
 		return (
 			<ToastContext.Consumer>
 				{(showToast: any) => (
@@ -107,7 +137,6 @@ export default class EditMeasurement extends React.Component<Props, State> {
 								onDOMChange={inputHandler(this.onMeasurementChanged)}
 							/>
 						</FormField>
-						{this.state.shouldRedirect && <Redirect to="/projects" />}
 					</Form>
 				)}
 			</ToastContext.Consumer>

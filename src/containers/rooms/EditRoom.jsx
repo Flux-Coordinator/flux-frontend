@@ -55,26 +55,26 @@ export default class EditRoom extends React.Component<Props, State> {
 	};
 
 	onSubmit = (showToast?: (toast: ToastMetadata) => void) => {
+		this.setState({ isLoading: true });
 		this.saveRoom(this.state.room)
 			.then(result => {
 				if (result.status === 201) {
-					const toast: ToastMetadata = {
-						status: "ok",
-						children: "Raum abgespeichert"
-					};
 					if (showToast) {
-						showToast(toast);
+						showToast({
+							status: "ok",
+							children: "Raum abgespeichert"
+						});
 					}
 					this.setState({ shouldRedirect: true });
 				}
 			})
 			.catch(error => {
-				const toast: ToastMetadata = {
-					status: "critical",
-					children: "Raum konnte nicht gespeichert werden"
-				};
+				this.setState({ isLoading: false });
 				if (showToast) {
-					showToast(toast);
+					showToast({
+						status: "critical",
+						children: "Raum konnte nicht gespeichert werden"
+					});
 				}
 			});
 	};
@@ -108,9 +108,14 @@ export default class EditRoom extends React.Component<Props, State> {
 	}
 
 	render() {
+		if (this.state.shouldRedirect) {
+			return <Redirect to={"/projects/" + this.props.match.params.projectId} />;
+		}
+
 		if (this.state.isLoading) {
 			return <Loading />;
 		}
+
 		return (
 			<ToastContext.Consumer>
 				{(showToast: any) => (
@@ -134,9 +139,6 @@ export default class EditRoom extends React.Component<Props, State> {
 								onDOMChange={inputHandler(this.onRoomChanged)}
 							/>
 						</FormField>
-						{this.state.shouldRedirect && (
-							<Redirect to={"/projects/" + this.props.match.params.projectId} />
-						)}
 					</Form>
 				)}
 			</ToastContext.Consumer>

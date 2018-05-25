@@ -20,7 +20,7 @@ type Props = {
 
 type State = {
 	project: Project,
-	loading: boolean,
+	isLoading: boolean,
 	shouldRedirect: boolean,
 	toast?: ToastMetadata
 };
@@ -33,7 +33,7 @@ export default class EditProject extends React.Component<Props, State> {
 			"Wahrscheinlich gab es einen Fehler in der Anwendung!",
 			[]
 		),
-		loading: true,
+		isLoading: true,
 		shouldRedirect: false
 	};
 
@@ -59,26 +59,26 @@ export default class EditProject extends React.Component<Props, State> {
 	};
 
 	onSubmit = (showToast?: (toast: ToastMetadata) => void) => {
+		this.setState({ isLoading: true });
 		this.saveProject(this.state.project)
 			.then(result => {
 				if (result.status === 201) {
-					const toast: ToastMetadata = {
-						status: "ok",
-						children: "Projekt abgespeichert"
-					};
 					if (showToast) {
-						showToast(toast);
+						showToast({
+							status: "ok",
+							children: "Projekt abgespeichert"
+						});
 					}
 					this.setState({ shouldRedirect: true });
 				}
 			})
 			.catch(error => {
-				const toast: ToastMetadata = {
-					status: "critical",
-					children: "Projekt konnte nicht gespeichert werden"
-				};
+				this.setState({ isLoading: false });
 				if (showToast) {
-					showToast(toast);
+					showToast({
+						status: "critical",
+						children: "Projekt konnte nicht gespeichert werden"
+					});
 				}
 			});
 	};
@@ -89,23 +89,28 @@ export default class EditProject extends React.Component<Props, State> {
 		if (typeof projectId === "undefined") {
 			this.setState({
 				project: new Project("", "", []),
-				loading: false
+				isLoading: false
 			});
 		} else {
 			this.fetchProject(projectId).then(result => {
 				const project = Project.fromObject(result.data);
 				this.setState({
 					project: project,
-					loading: false
+					isLoading: false
 				});
 			});
 		}
 	}
 
 	render() {
-		if (this.state.loading) {
-			return <Loading />;
+		if (this.state.shouldRedirect) {
+			return <Redirect to="/projects" />;
 		}
+
+		if (this.state.isLoading) {
+			return <isLoading />;
+		}
+
 		return (
 			<ToastContext.Consumer>
 				{(showToast: any) => (
@@ -129,7 +134,6 @@ export default class EditProject extends React.Component<Props, State> {
 								onDOMChange={inputHandler(this.onProjectChanged)}
 							/>
 						</FormField>
-						{this.state.shouldRedirect && <Redirect to="/projects" />}
 					</Form>
 				)}
 			</ToastContext.Consumer>
