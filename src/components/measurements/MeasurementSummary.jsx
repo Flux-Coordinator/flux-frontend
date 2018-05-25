@@ -104,7 +104,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 			<Section margin="none">
 				<Header size="small">
 					<Heading margin="none" tag="h3">
-						Aktuelle Messung ({this.props.currentMeasurement.measurementId})
+						Aktuelle Messung ({this.props.currentMeasurement.name})
 					</Heading>
 					<Button icon={icon} onClick={this.props.onStartMeasurement} />
 				</Header>

@@ -31,9 +31,7 @@ export default class EditMeasurement extends React.Component<Props, State> {
 		measurement: new Measurement(
 			undefined,
 			"Nicht initialisierte Messung",
-			new Date(),
-			new Date(),
-			"READY"
+			"Wahrscheinlich ein Fehler in der Anwendung"
 		),
 		isLoading: true,
 		shouldRedirect: false
@@ -91,13 +89,7 @@ export default class EditMeasurement extends React.Component<Props, State> {
 
 		if (typeof measurementId === "undefined") {
 			this.setState({
-				measurement: new Measurement(
-					undefined,
-					"",
-					new Date(),
-					new Date(),
-					"READY"
-				),
+				measurement: new Measurement(undefined, "", ""),
 				isLoading: false
 			});
 		} else {

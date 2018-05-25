@@ -5,33 +5,40 @@ import type { MeasurementState } from "./../types/MeasurementState";
 
 type ConstructorType = {
 	measurementId: number,
+	name: string,
 	description: string,
 	startDate: Date,
 	endDate: Date,
 	measurementState: MeasurementState,
+	creator?: string,
 	readings?: Reading[],
 	anchorPositions?: Anchor[]
 };
 
 export default class Measurement {
 	measurementId: ?number;
+	name: string;
 	description: string;
 	startDate: Date;
 	endDate: Date;
 	state: MeasurementState;
+	creator: string;
 	readings: Reading[];
 	anchors: Anchor[];
 
 	constructor(
 		measurementId?: number,
+		name: string,
 		description: string,
-		startDate: Date,
-		endDate: Date,
-		state: MeasurementState,
+		startDate?: Date = new Date(),
+		endDate?: Date = new Date(),
+		state?: MeasurementState = "READY",
+		creator?: string,
 		readings?: Reading[],
 		anchors?: Anchor[]
 	) {
 		this.measurementId = measurementId;
+		this.name = name;
 		this.description = description;
 		this.state = state;
 
@@ -62,10 +69,12 @@ export default class Measurement {
 
 	static fromObject({
 		measurementId,
+		name,
 		description,
 		startDate,
 		endDate,
 		measurementState,
+		creator,
 		readings,
 		anchorPositions
 	}: ConstructorType) {
@@ -93,10 +102,12 @@ export default class Measurement {
 
 		return new Measurement(
 			measurementId,
+			name,
 			description,
 			startDate,
 			endDate,
 			measurementState,
+			creator,
 			typedReadings,
 			typedAnchors
 		);

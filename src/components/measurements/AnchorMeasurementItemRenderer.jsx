@@ -18,6 +18,9 @@ export default function AnchorMeasurementItemRenderer({ item, match }: Props) {
 				<ItemListAnchorButton
 					path={`${match.url}/measurements/${item.measurementId}`}
 				>
+					<span>
+						<strong>{item.name}</strong>
+					</span>
 					<span>{item.description}</span>
 					<Timestamp value={item.startDate} />
 				</ItemListAnchorButton>
