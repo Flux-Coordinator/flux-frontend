@@ -16,6 +16,10 @@ export const inputHandler = (callback: (string, AllInputTypes) => void) => (
 				break;
 			case "text":
 			case "number":
+				if (event.currentTarget.value === "") {
+					callback(name, 0);
+					break;
+				}
 				callback(name, event.currentTarget.value);
 				break;
 			default:
