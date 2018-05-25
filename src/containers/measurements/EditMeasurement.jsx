@@ -49,7 +49,15 @@ export default class EditMeasurement extends React.Component<Props, State> {
 
 	saveMeasurement = (measurement: Measurement) => {
 		const { roomId } = this.props.match.params;
-		return axios.post(`/rooms/${roomId}/measurements`, measurement, {
+		const anchorPositions = measurement.anchors.map(a =>
+			a.toAnchorPositionObject()
+		);
+		const exportMeasurement = Object.assign(
+			{ anchorPositions: anchorPositions },
+			measurement
+		);
+		exportMeasurement.anchors = undefined;
+		return axios.post(`/rooms/${roomId}/measurements`, exportMeasurement, {
 			cancelToken: this.source.token
 		});
 	};
