@@ -13,7 +13,6 @@ import type { AllInputTypes } from "../../../utils/InputHandler";
 type Props = {
 	anchorIndex: number,
 	anchor: Anchor,
-	anchorIdSuggestions: string[],
 	onAnchorValueChanged: (anchorIndex: number, anchor: Anchor) => void
 };
 
@@ -43,7 +42,7 @@ export default function AnchorEditFieldset({
 	return (
 		<fieldset>
 			<Paragraph>Anchor {displayingIndex}</Paragraph>
-			<FormField label="Anchor ID" suggestions={anchorIdSuggestions}>
+			<FormField label="Anchor ID">
 				<TextInput
 					name="networkId"
 					placeHolder={`Netzwerkidentifikation von Anchor ${displayingIndex}`}

@@ -26,8 +26,7 @@ type State = {
 	measurement: Measurement,
 	isLoading: boolean,
 	shouldRedirect: boolean,
-	toast?: ToastMetadata,
-	anchorSuggestions: string[]
+	toast?: ToastMetadata
 };
 
 export default class EditMeasurement extends React.Component<Props, State> {
@@ -39,8 +38,7 @@ export default class EditMeasurement extends React.Component<Props, State> {
 			"Wahrscheinlich ein Fehler in der Anwendung"
 		),
 		isLoading: true,
-		shouldRedirect: false,
-		anchorSuggestions: ["6e4e", "6e5f", "6e62", "6964"]
+		shouldRedirect: false
 	};
 
 	fetchMeasurement = (measurementId: number) => {
@@ -94,8 +92,15 @@ export default class EditMeasurement extends React.Component<Props, State> {
 		const { measurementId } = this.props.match.params;
 
 		if (typeof measurementId === "undefined") {
+			const newMeasurement = new Measurement(undefined, "", "");
+			newMeasurement.anchors = [
+				new Anchor(0, "6e4e", 0, 0, 0),
+				new Anchor(0, "6e5f", 0, 0, 0),
+				new Anchor(0, "6e62", 0, 0, 0),
+				new Anchor(0, "6964", 0, 0, 0)
+			];
 			this.setState({
-				measurement: new Measurement(undefined, "", ""),
+				measurement: newMeasurement,
 				isLoading: false
 			});
 		} else {
