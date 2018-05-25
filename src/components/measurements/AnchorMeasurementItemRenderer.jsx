@@ -21,7 +21,9 @@ export default function AnchorMeasurementItemRenderer({ item, match }: Props) {
 					<span>{item.description}</span>
 					<Timestamp value={item.startDate} />
 				</ItemListAnchorButton>
-				<ItemListEditButton path={`/editMeasurement/${item.measurementId}`} />
+				<ItemListEditButton
+					path={`${match.url}/editMeasurement/${item.measurementId}`}
+				/>
 			</React.Fragment>
 		);
 	} else {

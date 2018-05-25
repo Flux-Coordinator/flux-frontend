@@ -11,6 +11,7 @@ import Layout from "../layout/Layout";
 import ImportExportContainer from "../importexport/ImportExportContainer";
 import EditProject from "./../../containers/projects/EditProject";
 import EditRoom from "./../../containers/rooms/EditRoom";
+import EditMeasurement from "./../../containers/measurements/EditMeasurement";
 import Login from "../login/LoginContainer";
 import Toast from "./../../components/toast/Toast";
 import { ToastContext } from "./../../components/toast/ToastContext";
@@ -51,6 +52,14 @@ export default class App extends React.Component<Prop, State> {
 								<Route
 									path="/projects/:projectId/editRoom"
 									component={EditRoom}
+								/>
+								<Route
+									path="/projects/:projectId/rooms/:roomId/editMeasurement/:measurementId"
+									component={EditMeasurement}
+								/>
+								<Route
+									path="/projects/:projectId/rooms/:roomId/editMeasurement"
+									component={EditMeasurement}
 								/>
 								<Route path="/projects" component={ProjectsContainer} />
 								<Route path="/import" exact component={ImportExportContainer} />
