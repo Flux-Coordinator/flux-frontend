@@ -69,8 +69,8 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	};
 
 	gradientCfg = {};
-	legendCanvas;
-	legendContext;
+	legendCanvas: ?HTMLCanvasElement;
+	legendContext: ?CanvasRenderingContext2D;
 	heatmap: Heatmap;
 	heatmapContainer: ?HTMLDivElement;
 	heatmapTooltip: ?HTMLDivElement;
@@ -130,11 +130,11 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	setData = () => {
 		if (this.state.container.loaded) {
 			if (this.props.heatmapModes.showAnchors) {
-				const dataPoints = this.transformData(this.props.anchors, true);
+				const dataPoints = this.transformData((this.props.anchors: any), true);
 				this.heatmap.setData(new HeatmapData(0, 1, dataPoints));
 			} else if (this.props.readings.length > 0) {
 				const dataPoints = this.transformData(
-					this.props.readings,
+					(this.props.readings: any),
 					this.props.heatmapModes.showCoverage
 				);
 				const max = this.computeMax(dataPoints);
@@ -227,21 +227,33 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	};
 
 	updateLegend = (data: HeatmapData) => {
-		this.heatmapLegendMin.innerHTML = "0";
-		this.heatmapLegendMax.innerHTML =
-			data.max != null ? Math.round(data.max).toString() : "1000";
-		const configObject = this.transformConfig(this.props.configObject);
-		if (configObject.gradient !== this.gradientCfg) {
-			this.gradientCfg = configObject.gradient;
-			let gradient = this.legendContext.createLinearGradient(0, 0, 100, 1);
-			for (let key in this.gradientCfg) {
-				if (this.gradientCfg.hasOwnProperty(key)) {
-					gradient.addColorStop(key, this.gradientCfg[key]);
+		if (
+			this.legendContext != null &&
+			this.heatmapGradient != null &&
+			this.legendCanvas != null
+		) {
+			const legendContext = this.legendContext;
+			const heatmapGradient = this.heatmapGradient;
+			const legendCanvas = this.legendCanvas;
+
+			this.heatmapLegendMax.innerHTML =
+				data.max != null ? Math.round(data.max).toString() : "1000";
+			const configObject = this.transformConfig(this.props.configObject);
+			if (configObject.gradient !== this.gradientCfg) {
+				this.gradientCfg = configObject.gradient;
+				let gradient = legendContext.createLinearGradient(0, 0, 100, 1);
+				for (let key in this.gradientCfg) {
+					if (this.gradientCfg.hasOwnProperty(key)) {
+						gradient.addColorStop(
+							parseFloat(key),
+							(this.gradientCfg: any)[key]
+						);
+					}
 				}
+				legendContext.fillStyle = gradient;
+				legendContext.fillRect(0, 0, 100, 10);
+				heatmapGradient.src = legendCanvas.toDataURL();
 			}
-			this.legendContext.fillStyle = gradient;
-			this.legendContext.fillRect(0, 0, 100, 10);
-			this.heatmapGradient.src = this.legendCanvas.toDataURL();
 		}
 	};
 
@@ -275,11 +287,15 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	};
 
 	showTooltip = () => {
-		this.heatmapTooltip.style.display = "block";
+		if (this.heatmapTooltip != null) {
+			this.heatmapTooltip.style.display = "block";
+		}
 	};
 
 	hideTooltip = () => {
-		this.heatmapTooltip.style.display = "none";
+		if (this.heatmapTooltip != null) {
+			this.heatmapTooltip.style.display = "none";
+		}
 	};
 
 	render() {
