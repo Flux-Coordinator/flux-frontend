@@ -18,7 +18,11 @@ export const inputHandler = (callback: (string, AllInputTypes) => void) => (
 				callback(name, event.currentTarget.value);
 				break;
 			case "number":
-				callback(name, parseFloat(event.currentTarget.value));
+				if (event.currentTarget.value === "") {
+					callback(name, 0);
+				} else {
+					callback(name, parseFloat(event.currentTarget.value));
+				}
 				break;
 			default:
 				break;

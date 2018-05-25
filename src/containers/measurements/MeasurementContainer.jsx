@@ -148,7 +148,7 @@ export default class MeasurementContainer extends React.Component<
 
 		let serverUri = process.env.REACT_APP_SERVICE_URI;
 		if (serverUri) {
-			serverUri = serverUri.replace(/(http(s?))/gi, "ws");
+			serverUri = serverUri.replace(/(http)/gi, "ws");
 			this.openWebsocket(`${serverUri}/streamMeasurements`);
 		}
 	}
