@@ -58,13 +58,13 @@ export default class MeasurementContainer extends React.Component<
 	};
 
 	startMeasurement = () => {
-		if (this.state.currentMeasurement.state === "RUNNING") {
+		if (this.state.currentMeasurement.measurementState === "RUNNING") {
 			axios
 				.delete("/measurements/active", { cancelToken: this.source.token })
 				.then(result => {
 					this.setState(prevState => {
 						const measurement = prevState.currentMeasurement;
-						measurement.state = "DONE";
+						measurement.measurementState = "DONE";
 						return {
 							currentMeasurement: measurement
 						};
@@ -81,7 +81,7 @@ export default class MeasurementContainer extends React.Component<
 				.then(result => {
 					this.setState(prevState => {
 						const measurement = prevState.currentMeasurement;
-						measurement.state = "RUNNING";
+						measurement.measurementState = "RUNNING";
 						return {
 							currentMeasurement: measurement
 						};

@@ -10,6 +10,10 @@ type ConstructorType = {
 	startDate: Date,
 	endDate: Date,
 	measurementState: MeasurementState,
+	factor: number,
+	heightTolerance: number,
+	offset: number,
+	targetHeight: number,
 	creator?: string,
 	readings?: Reading[],
 	anchorPositions?: Anchor[]
@@ -21,7 +25,11 @@ export default class Measurement {
 	description: string;
 	startDate: Date;
 	endDate: Date;
-	state: MeasurementState;
+	measurementState: MeasurementState;
+	factor: number;
+	heightTolerance: number;
+	offset: number;
+	targetHeight: number;
 	creator: string;
 	readings: Reading[];
 	anchors: Anchor[];
@@ -33,6 +41,10 @@ export default class Measurement {
 		startDate?: Date = new Date(),
 		endDate?: Date = new Date(),
 		measurementState?: MeasurementState = "READY",
+		factor: number,
+		heightTolerance: number,
+		offset: number,
+		targetHeight: number,
 		creator?: string = "",
 		readings?: Reading[] = [],
 		anchors?: Anchor[] = []
@@ -40,7 +52,11 @@ export default class Measurement {
 		this.measurementId = measurementId;
 		this.name = name;
 		this.description = description;
-		this.state = measurementState;
+		this.measurementState = measurementState;
+		this.factor = factor;
+		this.heightTolerance = heightTolerance;
+		this.offset = offset;
+		this.targetHeight = targetHeight;
 		this.creator = creator;
 		this.readings = readings;
 		this.anchors = anchors;
@@ -65,6 +81,10 @@ export default class Measurement {
 		startDate,
 		endDate,
 		measurementState,
+		factor,
+		heightTolerance,
+		offset,
+		targetHeight,
 		creator,
 		readings,
 		anchorPositions
@@ -82,7 +102,7 @@ export default class Measurement {
 				typedAnchors.push(
 					new Anchor(
 						a.anchorPositionId,
-						a.anchor.networkId,
+						a.anchor.networkid,
 						a.xposition,
 						a.yposition,
 						a.zposition
@@ -98,6 +118,10 @@ export default class Measurement {
 			startDate,
 			endDate,
 			measurementState,
+			factor,
+			heightTolerance,
+			offset,
+			targetHeight,
 			creator,
 			typedReadings,
 			typedAnchors

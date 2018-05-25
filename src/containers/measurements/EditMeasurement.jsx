@@ -9,7 +9,9 @@ import axios, { CancelToken, CancelTokenSource } from "axios";
 import { Redirect } from "react-router-dom";
 
 import Form from "./../../components/form/Form";
+import Anchor from "./../../models/Anchor";
 import Measurement from "../../models/Measurement";
+import AnchorEditFieldset from "./../../components/measurements/edit/AnchorEditFieldset";
 import { ToastContext } from "./../../components/toast/ToastContext";
 import { inputHandler } from "../../utils/InputHandler";
 
@@ -24,23 +26,9 @@ type State = {
 	measurement: Measurement,
 	isLoading: boolean,
 	shouldRedirect: boolean,
-	toast?: ToastMetadata
+	toast?: ToastMetadata,
+	anchorSuggestions: string[]
 };
-
-function RenderSingleAnchor({ anchorNumber }: { anchorNumber: number }) {
-	return (
-		<fieldset>
-			<Paragraph>Anker {anchorNumber}</Paragraph>
-			<FormField label="Anker ID">
-				<TextInput
-					name={`anchor${anchorNumber}Id`}
-					placeHolder={`Identifikation von Anker ${anchorNumber}`}
-					value=""
-				/>
-			</FormField>
-		</fieldset>
-	);
-}
 
 export default class EditMeasurement extends React.Component<Props, State> {
 	source: CancelTokenSource = CancelToken.source();
@@ -51,7 +39,8 @@ export default class EditMeasurement extends React.Component<Props, State> {
 			"Wahrscheinlich ein Fehler in der Anwendung"
 		),
 		isLoading: true,
-		shouldRedirect: false
+		shouldRedirect: false,
+		anchorSuggestions: ["6e4e", "6e5f", "6e62", "6964"]
 	};
 
 	fetchMeasurement = (measurementId: number) => {
@@ -120,14 +109,25 @@ export default class EditMeasurement extends React.Component<Props, State> {
 		}
 	}
 
+	onAnchorChanged = (index: number, anchor: Anchor) => {
+		const { measurement } = this.state;
+		measurement.anchors[index] = anchor;
+		this.setState({ measurement });
+	};
+
 	renderAnchorEditForm = () => {
-		return (
-			<React.Fragment>
-				<RenderSingleAnchor anchorNumber={1} />
-				<RenderSingleAnchor anchorNumber={2} />
-				<RenderSingleAnchor anchorNumber={3} />
-			</React.Fragment>
-		);
+		const { measurement } = this.state;
+		return measurement.anchors.map((a, index) => {
+			return (
+				<AnchorEditFieldset
+					key={index}
+					anchorIndex={index}
+					anchor={a}
+					onAnchorValueChanged={this.onAnchorChanged}
+					anchorIdSuggestions={this.state.anchorSuggestions}
+				/>
+			);
+		});
 	};
 
 	render() {
@@ -180,7 +180,8 @@ export default class EditMeasurement extends React.Component<Props, State> {
 								/>
 							</FormField>
 						</fieldset>
-						{measurement.state === "READY" && this.renderAnchorEditForm()}
+						{measurement.measurementState === "READY" &&
+							this.renderAnchorEditForm()}
 					</Form>
 				)}
 			</ToastContext.Consumer>
