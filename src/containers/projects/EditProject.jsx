@@ -108,7 +108,7 @@ export default class EditProject extends React.Component<Props, State> {
 		}
 
 		if (this.state.isLoading) {
-			return <isLoading />;
+			return <Loading />;
 		}
 
 		return (
