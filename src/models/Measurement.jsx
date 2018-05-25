@@ -33,26 +33,17 @@ export default class Measurement {
 		startDate?: Date = new Date(),
 		endDate?: Date = new Date(),
 		state?: MeasurementState = "READY",
-		creator?: string,
-		readings?: Reading[],
-		anchors?: Anchor[]
+		creator?: string = "",
+		readings?: Reading[] = [],
+		anchors?: Anchor[] = []
 	) {
 		this.measurementId = measurementId;
 		this.name = name;
 		this.description = description;
 		this.state = state;
-
-		if (readings) {
-			this.readings = readings;
-		} else {
-			this.readings = [];
-		}
-
-		if (anchors) {
-			this.anchors = anchors;
-		} else {
-			this.anchors = [];
-		}
+		this.creator = creator;
+		this.readings = readings;
+		this.anchors = anchors;
 
 		if (typeof startDate === "number" || typeof startDate === "string") {
 			this.startDate = new Date(startDate);

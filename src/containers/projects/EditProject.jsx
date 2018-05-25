@@ -121,7 +121,7 @@ export default class EditProject extends React.Component<Props, State> {
 						<FormField label="Name">
 							<TextInput
 								name="name"
-								placeholder="Projektname eingeben"
+								placeHolder="Projektname eingeben"
 								value={this.state.project.name}
 								onDOMChange={inputHandler(this.onProjectChanged)}
 							/>
@@ -129,7 +129,7 @@ export default class EditProject extends React.Component<Props, State> {
 						<FormField label="Beschreibung">
 							<TextInput
 								name="description"
-								placeholder="Beschreibung des Projektes"
+								placeHolder="Beschreibung des Projektes"
 								value={this.state.project.description}
 								onDOMChange={inputHandler(this.onProjectChanged)}
 							/>

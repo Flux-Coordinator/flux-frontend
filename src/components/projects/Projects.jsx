@@ -38,7 +38,7 @@ export default class Projects extends React.Component<Props, State> {
 								fill
 								iconAlign="start"
 								size="medium"
-								placeholder="Projekte suchen"
+								placeHolder="Projekte suchen"
 							/>
 						</Box>
 					</Header>

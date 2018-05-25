@@ -114,6 +114,8 @@ export default class EditMeasurement extends React.Component<Props, State> {
 			return <Loading />;
 		}
 
+		const { measurement } = this.state;
+
 		return (
 			<ToastContext.Consumer>
 				{(showToast: any) => (
@@ -121,11 +123,30 @@ export default class EditMeasurement extends React.Component<Props, State> {
 						heading="Messung bearbeiten"
 						onSubmit={() => this.onSubmit(showToast)}
 					>
+						<FormField label="Name">
+							<TextInput
+								name="name"
+								placeHolder="Namen eingeben"
+								value={measurement.name}
+								onDOMChange={inputHandler(this.onMeasurementChanged)}
+							/>
+						</FormField>
 						<FormField label="Beschreibung">
 							<TextInput
 								name="description"
-								placeholder="Projektname eingeben"
-								value={this.state.measurement.description}
+								placeHolder="Beschreibung eingeben"
+								value={measurement.description}
+								onDOMChange={inputHandler(this.onMeasurementChanged)}
+							/>
+						</FormField>
+						<FormField
+							label="Vermesser"
+							help="Name der Person, die die Messung durchführt"
+						>
+							<TextInput
+								name="creator"
+								placeHolder="Name des Vermessers"
+								value={measurement.creator}
 								onDOMChange={inputHandler(this.onMeasurementChanged)}
 							/>
 						</FormField>
