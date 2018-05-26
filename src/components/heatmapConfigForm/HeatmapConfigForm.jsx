@@ -10,17 +10,12 @@ import type { allInputTypes } from "../../utils/InputHandler";
 
 type Props = {
 	configObject: ConfigObject,
-	onSubmit: () => void,
 	onChange: (string, allInputTypes) => void
 };
 
-export default function HeatmapConfigForm({
-	configObject,
-	onSubmit,
-	onChange
-}: Props) {
+export default function HeatmapConfigForm({ configObject, onChange }: Props) {
 	return (
-		<Form heading="Heatmap bearbeiten" onSubmit={onSubmit}>
+		<Form heading="Heatmap bearbeiten">
 			<FormFields>
 				<fieldset>
 					<FormField label="Radius [mm]">

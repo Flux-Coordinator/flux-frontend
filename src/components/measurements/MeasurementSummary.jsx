@@ -77,10 +77,6 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 		alert("submit transformation");
 	};
 
-	onHeatmapConfigSubmit = () => {
-		alert("submit config");
-	};
-
 	render() {
 		if (this.props.isLoading) {
 			return <Loading />;
@@ -133,7 +129,6 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 									<AccordionPanel heading="Konfiguration">
 										<HeatmapConfigForm
 											configObject={this.state.configObject}
-											onSubmit={this.onHeatmapConfigSubmit}
 											onChange={this.handleHeatmapConfigChange}
 										/>
 									</AccordionPanel>
