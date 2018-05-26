@@ -29,7 +29,7 @@ export default class Project {
 	static fromObject({ name, description, rooms, projectId }: ConstructorType) {
 		const typedRoomObjects: Room[] = [];
 		rooms.forEach(r => {
-			typedRoomObjects.push(Room.fromObject(r));
+			typedRoomObjects.push(Room.fromObject((r: any)));
 		});
 		return new Project(name, description, typedRoomObjects, projectId);
 	}

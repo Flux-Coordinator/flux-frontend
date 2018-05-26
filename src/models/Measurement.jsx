@@ -5,47 +5,61 @@ import type { MeasurementState } from "./../types/MeasurementState";
 
 type ConstructorType = {
 	measurementId: number,
+	name: string,
 	description: string,
 	startDate: Date,
 	endDate: Date,
 	measurementState: MeasurementState,
+	factor: number,
+	heightTolerance: number,
+	offset: number,
+	targetHeight: number,
+	creator?: string,
 	readings?: Reading[],
 	anchorPositions?: Anchor[]
 };
 
 export default class Measurement {
-	measurementId: number;
+	measurementId: ?number;
+	name: string;
 	description: string;
 	startDate: Date;
 	endDate: Date;
-	state: MeasurementState;
+	measurementState: MeasurementState;
+	factor: number;
+	heightTolerance: number;
+	offset: number;
+	targetHeight: number;
+	creator: string;
 	readings: Reading[];
 	anchors: Anchor[];
 
 	constructor(
-		measurementId: number,
+		measurementId?: number,
+		name: string,
 		description: string,
-		startDate: Date,
-		endDate: Date,
-		state: MeasurementState,
-		readings?: Reading[],
-		anchors?: Anchor[]
+		startDate?: Date = new Date(),
+		endDate?: Date = new Date(),
+		measurementState?: MeasurementState = "READY",
+		factor: number,
+		heightTolerance: number,
+		offset: number,
+		targetHeight: number,
+		creator?: string = "",
+		readings?: Reading[] = [],
+		anchors?: Anchor[] = []
 	) {
 		this.measurementId = measurementId;
+		this.name = name;
 		this.description = description;
-		this.state = state;
-
-		if (readings) {
-			this.readings = readings;
-		} else {
-			this.readings = [];
-		}
-
-		if (anchors) {
-			this.anchors = anchors;
-		} else {
-			this.anchors = [];
-		}
+		this.measurementState = measurementState;
+		this.factor = factor;
+		this.heightTolerance = heightTolerance;
+		this.offset = offset;
+		this.targetHeight = targetHeight;
+		this.creator = creator;
+		this.readings = readings;
+		this.anchors = anchors;
 
 		if (typeof startDate === "number" || typeof startDate === "string") {
 			this.startDate = new Date(startDate);
@@ -62,17 +76,23 @@ export default class Measurement {
 
 	static fromObject({
 		measurementId,
+		name,
 		description,
 		startDate,
 		endDate,
 		measurementState,
+		factor,
+		heightTolerance,
+		offset,
+		targetHeight,
+		creator,
 		readings,
 		anchorPositions
 	}: ConstructorType) {
 		const typedReadings: Reading[] = [];
 		if (readings != null) {
 			readings.forEach(r => {
-				typedReadings.push(Reading.fromObject(r));
+				typedReadings.push(Reading.fromObject((r: any)));
 			});
 		}
 
@@ -82,7 +102,7 @@ export default class Measurement {
 				typedAnchors.push(
 					new Anchor(
 						a.anchorPositionId,
-						a.anchor.networkId,
+						a.anchor.networkid,
 						a.xposition,
 						a.yposition,
 						a.zposition
@@ -93,10 +113,16 @@ export default class Measurement {
 
 		return new Measurement(
 			measurementId,
+			name,
 			description,
 			startDate,
 			endDate,
 			measurementState,
+			factor,
+			heightTolerance,
+			offset,
+			targetHeight,
+			creator,
 			typedReadings,
 			typedAnchors
 		);

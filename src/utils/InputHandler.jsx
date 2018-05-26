@@ -15,12 +15,14 @@ export const inputHandler = (callback: (string, AllInputTypes) => void) => (
 				callback(name, event.currentTarget.checked);
 				break;
 			case "text":
+				callback(name, event.currentTarget.value);
+				break;
 			case "number":
 				if (event.currentTarget.value === "") {
 					callback(name, 0);
-					break;
+				} else {
+					callback(name, parseFloat(event.currentTarget.value));
 				}
-				callback(name, event.currentTarget.value);
 				break;
 			default:
 				break;

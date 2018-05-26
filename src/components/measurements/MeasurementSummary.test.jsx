@@ -11,9 +11,7 @@ describe("<MeasurementSummary />", () => {
 		const measurement = new Measurement(
 			1,
 			"Test measurement",
-			new Date(),
-			new Date(),
-			"READY"
+			"This is the description"
 		);
 		const room = new Room(
 			"Test room",

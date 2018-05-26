@@ -34,7 +34,10 @@ export default function Room({ match, room }: Props) {
 				}}
 			/>
 			<Section>
-				<ItemListHeader header="Messungen" path="/editMeasurement" />
+				<ItemListHeader
+					header="Messungen"
+					path={`${match.url}/editMeasurement`}
+				/>
 				<ItemsList
 					items={room.measurements}
 					keyFunc={(item: Measurement) => item.measurementId}

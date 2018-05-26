@@ -34,34 +34,54 @@ export default class MeasurementContainer extends React.Component<
 
 	getReadings = () => {
 		this.setState({ loading: true });
-		axios
-			.get(`/measurements/${this.props.measurement.measurementId}`, {
-				cancelToken: this.source.token
-			})
-			.then(result => {
-				const measurement = MeasurementModel.fromObject(result.data);
-				this.setState({ currentMeasurement: measurement, loading: false });
-			})
-			.catch(error => {
-				if (!axios.isCancel(error)) {
-					this.setState(
-						({
-							currentMeasurement: this.props.measurement,
-							loading: false
-						}: State)
-					);
-				}
-			});
+		const measurementId = this.props.measurement.measurementId;
+		if (measurementId != null) {
+			axios
+				.get(`/measurements/${measurementId}`, {
+					cancelToken: this.source.token
+				})
+				.then(result => {
+					const measurement = MeasurementModel.fromObject(result.data);
+					this.setState({ currentMeasurement: measurement, loading: false });
+				})
+				.catch(error => {
+					if (!axios.isCancel(error)) {
+						this.setState(
+							({
+								currentMeasurement: this.props.measurement,
+								loading: false
+							}: State)
+						);
+					}
+				});
+		}
 	};
 
 	startMeasurement = () => {
-		if (this.state.currentMeasurement.state === "RUNNING") {
+		if (this.state.currentMeasurement.measurementState === "RUNNING") {
 			axios
 				.delete("/measurements/active", { cancelToken: this.source.token })
 				.then(result => {
 					this.setState(prevState => {
 						const measurement = prevState.currentMeasurement;
-						measurement.state = "DONE";
+						measurement.measurementState = "DONE";
+						return {
+							currentMeasurement: measurement
+						};
+					});
+				})
+				.catch(error => {
+					alert(error.response.data);
+				});
+		} else if (this.props.measurement.measurementId != null) {
+			axios
+				.put("/measurements/active/" + this.props.measurement.measurementId, {
+					cancelToken: this.source.token
+				})
+				.then(result => {
+					this.setState(prevState => {
+						const measurement = prevState.currentMeasurement;
+						measurement.measurementState = "RUNNING";
 						return {
 							currentMeasurement: measurement
 						};
@@ -71,22 +91,9 @@ export default class MeasurementContainer extends React.Component<
 					alert(error.response.data);
 				});
 		} else {
-			axios
-				.put("/measurements/active/" + this.props.measurement.measurementId, {
-					cancelToken: this.source.token
-				})
-				.then(result => {
-					this.setState(prevState => {
-						const measurement = prevState.currentMeasurement;
-						measurement.state = "RUNNING";
-						return {
-							currentMeasurement: measurement
-						};
-					});
-				})
-				.catch(error => {
-					alert(error.response.data);
-				});
+			alert(
+				"Es gab einen Fehler und die Messung konnte nicht gestartet werden (die Messungs ID ist unbekannt)"
+			);
 		}
 	};
 

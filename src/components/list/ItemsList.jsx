@@ -51,6 +51,7 @@ export default function ItemsList<T>({
 	return (
 		<React.Fragment>
 			<ListPlaceholder
+				emptyMessage="Keine Daten vorhanden"
 				unfilteredTotal={unfilteredTotal}
 				filteredTotal={filteredTotal}
 			/>

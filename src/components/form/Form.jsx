@@ -16,6 +16,7 @@ type Props = {
 export default function Form({ heading, children, onSubmit }: Props) {
 	return (
 		<GrommetForm
+			plain
 			pad="medium"
 			onSubmit={event => {
 				if (onSubmit) {
