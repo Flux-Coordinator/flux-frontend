@@ -17,6 +17,7 @@ import Box from "grommet/components/Box";
 import { PLACEHOLDER_IMAGE } from "../../images/ImagesBase64";
 import { mousePositionHandler } from "../../utils/MousePositionHandler";
 import BrowserPosition from "../../models/BrowserPosition";
+import HeatmapLegend from "./HeatmapLegend";
 
 const FIXED_HEATMAP_VALUE = 1;
 const TOOLTIP_CURSOR_DISTANCE = 15;
@@ -69,19 +70,14 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	};
 
 	gradientCfg = {};
-	legendCanvas: ?HTMLCanvasElement;
-	legendContext: ?CanvasRenderingContext2D;
 	heatmap: Heatmap;
 	heatmapContainer: ?HTMLDivElement;
 	heatmapTooltip: ?HTMLDivElement;
-	heatmapLegend: ?HTMLDivElement;
-	heatmapLegendMin: ?HTMLSpanElement;
-	heatmapLegendMax: ?HTMLSpanElement;
-	heatmapGradient: ?HTMLImageElement;
 	imgElement: ?HTMLImageElement;
+	heatmapData: HeatmapData = new HeatmapData(0, 1, []);
+	transformedConfigObject: ?ConfigObject;
 
 	componentDidMount() {
-		this.createLegend();
 		this.heatmap = this.createHeatmapInstance(
 			this.transformConfig(this.props.configObject)
 		);
@@ -139,8 +135,8 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 				);
 				const max = this.computeMax(dataPoints);
 				const heatmapData = new HeatmapData(0, max, dataPoints);
+				this.heatmapData = heatmapData;
 				this.heatmap.setData(heatmapData);
-				this.updateLegend(heatmapData);
 			}
 		}
 	};
@@ -200,6 +196,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	};
 
 	transformConfig = (configObject: ConfigObject): ConfigObject => {
+		let transformedConfigObject = configObject;
 		if (configObject.radius != null) {
 			const container = this.state.container;
 			const transformation = this.props.transformation;
@@ -209,52 +206,15 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			if (radius <= 0.5) {
 				radius = 0.5;
 			}
-			return Object.assign(
+			transformedConfigObject = Object.assign(
 				{},
 				FluxHeatmap.defaultProps.configObject,
 				configObject,
 				{ radius: radius }
 			);
 		}
-		return configObject;
-	};
-
-	createLegend = () => {
-		this.legendCanvas = document.createElement("canvas");
-		this.legendCanvas.width = 100;
-		this.legendCanvas.height = 10;
-		this.legendContext = this.legendCanvas.getContext("2d");
-	};
-
-	updateLegend = (data: HeatmapData) => {
-		if (
-			this.legendContext != null &&
-			this.heatmapGradient != null &&
-			this.legendCanvas != null
-		) {
-			const legendContext = this.legendContext;
-			const heatmapGradient = this.heatmapGradient;
-			const legendCanvas = this.legendCanvas;
-
-			this.heatmapLegendMax.innerHTML =
-				data.max != null ? Math.round(data.max).toString() : "1000";
-			const configObject = this.transformConfig(this.props.configObject);
-			if (configObject.gradient !== this.gradientCfg) {
-				this.gradientCfg = configObject.gradient;
-				let gradient = legendContext.createLinearGradient(0, 0, 100, 1);
-				for (let key in this.gradientCfg) {
-					if (this.gradientCfg.hasOwnProperty(key)) {
-						gradient.addColorStop(
-							parseFloat(key),
-							(this.gradientCfg: any)[key]
-						);
-					}
-				}
-				legendContext.fillStyle = gradient;
-				legendContext.fillRect(0, 0, 100, 10);
-				heatmapGradient.src = legendCanvas.toDataURL();
-			}
-		}
+		this.transformedConfigObject = transformedConfigObject;
+		return transformedConfigObject;
 	};
 
 	onMouseMove = (mousePosition: BrowserPosition) => {
@@ -332,25 +292,13 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 				>
 					0
 				</div>
-				<div ref={heatmapLegend => (this.heatmapLegend = heatmapLegend)}>
-					<span
-						ref={heatmapLegendMin => (this.heatmapLegendMin = heatmapLegendMin)}
-						style={{ float: "left" }}
-					>
-						0
-					</span>
-					<span
-						ref={heatmapLegendMax => (this.heatmapLegendMax = heatmapLegendMax)}
-						style={{ float: "right" }}
-					>
-						1
-					</span>
-					<img
-						alt={""}
-						ref={heatmapGradient => (this.heatmapGradient = heatmapGradient)}
-						style={{ width: "100%", height: "15px" }}
-					/>
-				</div>
+				{this.transformedConfigObject &&
+					this.transformedConfigObject.gradient && (
+						<HeatmapLegend
+							gradient={this.transformedConfigObject.gradient}
+							heatmapData={this.heatmapData}
+						/>
+					)}
 			</Box>
 		);
 	}
