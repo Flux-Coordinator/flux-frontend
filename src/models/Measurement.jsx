@@ -1,6 +1,7 @@
 // @flow
 import Reading from "./Reading";
 import Anchor from "./Anchor";
+import Transformation from "./Transformation";
 import type { MeasurementState } from "./../types/MeasurementState";
 
 type ConstructorType = {
@@ -10,10 +11,9 @@ type ConstructorType = {
 	startDate: Date,
 	endDate: Date,
 	measurementState: MeasurementState,
-	factor: number,
-	heightTolerance: number,
-	offset: number,
-	targetHeight: number,
+	xOffset: number,
+	yOffset: number,
+	scaleFactor: number,
 	creator?: string,
 	readings?: Reading[],
 	anchorPositions?: Anchor[]
@@ -26,10 +26,7 @@ export default class Measurement {
 	startDate: Date;
 	endDate: Date;
 	measurementState: MeasurementState;
-	factor: number;
-	heightTolerance: number;
-	offset: number;
-	targetHeight: number;
+	transformation: Transformation;
 	creator: string;
 	readings: Reading[];
 	anchors: Anchor[];
@@ -38,13 +35,12 @@ export default class Measurement {
 		measurementId?: number,
 		name: string,
 		description: string,
+		xOffset: number,
+		yOffset: number,
+		scaleFactor: number,
 		startDate?: Date = new Date(),
 		endDate?: Date = new Date(),
 		measurementState?: MeasurementState = "READY",
-		factor: number,
-		heightTolerance: number,
-		offset: number,
-		targetHeight: number,
 		creator?: string = "",
 		readings?: Reading[] = [],
 		anchors?: Anchor[] = []
@@ -53,10 +49,7 @@ export default class Measurement {
 		this.name = name;
 		this.description = description;
 		this.measurementState = measurementState;
-		this.factor = factor;
-		this.heightTolerance = heightTolerance;
-		this.offset = offset;
-		this.targetHeight = targetHeight;
+		this.transformation = new Transformation(xOffset, yOffset, scaleFactor);
 		this.creator = creator;
 		this.readings = readings;
 		this.anchors = anchors;
@@ -81,10 +74,9 @@ export default class Measurement {
 		startDate,
 		endDate,
 		measurementState,
-		factor,
-		heightTolerance,
-		offset,
-		targetHeight,
+		xOffset,
+		yOffset,
+		scaleFactor,
 		creator,
 		readings,
 		anchorPositions
@@ -115,13 +107,12 @@ export default class Measurement {
 			measurementId,
 			name,
 			description,
+			xOffset,
+			yOffset,
+			scaleFactor,
 			startDate,
 			endDate,
 			measurementState,
-			factor,
-			heightTolerance,
-			offset,
-			targetHeight,
 			creator,
 			typedReadings,
 			typedAnchors

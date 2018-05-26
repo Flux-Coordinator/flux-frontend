@@ -43,7 +43,6 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			minOpacity: 0,
 			blur: 0.75
 		},
-		transformation: new Transformation(),
 		heatmapModes: {
 			showCoverage: false,
 			showAnchors: false

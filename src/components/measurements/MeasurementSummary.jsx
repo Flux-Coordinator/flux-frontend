@@ -52,7 +52,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 
 	componentDidMount() {
 		this.setState({
-			transformation: this.props.room.transformation
+			transformation: this.props.currentMeasurement.transformation
 		});
 	}
 
