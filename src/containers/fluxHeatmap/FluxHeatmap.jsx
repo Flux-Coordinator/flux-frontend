@@ -11,12 +11,11 @@ import Transformation from "../../models/Transformation";
 import type { ConfigObject, Container, HeatmapMode } from "../../types/Heatmap";
 import Box from "grommet/components/Box";
 import { PLACEHOLDER_IMAGE } from "../../images/ImagesBase64";
-import { mousePositionHandler } from "../../utils/MousePositionHandler";
-import BrowserPosition from "../../models/BrowserPosition";
 import HeatmapLegend from "./HeatmapLegend";
+import HeatmapTooltip from "./HeatmapTooltip";
+import BrowserPosition from "../../models/BrowserPosition";
 
 const FIXED_HEATMAP_VALUE = 1;
-const TOOLTIP_CURSOR_DISTANCE = 15;
 
 type Props = {
 	readings: ReadingModel[],
@@ -68,7 +67,6 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 
 	heatmap: Heatmap;
 	heatmapContainer: ?HTMLDivElement;
-	heatmapTooltip: ?HTMLDivElement;
 	imgElement: ?HTMLImageElement;
 
 	componentDidMount() {
@@ -234,81 +232,35 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		return transformedConfigObject;
 	};
 
-	onMouseMove = (mousePosition: BrowserPosition) => {
-		let value = this.heatmap.getValueAt({
-			x: mousePosition.xposition,
-			y: mousePosition.yposition
+	getValueForTooltip = (position: BrowserPosition): number => {
+		return this.heatmap.getValueAt({
+			x: position.xposition,
+			y: position.yposition
 		});
-		this.showTooltip();
-		this.updateTooltip(
-			new HeatmapDataPoint(
-				mousePosition.xposition,
-				mousePosition.yposition,
-				value
-			)
-		);
-	};
-
-	onMouseOut = () => {
-		this.hideTooltip();
-	};
-
-	updateTooltip = (dataPoint: HeatmapDataPoint) => {
-		this.heatmapTooltip.style.webkitTransform =
-			"translate(" +
-			(dataPoint.x + TOOLTIP_CURSOR_DISTANCE) +
-			"px, " +
-			(dataPoint.y + TOOLTIP_CURSOR_DISTANCE) +
-			"px)";
-		this.heatmapTooltip.innerHTML = dataPoint.value;
-	};
-
-	showTooltip = () => {
-		if (this.heatmapTooltip != null) {
-			this.heatmapTooltip.style.display = "block";
-		}
-	};
-
-	hideTooltip = () => {
-		if (this.heatmapTooltip != null) {
-			this.heatmapTooltip.style.display = "none";
-		}
 	};
 
 	render() {
 		return (
 			<Box size="xlarge">
-				<div
-					ref={heatmapContainer => (this.heatmapContainer = heatmapContainer)}
-					onMouseMove={mousePositionHandler(this.onMouseMove)}
-					onMouseOut={this.onMouseOut}
-				>
-					<img
-						onLoad={this.setContainerState}
-						ref={imgElement => (this.imgElement = imgElement)}
-						src={this.props.backgroundImage}
-						alt={"heatmap"}
-						style={{ display: "block", maxWidth: "100%" }}
-					/>
-					<ReactResizeDetector
-						skipOnMount
-						handleWidth
-						handleHeight
-						onResize={this.setContainerState}
-					/>
-				</div>
-				<div
-					ref={heatmapTooltip => (this.heatmapTooltip = heatmapTooltip)}
-					style={{
-						display: "none",
-						position: "absolute",
-						background: "rgba(0,0,0,.8)",
-						color: "#fff",
-						padding: "5px"
-					}}
-				>
-					0
-				</div>
+				<HeatmapTooltip getValueCallback={this.getValueForTooltip}>
+					<div
+						ref={heatmapContainer => (this.heatmapContainer = heatmapContainer)}
+					>
+						<img
+							onLoad={this.setContainerState}
+							ref={imgElement => (this.imgElement = imgElement)}
+							src={this.props.backgroundImage}
+							alt={"heatmap"}
+							style={{ display: "block", maxWidth: "100%" }}
+						/>
+						<ReactResizeDetector
+							skipOnMount
+							handleWidth
+							handleHeight
+							onResize={this.setContainerState}
+						/>
+					</div>
+				</HeatmapTooltip>
 				{this.state.configObject.gradient && (
 					<HeatmapLegend
 						heatmapGradient={this.state.configObject.gradient}
