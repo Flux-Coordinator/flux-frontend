@@ -4,7 +4,7 @@ import * as React from "react";
 import HeatmapData from "../../models/HeatmapData";
 
 type Props = {
-	gradient: Object,
+	heatmapGradient: Object,
 	heatmapData: HeatmapData
 };
 
@@ -17,7 +17,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		legendGradient: ""
 	};
 
-	gradientCfg = {};
+	heatmapGradient = {};
 	legendCanvas: ?HTMLCanvasElement;
 	legendContext: ?CanvasRenderingContext2D;
 
@@ -42,18 +42,23 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			const legendContext = this.legendContext;
 			const legendCanvas = this.legendCanvas;
 
-			if (this.props.gradient !== this.gradientCfg) {
-				this.gradientCfg = this.props.gradient;
-				let gradient = legendContext.createLinearGradient(0, 0, 100, 1);
-				for (let key in this.gradientCfg) {
-					if (this.gradientCfg.hasOwnProperty(key)) {
-						gradient.addColorStop(
+			if (this.props.heatmapGradient !== this.heatmapGradient) {
+				this.heatmapGradient = this.props.heatmapGradient;
+				let legendCanvasGradient = legendContext.createLinearGradient(
+					0,
+					0,
+					100,
+					1
+				);
+				for (let key in this.heatmapGradient) {
+					if (this.heatmapGradient.hasOwnProperty(key)) {
+						legendCanvasGradient.addColorStop(
 							parseFloat(key),
-							(this.gradientCfg: any)[key]
+							(this.heatmapGradient: any)[key]
 						);
 					}
 				}
-				legendContext.fillStyle = gradient;
+				legendContext.fillStyle = legendCanvasGradient;
 				legendContext.fillRect(0, 0, 100, 10);
 				this.setState({ legendGradient: legendCanvas.toDataURL() });
 			}

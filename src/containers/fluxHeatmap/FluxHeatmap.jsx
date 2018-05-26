@@ -69,7 +69,6 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		}
 	};
 
-	gradientCfg = {};
 	heatmap: Heatmap;
 	heatmapContainer: ?HTMLDivElement;
 	heatmapTooltip: ?HTMLDivElement;
@@ -295,7 +294,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 				{this.transformedConfigObject &&
 					this.transformedConfigObject.gradient && (
 						<HeatmapLegend
-							gradient={this.transformedConfigObject.gradient}
+							heatmapGradient={this.transformedConfigObject.gradient}
 							heatmapData={this.heatmapData}
 						/>
 					)}
