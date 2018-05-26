@@ -8,11 +8,7 @@ import HeatmapData from "../../models/HeatmapData";
 import { Positionable } from "../../types/Positionable";
 import ReactResizeDetector from "react-resize-detector";
 import Transformation from "../../models/Transformation";
-import type {
-	ConfigObject,
-	Container,
-	HeatmapModes
-} from "../../types/Heatmap";
+import type { ConfigObject, Container, HeatmapMode } from "../../types/Heatmap";
 import Box from "grommet/components/Box";
 import { PLACEHOLDER_IMAGE } from "../../images/ImagesBase64";
 import { mousePositionHandler } from "../../utils/MousePositionHandler";
@@ -28,11 +24,13 @@ type Props = {
 	backgroundImage: string,
 	configObject: ConfigObject,
 	transformation: Transformation,
-	heatmapModes: HeatmapModes
+	heatmapMode: HeatmapMode
 };
 
 type State = {
-	container: Container
+	container: Container,
+	configObject: ConfigObject,
+	heatmapData: HeatmapData
 };
 
 export default class FluxHeatmap extends React.Component<Props, State> {
@@ -53,10 +51,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			}
 		},
 		transformation: new Transformation(),
-		heatmapModes: {
-			showCoverage: false,
-			showAnchors: false
-		}
+		heatmapMode: "DEFAULT"
 	};
 
 	state = {
@@ -66,19 +61,19 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			originalHeight: 1,
 			originalWidth: 1,
 			loaded: false
-		}
+		},
+		configObject: {},
+		heatmapData: new HeatmapData(0, 1, [])
 	};
 
 	heatmap: Heatmap;
 	heatmapContainer: ?HTMLDivElement;
 	heatmapTooltip: ?HTMLDivElement;
 	imgElement: ?HTMLImageElement;
-	heatmapData: HeatmapData = new HeatmapData(0, 1, []);
-	transformedConfigObject: ?ConfigObject;
 
 	componentDidMount() {
 		this.heatmap = this.createHeatmapInstance(
-			this.transformConfig(this.props.configObject)
+			this.loadConfig(this.props.configObject)
 		);
 		this.setData();
 	}
@@ -94,18 +89,29 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		return Heatmap.create(extendedConfigObject);
 	};
 
-	destroyHeatmapInstance = (heatmapInstance: Heatmap): HeatmapDataPoint[] => {
+	destroyHeatmapInstance = (heatmapInstance: Heatmap) => {
 		// destroy function not supported from Heatmap.js, but needed due to a bug on config change:
 		// https://github.com/pa7/heatmap.js/issues/209
-		const currentData = heatmapInstance.getData();
-		const canvas = heatmapInstance._renderer.canvas;
-		canvas.remove();
-		return currentData;
+		heatmapInstance._renderer.canvas.remove();
 	};
 
-	componentDidUpdate() {
-		this.setConfig();
-		this.setData();
+	componentDidUpdate(prevProps: Props, prevState: State) {
+		if (
+			prevProps.heatmapMode !== this.props.heatmapMode ||
+			prevProps.transformation !== this.props.transformation ||
+			prevState.container.width !== this.state.container.width ||
+			prevState.container.height !== this.state.container.height
+		) {
+			this.setConfig();
+			this.setData();
+		} else {
+			if (prevProps.configObject !== this.props.configObject) {
+				this.setConfig();
+			}
+			if (prevProps.readings.length !== this.props.readings.length) {
+				this.setData();
+			}
+		}
 	}
 
 	setContainerState = () => {
@@ -124,17 +130,17 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 
 	setData = () => {
 		if (this.state.container.loaded) {
-			if (this.props.heatmapModes.showAnchors) {
+			if (this.props.heatmapMode === "ANCHORS") {
 				const dataPoints = this.transformData((this.props.anchors: any), true);
 				this.heatmap.setData(new HeatmapData(0, 1, dataPoints));
 			} else if (this.props.readings.length > 0) {
 				const dataPoints = this.transformData(
 					(this.props.readings: any),
-					this.props.heatmapModes.showCoverage
+					this.props.heatmapMode === "COVERAGE"
 				);
 				const max = this.computeMax(dataPoints);
 				const heatmapData = new HeatmapData(0, max, dataPoints);
-				this.heatmapData = heatmapData;
+				this.setState({ heatmapData: heatmapData });
 				this.heatmap.setData(heatmapData);
 			}
 		}
@@ -142,8 +148,8 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 
 	setConfig = () => {
 		if (this.state.container.loaded) {
-			let configObject = this.transformConfig(this.props.configObject);
-			if (this.props.heatmapModes.showAnchors) {
+			let configObject = this.loadConfig(this.props.configObject);
+			if (this.props.heatmapMode === "ANCHORS") {
 				configObject = {
 					radius: 3,
 					opacity: 1,
@@ -153,9 +159,9 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 					}
 				};
 			}
-			const currentData = this.destroyHeatmapInstance(this.heatmap);
+			this.destroyHeatmapInstance(this.heatmap);
 			this.heatmap = this.createHeatmapInstance(configObject);
-			this.heatmap.setData(currentData);
+			this.heatmap.setData(this.state.heatmapData);
 		}
 	};
 
@@ -194,6 +200,22 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		}, []);
 	};
 
+	loadConfig = (configObject: ConfigObject): ConfigObject => {
+		let newConfigObject = this.transformConfig(
+			this.addDefaultConfig(configObject)
+		);
+		this.setState({ configObject: newConfigObject });
+		return newConfigObject;
+	};
+
+	addDefaultConfig = (configObject: ConfigObject): ConfigObject => {
+		return Object.assign(
+			{},
+			FluxHeatmap.defaultProps.configObject,
+			configObject
+		);
+	};
+
 	transformConfig = (configObject: ConfigObject): ConfigObject => {
 		let transformedConfigObject = configObject;
 		if (configObject.radius != null) {
@@ -205,14 +227,10 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			if (radius <= 0.5) {
 				radius = 0.5;
 			}
-			transformedConfigObject = Object.assign(
-				{},
-				FluxHeatmap.defaultProps.configObject,
-				configObject,
-				{ radius: radius }
-			);
+			transformedConfigObject = Object.assign({}, configObject, {
+				radius: radius
+			});
 		}
-		this.transformedConfigObject = transformedConfigObject;
 		return transformedConfigObject;
 	};
 
@@ -291,13 +309,12 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 				>
 					0
 				</div>
-				{this.transformedConfigObject &&
-					this.transformedConfigObject.gradient && (
-						<HeatmapLegend
-							heatmapGradient={this.transformedConfigObject.gradient}
-							heatmapData={this.heatmapData}
-						/>
-					)}
+				{this.state.configObject.gradient && (
+					<HeatmapLegend
+						heatmapGradient={this.state.configObject.gradient}
+						heatmapData={this.state.heatmapData}
+					/>
+				)}
 			</Box>
 		);
 	}

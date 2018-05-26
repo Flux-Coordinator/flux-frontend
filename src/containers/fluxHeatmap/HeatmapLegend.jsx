@@ -12,7 +12,7 @@ type State = {
 	legendGradient: string
 };
 
-export default class FluxHeatmap extends React.Component<Props, State> {
+export default class HeatmapLegend extends React.Component<Props, State> {
 	state = {
 		legendGradient: ""
 	};
