@@ -50,10 +50,9 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 		}
 	};
 
-	componentDidMount() {
-		this.setState({
-			transformation: this.props.currentMeasurement.transformation
-		});
+	static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+		prevState.transformation = nextProps.currentMeasurement.transformation;
+		return prevState;
 	}
 
 	handleTransformationChange = (key: string, value: AllInputTypes) => {
