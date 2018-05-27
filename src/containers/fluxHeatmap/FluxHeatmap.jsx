@@ -129,15 +129,16 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	setData = () => {
 		if (this.state.container.loaded) {
 			let dataPoints: HeatmapDataPoint[];
-			if (this.props.heatmapMode === "ANCHORS") {
-				dataPoints = this.transformData((this.props.anchors: any), false);
-			} else if (this.props.readings.length > 0) {
-				dataPoints = this.transformData(
-					(this.props.readings: any),
-					this.props.heatmapMode === "COVERAGE"
-				);
-			} else {
-				dataPoints = [];
+			dataPoints = [];
+			if (this.props.transformation.scaleFactor !== 0) {
+				if (this.props.heatmapMode === "ANCHORS") {
+					dataPoints = this.transformData((this.props.anchors: any), false);
+				} else if (this.props.readings.length > 0) {
+					dataPoints = this.transformData(
+						(this.props.readings: any),
+						this.props.heatmapMode === "COVERAGE"
+					);
+				}
 			}
 			const max = this.computeMax(dataPoints);
 			const heatmapData = new HeatmapData(0, max, dataPoints);
