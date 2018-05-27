@@ -34,7 +34,9 @@ export default class EditMeasurement extends React.Component<Props, State> {
 		measurement: new Measurement(
 			undefined,
 			"Nicht initialisierte Messung",
-			"Wahrscheinlich ein Fehler in der Anwendung"
+			"Wahrscheinlich ein Fehler in der Anwendung",
+			0,
+			0
 		),
 		isLoading: true,
 		shouldRedirect: false
@@ -51,9 +53,9 @@ export default class EditMeasurement extends React.Component<Props, State> {
 		const anchorPositions = measurement.anchors.map(a =>
 			a.toAnchorPositionObject()
 		);
-		const exportMeasurement = Object.assign(
+		const exportMeasurement: any = Object.assign(
 			{ anchorPositions: anchorPositions },
-			measurement
+			(measurement: any)
 		);
 		exportMeasurement.anchors = undefined;
 		return axios.post(`/rooms/${roomId}/measurements`, exportMeasurement, {
@@ -99,7 +101,7 @@ export default class EditMeasurement extends React.Component<Props, State> {
 		const { measurementId } = this.props.match.params;
 
 		if (typeof measurementId === "undefined") {
-			const newMeasurement = new Measurement(undefined, "", "");
+			const newMeasurement = new Measurement(undefined, "", "", 0, 0);
 			newMeasurement.anchors = [
 				new Anchor(0, "6e4e", 0, 0, 0),
 				new Anchor(0, "6e5f", 0, 0, 0),
