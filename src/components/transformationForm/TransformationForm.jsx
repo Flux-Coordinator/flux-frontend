@@ -27,7 +27,7 @@ export default function TransformationForm({
 						<NumberInput
 							name={"scaleFactor"}
 							value={transformation.scaleFactor}
-							step={0.01}
+							step={0.001}
 							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
@@ -35,7 +35,7 @@ export default function TransformationForm({
 						<NumberInput
 							name={"xOffset"}
 							value={transformation.xOffset}
-							step={5}
+							step={1}
 							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
@@ -43,7 +43,7 @@ export default function TransformationForm({
 						<NumberInput
 							name={"yOffset"}
 							value={transformation.yOffset}
-							step={5}
+							step={1}
 							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
