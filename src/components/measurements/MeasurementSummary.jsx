@@ -47,10 +47,9 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 		heatmapMode: "DEFAULT"
 	};
 
-	componentDidMount() {
-		this.setState({
-			transformation: this.props.room.transformation
-		});
+	static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+		prevState.transformation = nextProps.currentMeasurement.transformation;
+		return prevState;
 	}
 
 	handleValueChange = (key: string, value: AllInputTypes) => {

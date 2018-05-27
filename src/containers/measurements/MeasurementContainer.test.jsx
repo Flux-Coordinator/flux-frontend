@@ -11,7 +11,10 @@ describe("<MeasurementContainer />", () => {
 		const measurement = new Measurement(
 			1,
 			"Test Measurement",
-			"Test description"
+			"Test description",
+			1650,
+			300,
+			0.15
 		);
 		const room = new Room(
 			"Test Room",

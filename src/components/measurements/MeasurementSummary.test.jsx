@@ -11,7 +11,10 @@ describe("<MeasurementSummary />", () => {
 		const measurement = new Measurement(
 			1,
 			"Test measurement",
-			"This is the description"
+			"This is the description",
+			1650,
+			300,
+			0.15
 		);
 		const room = new Room(
 			"Test room",
@@ -19,9 +22,6 @@ describe("<MeasurementSummary />", () => {
 			([measurement]: Measurement[]),
 			"",
 			1,
-			100,
-			200,
-			0.15,
 			1
 		);
 		const wrapper = shallow(
