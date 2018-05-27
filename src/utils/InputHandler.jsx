@@ -15,8 +15,6 @@ export const inputHandler = (callback: (string, AllInputTypes) => void) => (
 				callback(name, event.currentTarget.checked);
 				break;
 			case "radio":
-				callback(name, event.currentTarget.value);
-				break;
 			case "text":
 				callback(name, event.currentTarget.value);
 				break;
