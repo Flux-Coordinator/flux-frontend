@@ -37,7 +37,7 @@ export default class Measurement {
 		description: string,
 		xOffset: number,
 		yOffset: number,
-		scaleFactor: number,
+		scaleFactor: number = 1.0,
 		startDate?: Date = new Date(),
 		endDate?: Date = new Date(),
 		measurementState?: MeasurementState = "READY",

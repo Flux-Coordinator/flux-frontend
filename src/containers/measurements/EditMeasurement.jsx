@@ -35,7 +35,6 @@ export default class EditMeasurement extends React.Component<Props, State> {
 			undefined,
 			"Nicht initialisierte Messung",
 			"Wahrscheinlich ein Fehler in der Anwendung",
-			100,
 			0,
 			0
 		),
@@ -102,7 +101,7 @@ export default class EditMeasurement extends React.Component<Props, State> {
 		const { measurementId } = this.props.match.params;
 
 		if (typeof measurementId === "undefined") {
-			const newMeasurement = new Measurement(undefined, "", "", 0, 0, 0);
+			const newMeasurement = new Measurement(undefined, "", "", 0, 0);
 			newMeasurement.anchors = [
 				new Anchor(0, "6e4e", 0, 0, 0),
 				new Anchor(0, "6e5f", 0, 0, 0),
