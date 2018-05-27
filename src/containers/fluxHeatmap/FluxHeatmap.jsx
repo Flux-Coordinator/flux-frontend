@@ -129,18 +129,18 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	setData = () => {
 		if (this.state.container.loaded) {
 			let dataPoints: HeatmapDataPoint[];
-			let heatmapData: HeatmapData;
 			if (this.props.heatmapMode === "ANCHORS") {
-				dataPoints = this.transformData((this.props.anchors: any), true);
-				heatmapData = new HeatmapData(0, 1, dataPoints);
+				dataPoints = this.transformData((this.props.anchors: any), false);
 			} else if (this.props.readings.length > 0) {
 				dataPoints = this.transformData(
 					(this.props.readings: any),
 					this.props.heatmapMode === "COVERAGE"
 				);
-				const max = this.computeMax(dataPoints);
-				heatmapData = new HeatmapData(0, max, dataPoints);
+			} else {
+				return;
 			}
+			const max = this.computeMax(dataPoints);
+			const heatmapData = new HeatmapData(0, max, dataPoints);
 			this.setState({ heatmapData: heatmapData });
 			this.heatmap.setData(heatmapData);
 		}
@@ -151,7 +151,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			let configObject = this.loadConfig(this.props.configObject);
 			if (this.props.heatmapMode === "ANCHORS") {
 				configObject = {
-					radius: 3,
+					radius: 4,
 					opacity: 1,
 					blur: 0,
 					gradient: {
@@ -235,16 +235,35 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	};
 
 	getValueForTooltip = (position: BrowserPosition): number => {
-		return this.heatmap.getValueAt({
+		let value = this.heatmap.getValueAt({
 			x: position.xposition,
 			y: position.yposition
 		});
+		if (this.props.heatmapMode === "ANCHORS" && value !== 0) {
+			const points = this.state.heatmapData.data;
+			value = points.reduce(
+				(prev, curr) =>
+					this.getDistance(curr, position) < this.getDistance(prev, position)
+						? curr
+						: prev
+			).value;
+		}
+		return value;
+	};
+
+	getDistance = (p1: HeatmapDataPoint, p2: BrowserPosition): number => {
+		return Math.sqrt(
+			Math.pow(p1.x - p2.xposition, 2) + Math.pow(p1.y - p2.yposition, 2)
+		);
 	};
 
 	render() {
 		return (
 			<Box size="xlarge">
-				<HeatmapTooltip getValueCallback={this.getValueForTooltip}>
+				<HeatmapTooltip
+					getValueCallback={this.getValueForTooltip}
+					heatmapMode={this.props.heatmapMode}
+				>
 					<div
 						ref={heatmapContainer => (this.heatmapContainer = heatmapContainer)}
 					>
@@ -263,12 +282,13 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 						/>
 					</div>
 				</HeatmapTooltip>
-				{this.state.configObject.gradient && (
-					<HeatmapLegend
-						heatmapGradient={this.state.configObject.gradient}
-						heatmapData={this.state.heatmapData}
-					/>
-				)}
+				{this.state.configObject.gradient &&
+					this.props.heatmapMode !== "ANCHORS" && (
+						<HeatmapLegend
+							heatmapGradient={this.state.configObject.gradient}
+							heatmapData={this.state.heatmapData}
+						/>
+					)}
 			</Box>
 		);
 	}

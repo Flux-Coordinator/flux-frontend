@@ -3,11 +3,13 @@ import * as React from "react";
 import { mousePositionHandler } from "../../utils/MousePositionHandler";
 import BrowserPosition from "../../models/BrowserPosition";
 import HeatmapDataPoint from "../../models/HeatmapDataPoint";
+import type { HeatmapMode } from "../../types/Heatmap";
 
 const TOOLTIP_CURSOR_DISTANCE = 15;
 
 type Props = {
 	children: React.Node,
+	heatmapMode: HeatmapMode,
 	getValueCallback: BrowserPosition => number
 };
 
@@ -18,14 +20,18 @@ export default class HeatmapTooltip extends React.Component<Props> {
 		let value = this.props.getValueCallback(
 			new BrowserPosition(mousePosition.xposition, mousePosition.yposition)
 		);
-		this.showTooltip();
-		this.updateTooltip(
-			new HeatmapDataPoint(
-				mousePosition.xposition,
-				mousePosition.yposition,
-				value
-			)
-		);
+		if (!(this.props.heatmapMode === "ANCHORS" && value === 0)) {
+			this.updateTooltip(
+				new HeatmapDataPoint(
+					mousePosition.xposition,
+					mousePosition.yposition,
+					value
+				)
+			);
+			this.showTooltip();
+		} else {
+			this.hideTooltip();
+		}
 	};
 
 	onMouseOut = () => {
@@ -40,7 +46,11 @@ export default class HeatmapTooltip extends React.Component<Props> {
 				"px, " +
 				(dataPoint.y + TOOLTIP_CURSOR_DISTANCE) +
 				"px)";
-			this.heatmapTooltip.innerHTML = dataPoint.value.toString();
+			let heatmapValue = dataPoint.value.toString();
+			if (this.props.heatmapMode === "ANCHORS") {
+				heatmapValue = "0x" + dataPoint.value.toString(16);
+			}
+			this.heatmapTooltip.innerHTML = heatmapValue;
 		}
 	};
 
