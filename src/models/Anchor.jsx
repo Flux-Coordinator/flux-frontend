@@ -46,7 +46,7 @@ export default class Anchor implements Positionable {
 			zposition: this.position.zposition,
 			anchor: {
 				anchorId: 0,
-				networkid: this.networkId
+				networkId: this.networkId
 			}
 		};
 	};

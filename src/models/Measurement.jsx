@@ -102,7 +102,7 @@ export default class Measurement {
 				typedAnchors.push(
 					new Anchor(
 						a.anchorPositionId,
-						a.anchor.networkid,
+						a.anchor.networkId,
 						a.xposition,
 						a.yposition,
 						a.zposition
