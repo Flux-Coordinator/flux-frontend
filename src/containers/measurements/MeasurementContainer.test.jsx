@@ -11,10 +11,7 @@ describe("<MeasurementContainer />", () => {
 		const measurement = new Measurement(
 			1,
 			"Test Measurement",
-			new Date(),
-			new Date(),
-			"READY",
-			[]
+			"Test description"
 		);
 		const room = new Room(
 			"Test Room",

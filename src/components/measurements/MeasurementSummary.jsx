@@ -19,7 +19,7 @@ import TransformationForm from "../transformationForm/TransformationForm";
 import HeatmapConfigForm from "../heatmapConfigForm/HeatmapConfigForm";
 import { EXAMPLE_IMAGE } from "../../images/ImagesBase64";
 import HeatmapModeForm from "../heatmapModeForm/HeatmapModeForm";
-import type { allInputTypes } from "../../utils/InputHandler";
+import type { AllInputTypes } from "../../utils/InputHandler";
 import Loading from "../loading/Loading";
 
 type Props = {
@@ -53,11 +53,11 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 		});
 	}
 
-	handleValueChange = (key: string, value: allInputTypes) => {
+	handleValueChange = (key: string, value: AllInputTypes) => {
 		this.setState({ [key]: value });
 	};
 
-	handleTransformationChange = (key: string, value: allInputTypes) => {
+	handleTransformationChange = (key: string, value: AllInputTypes) => {
 		this.setState(prevState => ({
 			transformation: Object.assign(({}: any), prevState.transformation, {
 				[key]: parseFloat(value)
@@ -65,7 +65,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 		}));
 	};
 
-	handleHeatmapConfigChange = (key: string, value: allInputTypes) => {
+	handleHeatmapConfigChange = (key: string, value: AllInputTypes) => {
 		this.setState(prevState => ({
 			configObject: Object.assign({}, prevState.configObject, {
 				[key]: parseFloat(value)
@@ -83,7 +83,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 		}
 
 		let icon: React.Node;
-		if (this.props.currentMeasurement.state === "RUNNING") {
+		if (this.props.currentMeasurement.measurementState === "RUNNING") {
 			icon = <PauseIcon colorIndex="warning" />;
 		} else {
 			icon = <PlayIcon colorIndex="ok" />;
@@ -93,7 +93,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 			<Section margin="none">
 				<Header size="small">
 					<Heading margin="none" tag="h3">
-						Aktuelle Messung ({this.props.currentMeasurement.measurementId})
+						Aktuelle Messung ({this.props.currentMeasurement.name})
 					</Heading>
 					<Button icon={icon} onClick={this.props.onStartMeasurement} />
 				</Header>

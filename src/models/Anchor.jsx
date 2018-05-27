@@ -37,4 +37,17 @@ export default class Anchor implements Positionable {
 	}: ConstructorType) {
 		return new Anchor(anchorId, networkId, xposition, yposition, zposition);
 	}
+
+	toAnchorPositionObject = () => {
+		return {
+			anchorPositionId: this.anchorId,
+			xposition: this.position.xposition,
+			yposition: this.position.yposition,
+			zposition: this.position.zposition,
+			anchor: {
+				anchorId: 0,
+				networkid: this.networkId
+			}
+		};
+	};
 }

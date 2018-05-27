@@ -1,7 +1,7 @@
 // @flow
-export type allInputTypes = string | number | boolean;
+export type AllInputTypes = string | number | boolean;
 
-export const inputHandler = (callback: (string, allInputTypes) => void) => (
+export const inputHandler = (callback: (string, AllInputTypes) => void) => (
 	event: SyntheticEvent<HTMLInputElement>
 ) => {
 	if (
@@ -18,12 +18,14 @@ export const inputHandler = (callback: (string, allInputTypes) => void) => (
 				callback(name, event.currentTarget.value);
 				break;
 			case "text":
+				callback(name, event.currentTarget.value);
+				break;
 			case "number":
 				if (event.currentTarget.value === "") {
 					callback(name, 0);
-					break;
+				} else {
+					callback(name, parseFloat(event.currentTarget.value));
 				}
-				callback(name, event.currentTarget.value);
 				break;
 			default:
 				break;

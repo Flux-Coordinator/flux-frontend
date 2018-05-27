@@ -1,6 +1,5 @@
 // @flow
 import * as React from "react";
-import Header from "grommet/components/Header";
 import Heading from "grommet/components/Heading";
 import Section from "grommet/components/Section";
 import Article from "grommet/components/Article";
@@ -10,6 +9,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Measurement from "../../models/Measurement";
 import RoomModel from "../../models/Room";
 import ItemsList from "../list/ItemsList";
+import ItemListHeader from "./../list/ItemListHeader";
 import MeasurementContainer from "../../containers/measurements/MeasurementContainer";
 import AnchorMeasurementItemRenderer from "../measurements/AnchorMeasurementItemRenderer";
 
@@ -34,9 +34,10 @@ export default function Room({ match, room }: Props) {
 				}}
 			/>
 			<Section>
-				<Header size="small">
-					<Heading tag="h3">Messungen</Heading>
-				</Header>
+				<ItemListHeader
+					header="Messungen"
+					path={`${match.url}/editMeasurement`}
+				/>
 				<ItemsList
 					items={room.measurements}
 					keyFunc={(item: Measurement) => item.measurementId}
