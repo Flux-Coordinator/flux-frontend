@@ -137,7 +137,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 					this.props.heatmapMode === "COVERAGE"
 				);
 			} else {
-				return;
+				dataPoints = [];
 			}
 			const max = this.computeMax(dataPoints);
 			const heatmapData = new HeatmapData(0, max, dataPoints);
@@ -166,6 +166,9 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	};
 
 	computeMax = (dataPoints: HeatmapDataPoint[]) => {
+		if (dataPoints.length === 0) {
+			return 0;
+		}
 		return Math.max(...dataPoints.map(d => d.value));
 	};
 
