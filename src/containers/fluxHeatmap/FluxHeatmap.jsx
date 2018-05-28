@@ -10,7 +10,7 @@ import ReactResizeDetector from "react-resize-detector";
 import Transformation from "../../models/Transformation";
 import type { ConfigObject, Container, HeatmapMode } from "../../types/Heatmap";
 import Box from "grommet/components/Box";
-import { PLACEHOLDER_IMAGE } from "../../images/ImagesBase64";
+import { PLACEHOLDER_IMAGE, EXAMPLE_IMAGE } from "../../images/ImagesBase64";
 import HeatmapLegend from "./HeatmapLegend";
 import HeatmapTooltip from "./HeatmapTooltip";
 import BrowserPosition from "../../models/BrowserPosition";
@@ -53,6 +53,8 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		heatmapMode: "DEFAULT"
 	};
 
+	imgElement: ?HTMLImageElement;
+
 	state = {
 		container: {
 			height: 1,
@@ -67,7 +69,6 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 
 	heatmap: Heatmap;
 	heatmapContainer: ?HTMLDivElement;
-	imgElement: ?HTMLImageElement;
 
 	componentDidMount() {
 		this.heatmap = this.createHeatmapInstance(
@@ -112,18 +113,16 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		}
 	}
 
-	setContainerState = () => {
-		if (this.imgElement != null) {
-			this.setState({
-				container: {
-					height: this.imgElement.clientHeight,
-					width: this.imgElement.clientWidth,
-					originalHeight: this.imgElement.naturalHeight,
-					originalWidth: this.imgElement.naturalWidth,
-					loaded: true
-				}
-			});
-		}
+	setContainerState = (event: SyntheticEvent<HTMLImageElement>) => {
+		this.setState({
+			container: {
+				height: event.currentTarget.clientHeight,
+				width: event.currentTarget.clientWidth,
+				originalHeight: event.currentTarget.naturalHeight,
+				originalWidth: event.currentTarget.naturalWidth,
+				loaded: true
+			}
+		});
 	};
 
 	setData = () => {
@@ -262,6 +261,11 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	};
 
 	render() {
+		let { backgroundImage } = this.props;
+		if (!backgroundImage) {
+			backgroundImage = EXAMPLE_IMAGE;
+		}
+
 		return (
 			<Box size="xlarge">
 				<HeatmapTooltip
@@ -273,10 +277,8 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 					>
 						<img
 							onLoad={this.setContainerState}
-							ref={imgElement => (this.imgElement = imgElement)}
-							src={this.props.backgroundImage}
+							src={backgroundImage}
 							alt={"heatmap"}
-							style={{ display: "block", maxWidth: "100%" }}
 						/>
 						<ReactResizeDetector
 							skipOnMount
