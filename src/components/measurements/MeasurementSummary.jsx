@@ -16,9 +16,9 @@ import Transformation from "../../models/Transformation";
 import FluxHeatmap from "../../containers/fluxHeatmap/FluxHeatmap";
 import type { ConfigObject, HeatmapMode } from "../../types/Heatmap";
 import TransformationForm from "../transformationForm/TransformationForm";
-import HeatmapConfigForm from "../heatmapConfigForm/HeatmapConfigForm";
+import HeatmapConfigForm from "../heatmap/heatmapConfigForm/HeatmapConfigForm";
 import { EXAMPLE_IMAGE } from "../../images/ImagesBase64";
-import HeatmapModeForm from "../heatmapModeForm/HeatmapModeForm";
+import HeatmapModeForm from "../heatmap/heatmapModeForm/HeatmapModeForm";
 import type { AllInputTypes } from "../../utils/InputHandler";
 import Loading from "../loading/Loading";
 

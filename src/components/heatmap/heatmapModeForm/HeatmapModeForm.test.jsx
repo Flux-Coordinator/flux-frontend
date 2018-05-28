@@ -3,8 +3,8 @@ import * as React from "react";
 import { shallow } from "enzyme";
 
 import HeatmapModeForm from "./HeatmapModeForm";
-import type { AllInputTypes } from "../../utils/InputHandler";
-import type { HeatmapMode } from "../../types/Heatmap";
+import type { AllInputTypes } from "../../../utils/InputHandler";
+import type { HeatmapMode } from "../../../types/Heatmap";
 
 describe("<HeatmapModeForm />", () => {
 	const onChange = (key: string, value: AllInputTypes) => {};

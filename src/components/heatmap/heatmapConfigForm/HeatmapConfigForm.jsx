@@ -1,12 +1,12 @@
 // @flow
 import * as React from "react";
-import Form from "./../../components/form/Form";
+import Form from "../../form/Form";
 import FormField from "grommet/components/FormField";
 import FormFields from "grommet/components/FormFields";
 import NumberInput from "grommet/components/NumberInput";
-import type { ConfigObject } from "../../types/Heatmap";
-import { inputHandler } from "../../utils/InputHandler";
-import type { AllInputTypes } from "../../utils/InputHandler";
+import type { ConfigObject } from "../../../types/Heatmap";
+import { inputHandler } from "../../../utils/InputHandler";
+import type { AllInputTypes } from "../../../utils/InputHandler";
 
 type Props = {
 	configObject: ConfigObject,
