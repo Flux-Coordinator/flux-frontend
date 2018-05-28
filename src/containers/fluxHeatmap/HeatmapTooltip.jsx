@@ -78,7 +78,6 @@ export default class HeatmapTooltip extends React.Component<Props> {
 	render() {
 		return (
 			<div
-				id={"testwrapper"}
 				style={{ position: "relative" }}
 				onMouseMove={mousePositionHandler(this.onMouseMove)}
 				onMouseOut={this.onMouseOut}
