@@ -39,17 +39,26 @@ export default class HeatmapTooltip extends React.Component<Props> {
 	};
 
 	updateTooltip = (dataPoint: HeatmapDataPoint) => {
+		this.positionTooltip(
+			dataPoint.x + TOOLTIP_CURSOR_DISTANCE,
+			dataPoint.y + TOOLTIP_CURSOR_DISTANCE
+		);
+		let heatmapValue = dataPoint.value.toString();
+		if (this.props.heatmapMode === "ANCHORS") {
+			heatmapValue = "0x" + dataPoint.value.toString(16);
+		}
+		this.setTooltipValue(heatmapValue);
+	};
+
+	positionTooltip = (xPosition: number, yPosition: number) => {
 		if (this.heatmapTooltip != null) {
 			this.heatmapTooltip.style.webkitTransform =
-				"translate(" +
-				(dataPoint.x + TOOLTIP_CURSOR_DISTANCE) +
-				"px, " +
-				(dataPoint.y + TOOLTIP_CURSOR_DISTANCE) +
-				"px)";
-			let heatmapValue = dataPoint.value.toString();
-			if (this.props.heatmapMode === "ANCHORS") {
-				heatmapValue = "0x" + dataPoint.value.toString(16);
-			}
+				"translate(" + xPosition + "px, " + yPosition + "px)";
+		}
+	};
+
+	setTooltipValue = (heatmapValue: string) => {
+		if (this.heatmapTooltip != null) {
 			this.heatmapTooltip.innerHTML = heatmapValue;
 		}
 	};
