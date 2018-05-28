@@ -112,7 +112,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		}
 	}
 
-	setContainerState = (event: SyntheticEvent<HTMLImageElement>) => {
+	setContainerState = () => {
 		if (this.imgElement != null) {
 			this.setState({
 				container: {

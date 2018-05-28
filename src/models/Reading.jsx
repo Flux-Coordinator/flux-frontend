@@ -42,7 +42,7 @@ export default class Reading implements Positionable {
 		readingId: this.readingId,
 		luxValue: this.luxValue,
 		timestamp: this.timestamp,
-		...this.position.toObject()
+		...this.position
 	});
 
 	static fromObject({
