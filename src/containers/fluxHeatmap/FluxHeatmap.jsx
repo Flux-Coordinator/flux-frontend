@@ -14,6 +14,8 @@ import { PLACEHOLDER_IMAGE } from "../../images/ImagesBase64";
 import HeatmapLegend from "./HeatmapLegend";
 import HeatmapTooltip from "./HeatmapTooltip";
 import BrowserPosition from "../../models/BrowserPosition";
+import type { AllInputTypes } from "../../utils/InputHandler";
+import HeatmapAnalysisForm from "../../components/heatmap/heatmapAnalysisForm/HeatmapAnalysisForm";
 
 const FIXED_HEATMAP_VALUE = 1;
 
@@ -29,7 +31,8 @@ type Props = {
 type State = {
 	container: Container,
 	configObject: ConfigObject,
-	heatmapData: HeatmapData
+	heatmapData: HeatmapData,
+	maxLuxValue: number
 };
 
 export default class FluxHeatmap extends React.Component<Props, State> {
@@ -62,7 +65,8 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			loaded: false
 		},
 		configObject: {},
-		heatmapData: new HeatmapData(0, 1, [])
+		heatmapData: new HeatmapData(0, 1, []),
+		maxLuxValue: 0
 	};
 
 	heatmap: Heatmap;
@@ -261,6 +265,10 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		);
 	};
 
+	handleValueChange = (key: string, value: AllInputTypes) => {
+		this.setState({ [key]: value });
+	};
+
 	render() {
 		return (
 			<Box size="xlarge">
@@ -293,6 +301,13 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 							heatmapData={this.state.heatmapData}
 						/>
 					)}
+				<Box>
+					<HeatmapAnalysisForm
+						heatmapData={this.state.heatmapData}
+						maxLuxValue={this.state.maxLuxValue}
+						onChange={this.handleValueChange}
+					/>
+				</Box>
 			</Box>
 		);
 	}
