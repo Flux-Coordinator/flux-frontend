@@ -20,4 +20,10 @@ export default class Position {
 	static fromObject({ xposition, yposition, zposition }: ConstructorType) {
 		return new Position(xposition, yposition, zposition);
 	}
+
+	toObject = () => ({
+		xposition: this.xposition,
+		yposition: this.yposition,
+		zposition: this.zposition
+	});
 }

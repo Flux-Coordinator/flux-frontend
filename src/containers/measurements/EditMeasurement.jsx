@@ -53,10 +53,17 @@ export default class EditMeasurement extends React.Component<Props, State> {
 		const anchorPositions = measurement.anchors.map(a =>
 			a.toAnchorPositionObject()
 		);
-		const exportMeasurement: any = Object.assign(
-			{ anchorPositions: anchorPositions },
-			(measurement: any)
-		);
+		const transformation = {
+			xOffset: measurement.transformation.xOffset,
+			yOffset: measurement.transformation.yOffset,
+			scaleFactor: measurement.transformation.scaleFactor
+		};
+		const readingDtos = measurement.readings.map(r => r.toDTO());
+		const exportMeasurement: any = Object.assign({}, (measurement: any), {
+			anchorPositions: anchorPositions,
+			readings: readingDtos,
+			...transformation
+		});
 		exportMeasurement.anchors = undefined;
 		return axios.post(`/rooms/${roomId}/measurements`, exportMeasurement, {
 			cancelToken: this.source.token

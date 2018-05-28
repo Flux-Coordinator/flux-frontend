@@ -38,6 +38,13 @@ export default class Reading implements Positionable {
 		this.position = new PositionModel(xposition, yposition, zposition);
 	}
 
+	toDTO = () => ({
+		readingId: this.readingId,
+		luxValue: this.luxValue,
+		timestamp: this.timestamp,
+		...this.position.toObject()
+	});
+
 	static fromObject({
 		readingId,
 		luxValue,
