@@ -31,7 +31,7 @@ export default function TransformationForm({
 							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
-					<FormField label="Horizontaler Versatz">
+					<FormField label="Horizontaler Versatz (in Pixel)">
 						<NumberInput
 							name={"xOffset"}
 							value={transformation.xOffset}
@@ -39,7 +39,7 @@ export default function TransformationForm({
 							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
-					<FormField label="Vertikaler Versatz">
+					<FormField label="Vertikaler Versatz (in Pixel)">
 						<NumberInput
 							name={"yOffset"}
 							value={transformation.yOffset}
