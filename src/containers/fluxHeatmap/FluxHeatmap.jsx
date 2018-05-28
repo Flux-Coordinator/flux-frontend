@@ -53,8 +53,6 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		heatmapMode: "DEFAULT"
 	};
 
-	imgElement: ?HTMLImageElement;
-
 	state = {
 		container: {
 			height: 1,
@@ -69,6 +67,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 
 	heatmap: Heatmap;
 	heatmapContainer: ?HTMLDivElement;
+	imgElement: ?HTMLImageElement;
 
 	componentDidMount() {
 		this.heatmap = this.createHeatmapInstance(
@@ -114,15 +113,17 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	}
 
 	setContainerState = (event: SyntheticEvent<HTMLImageElement>) => {
-		this.setState({
-			container: {
-				height: event.currentTarget.clientHeight,
-				width: event.currentTarget.clientWidth,
-				originalHeight: event.currentTarget.naturalHeight,
-				originalWidth: event.currentTarget.naturalWidth,
-				loaded: true
-			}
-		});
+		if (this.imgElement != null) {
+			this.setState({
+				container: {
+					height: this.imgElement.clientHeight,
+					width: this.imgElement.clientWidth,
+					originalHeight: this.imgElement.naturalHeight,
+					originalWidth: this.imgElement.naturalWidth,
+					loaded: true
+				}
+			});
+		}
 	};
 
 	setData = () => {
@@ -276,6 +277,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 						ref={heatmapContainer => (this.heatmapContainer = heatmapContainer)}
 					>
 						<img
+							ref={imgElement => (this.imgElement = imgElement)}
 							onLoad={this.setContainerState}
 							src={backgroundImage}
 							alt={"heatmap"}
