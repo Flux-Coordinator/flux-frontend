@@ -96,6 +96,7 @@ export default class HeatmapAnalysisForm extends React.Component<Props, State> {
 							help={"(0 = kein Limit)"}
 						>
 							<NumberInput
+								disabled={this.props.heatmapMode !== "DEFAULT"}
 								name={"maxLuxValue"}
 								value={this.props.maxLuxValue}
 								min={0}
