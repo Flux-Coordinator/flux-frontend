@@ -1,5 +1,7 @@
 // @flow
 import * as React from "react";
+import Image from "grommet/components/Image";
+import NumberInput from "grommet/components/NumberInput";
 import TextInput from "grommet/components/TextInput";
 import FormField from "grommet/components/FormField";
 import Loading from "../../components/loading/Loading";
@@ -44,6 +46,22 @@ export default class EditRoom extends React.Component<Props, State> {
 		});
 	};
 
+	convertFileToString: (file: File) => Promise<string | ArrayBuffer> = (
+		file: File
+	) => {
+		return new Promise(function(resolve, reject) {
+			const reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onload = () => {
+				resolve(reader.result);
+			};
+
+			reader.onerror = error => {
+				reject(error);
+			};
+		});
+	};
+
 	saveRoom = (room: Room) => {
 		return axios.post(
 			`/projects/${this.props.match.params.projectId}/rooms`,
@@ -80,12 +98,25 @@ export default class EditRoom extends React.Component<Props, State> {
 	};
 
 	onRoomChanged = (key: string, value: AllInputTypes) => {
-		this.setState((prevState, props) => {
+		this.setState(prevState => {
 			prevState.room = Object.assign(prevState.room, {
 				[key]: value
 			});
 			return prevState;
 		});
+	};
+
+	onRoomPlanChanged = (key: string, value: AllInputTypes) => {
+		if (value && value[0]) {
+			this.convertFileToString(value[0]).then(result => {
+				this.setState(prevState => {
+					prevState.room = Object.assign(prevState.room, {
+						[key]: result
+					});
+					return prevState;
+				});
+			});
+		}
 	};
 
 	componentDidMount() {
@@ -116,6 +147,8 @@ export default class EditRoom extends React.Component<Props, State> {
 			return <Loading />;
 		}
 
+		const { room } = this.state;
+
 		return (
 			<ToastContext.Consumer>
 				{(showToast: any) => (
@@ -127,7 +160,7 @@ export default class EditRoom extends React.Component<Props, State> {
 							<TextInput
 								name="name"
 								placeHolder="Raumname eingeben"
-								value={this.state.room.name}
+								value={room.name}
 								onDOMChange={inputHandler(this.onRoomChanged)}
 							/>
 						</FormField>
@@ -135,10 +168,26 @@ export default class EditRoom extends React.Component<Props, State> {
 							<TextInput
 								name="description"
 								placeHolder="Beschreibung eingeben"
-								value={this.state.room.description}
+								value={room.description}
 								onDOMChange={inputHandler(this.onRoomChanged)}
 							/>
 						</FormField>
+						<FormField label="Raumgrösse (in m²)">
+							<NumberInput
+								name="floorSpace"
+								value={room.floorSpace}
+								onChange={inputHandler(this.onRoomChanged)}
+							/>
+						</FormField>
+						<FormField label="Raumplan">
+							<input
+								type="file"
+								accept="image/*"
+								name="floorPlan"
+								onChange={inputHandler(this.onRoomPlanChanged)}
+							/>
+						</FormField>
+						<Image src={room.floorPlan} alt="" />
 					</Form>
 				)}
 			</ToastContext.Consumer>

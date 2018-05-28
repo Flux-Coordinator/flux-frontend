@@ -10,7 +10,7 @@ import ReactResizeDetector from "react-resize-detector";
 import Transformation from "../../models/Transformation";
 import type { ConfigObject, Container, HeatmapMode } from "../../types/Heatmap";
 import Box from "grommet/components/Box";
-import { PLACEHOLDER_IMAGE } from "../../images/ImagesBase64";
+import { PLACEHOLDER_IMAGE, EXAMPLE_IMAGE } from "../../images/ImagesBase64";
 import HeatmapLegend from "./HeatmapLegend";
 import HeatmapTooltip from "./HeatmapTooltip";
 import BrowserPosition from "../../models/BrowserPosition";
@@ -262,6 +262,11 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	};
 
 	render() {
+		let { backgroundImage } = this.props;
+		if (!backgroundImage) {
+			backgroundImage = EXAMPLE_IMAGE;
+		}
+
 		return (
 			<Box size="xlarge">
 				<HeatmapTooltip
@@ -272,11 +277,10 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 						ref={heatmapContainer => (this.heatmapContainer = heatmapContainer)}
 					>
 						<img
-							onLoad={this.setContainerState}
 							ref={imgElement => (this.imgElement = imgElement)}
-							src={this.props.backgroundImage}
+							onLoad={this.setContainerState}
+							src={backgroundImage}
 							alt={"heatmap"}
-							style={{ display: "block", maxWidth: "100%" }}
 						/>
 						<ReactResizeDetector
 							skipOnMount

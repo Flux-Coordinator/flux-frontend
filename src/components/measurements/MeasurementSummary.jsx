@@ -17,7 +17,6 @@ import FluxHeatmap from "../../containers/fluxHeatmap/FluxHeatmap";
 import type { ConfigObject, HeatmapMode } from "../../types/Heatmap";
 import TransformationForm from "../transformationForm/TransformationForm";
 import HeatmapConfigForm from "../heatmap/heatmapConfigForm/HeatmapConfigForm";
-import { EXAMPLE_IMAGE } from "../../images/ImagesBase64";
 import HeatmapModeForm from "../heatmap/heatmapModeForm/HeatmapModeForm";
 import type { AllInputTypes } from "../../utils/InputHandler";
 import Loading from "../loading/Loading";
@@ -105,7 +104,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 							<FluxHeatmap
 								readings={this.props.currentMeasurement.readings}
 								anchors={this.props.currentMeasurement.anchors}
-								backgroundImage={EXAMPLE_IMAGE}
+								backgroundImage={this.props.room.floorPlan}
 								transformation={this.state.transformation}
 								configObject={this.state.configObject}
 								heatmapMode={this.state.heatmapMode}
