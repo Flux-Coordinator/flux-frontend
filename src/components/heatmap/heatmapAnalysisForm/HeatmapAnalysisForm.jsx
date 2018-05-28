@@ -9,10 +9,12 @@ import Value from "grommet/components/Value";
 import { inputHandler } from "../../../utils/InputHandler";
 import type { AllInputTypes } from "../../../utils/InputHandler";
 import HeatmapData from "../../../models/HeatmapData";
+import type { HeatmapMode } from "../../../types/Heatmap";
 
 type Props = {
 	heatmapData: HeatmapData,
 	maxLuxValue: number,
+	heatmapMode: HeatmapMode,
 	onChange: (string, AllInputTypes) => void
 };
 
@@ -38,32 +40,50 @@ export default class HeatmapAnalysisForm extends React.Component<Props, State> {
 	static getDerivedStateFromProps(nextProps: Props, prevState: State) {
 		if (
 			nextProps.heatmapData.data &&
-			nextProps.heatmapData.data.length !== 0 &&
-			nextProps.heatmapData.data.length !== prevState.numberOfReadings
+			nextProps.heatmapData.data.length !== prevState.numberOfReadings &&
+			nextProps.heatmapMode === "DEFAULT"
 		) {
-			const dataPoints = nextProps.heatmapData.data;
-			const numberOfReadings = dataPoints.length;
-			const average =
-				dataPoints.reduce((sum, curr) => sum + curr.value, 0) /
-				numberOfReadings;
-			const min = dataPoints.reduce(
-				(prev, curr) => (curr.value < prev.value ? curr : prev)
-			).value;
-			const max = dataPoints.reduce(
-				(prev, curr) => (curr.value > prev.value ? curr : prev)
-			).value;
-			const uniformity = min / average;
-			const irregularity = min / max;
-			return {
-				numberOfReadings: numberOfReadings,
-				average: Math.round(average),
-				min: Math.floor(min),
-				max: Math.ceil(max),
-				uniformity: (Math.round(uniformity * 100) / 100).toFixed(2),
-				irregularity: (Math.round(irregularity * 100) / 100).toFixed(2)
-			};
+			if (nextProps.heatmapData.data.length !== 0) {
+				return HeatmapAnalysisForm.calculateHeatmapAnalysis(nextProps);
+			} else {
+				return HeatmapAnalysisForm.getDefaultHeatmapAnalysis();
+			}
 		}
 		return null;
+	}
+
+	static calculateHeatmapAnalysis(props: Props): State {
+		const dataPoints = props.heatmapData.data;
+		const numberOfReadings = dataPoints.length;
+		const average =
+			dataPoints.reduce((sum, curr) => sum + curr.value, 0) / numberOfReadings;
+		const min = dataPoints.reduce(
+			(prev, curr) => (curr.value < prev.value ? curr : prev)
+		).value;
+		const max = dataPoints.reduce(
+			(prev, curr) => (curr.value > prev.value ? curr : prev)
+		).value;
+		const uniformity = min / average;
+		const irregularity = min / max;
+		return {
+			numberOfReadings: numberOfReadings,
+			average: Math.round(average),
+			min: Math.floor(min),
+			max: Math.ceil(max),
+			uniformity: Math.round(uniformity * 100) / 100,
+			irregularity: Math.round(irregularity * 100) / 100
+		};
+	}
+
+	static getDefaultHeatmapAnalysis(): State {
+		return {
+			numberOfReadings: 0,
+			average: 0,
+			min: 0,
+			max: 0,
+			uniformity: 0,
+			irregularity: 0
+		};
 	}
 
 	render() {
