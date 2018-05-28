@@ -10,11 +10,6 @@ export type ConfigObject = {
 	gradient?: Object
 };
 
-export type HeatmapModes = {
-	showCoverage: boolean,
-	showAnchors: boolean
-};
-
 export type Container = {
 	height: number,
 	width: number,
@@ -22,3 +17,11 @@ export type Container = {
 	originalWidth: number,
 	loaded: boolean
 };
+
+const heatmapModes = {
+	DEFAULT: "DEFAULT",
+	COVERAGE: "COVERAGE",
+	ANCHORS: "ANCHORS"
+};
+
+export type HeatmapMode = $Keys<typeof heatmapModes>;

@@ -1,29 +1,24 @@
 // @flow
 import * as React from "react";
-import Form from "./../../components/form/Form";
+import Form from "../../form/Form";
 import FormField from "grommet/components/FormField";
 import FormFields from "grommet/components/FormFields";
 import NumberInput from "grommet/components/NumberInput";
-import type { ConfigObject } from "../../types/Heatmap";
-import { inputHandler } from "../../utils/InputHandler";
-import type { AllInputTypes } from "../../utils/InputHandler";
+import type { ConfigObject } from "../../../types/Heatmap";
+import { inputHandler } from "../../../utils/InputHandler";
+import type { AllInputTypes } from "../../../utils/InputHandler";
 
 type Props = {
 	configObject: ConfigObject,
-	onSubmit: () => void,
 	onChange: (string, AllInputTypes) => void
 };
 
-export default function HeatmapConfigForm({
-	configObject,
-	onSubmit,
-	onChange
-}: Props) {
+export default function HeatmapConfigForm({ configObject, onChange }: Props) {
 	return (
-		<Form heading="Heatmap bearbeiten" onSubmit={onSubmit}>
+		<Form heading="Heatmap bearbeiten">
 			<FormFields>
 				<fieldset>
-					<FormField label="Radius [mm]">
+					<FormField label="Radius (in Millimeter)">
 						<NumberInput
 							name={"radius"}
 							value={configObject.radius}
@@ -32,7 +27,7 @@ export default function HeatmapConfigForm({
 							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
-					<FormField label="Minimale Deckkraft [0;1]">
+					<FormField label="Minimale Deckkraft (0 bis 1)">
 						<NumberInput
 							name={"minOpacity"}
 							value={configObject.minOpacity}
@@ -42,7 +37,7 @@ export default function HeatmapConfigForm({
 							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
-					<FormField label="Maximale Deckkraft [0;1]">
+					<FormField label="Maximale Deckkraft (0 bis 1)">
 						<NumberInput
 							name={"maxOpacity"}
 							value={configObject.maxOpacity}
@@ -52,7 +47,7 @@ export default function HeatmapConfigForm({
 							onChange={inputHandler(onChange)}
 						/>
 					</FormField>
-					<FormField label="Glättung [0;1]">
+					<FormField label="Glättung (0 bis 1)">
 						<NumberInput
 							name={"blur"}
 							value={configObject.blur}

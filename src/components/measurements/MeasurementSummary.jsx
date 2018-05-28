@@ -14,11 +14,11 @@ import RoomModel from "../../models/Room";
 import MeasurementModel from "../../models/Measurement";
 import Transformation from "../../models/Transformation";
 import FluxHeatmap from "../../containers/fluxHeatmap/FluxHeatmap";
-import type { ConfigObject, HeatmapModes } from "../../types/Heatmap";
+import type { ConfigObject, HeatmapMode } from "../../types/Heatmap";
 import TransformationForm from "../transformationForm/TransformationForm";
-import HeatmapConfigForm from "../heatmapConfigForm/HeatmapConfigForm";
+import HeatmapConfigForm from "../heatmap/heatmapConfigForm/HeatmapConfigForm";
 import { EXAMPLE_IMAGE } from "../../images/ImagesBase64";
-import HeatmapModeForm from "../heatmapModeForm/HeatmapModeForm";
+import HeatmapModeForm from "../heatmap/heatmapModeForm/HeatmapModeForm";
 import type { AllInputTypes } from "../../utils/InputHandler";
 import Loading from "../loading/Loading";
 
@@ -32,7 +32,7 @@ type Props = {
 type State = {
 	transformation: Transformation,
 	configObject: ConfigObject,
-	heatmapModes: HeatmapModes
+	heatmapMode: HeatmapMode
 };
 
 export default class MeasurementSummary extends React.Component<Props, State> {
@@ -44,10 +44,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 			blur: 0.75
 		},
 		transformation: new Transformation(),
-		heatmapModes: {
-			showCoverage: false,
-			showAnchors: false
-		}
+		heatmapMode: "DEFAULT"
 	};
 
 	static getDerivedStateFromProps(nextProps: Props, prevState: State) {
@@ -55,25 +52,21 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 		return prevState;
 	}
 
+	handleValueChange = (key: string, value: AllInputTypes) => {
+		this.setState({ [key]: value });
+	};
+
 	handleTransformationChange = (key: string, value: AllInputTypes) => {
-		this.setState((prevState, props) => ({
-			transformation: Object.assign(prevState.transformation, {
+		this.setState(prevState => ({
+			transformation: Object.assign(({}: any), prevState.transformation, {
 				[key]: parseFloat(value)
 			})
 		}));
 	};
 
-	handleModeChange = (key: string, value: AllInputTypes) => {
-		this.setState((prevState, props) => ({
-			heatmapModes: Object.assign(prevState.heatmapModes, {
-				[key]: value
-			})
-		}));
-	};
-
 	handleHeatmapConfigChange = (key: string, value: AllInputTypes) => {
-		this.setState((prevState, props) => ({
-			configObject: Object.assign(prevState.configObject, {
+		this.setState(prevState => ({
+			configObject: Object.assign({}, prevState.configObject, {
 				[key]: parseFloat(value)
 			})
 		}));
@@ -81,10 +74,6 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 
 	onTransformationSubmit = () => {
 		alert("submit transformation");
-	};
-
-	onHeatmapConfigSubmit = () => {
-		alert("submit config");
 	};
 
 	render() {
@@ -119,7 +108,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 								backgroundImage={EXAMPLE_IMAGE}
 								transformation={this.state.transformation}
 								configObject={this.state.configObject}
-								heatmapModes={this.state.heatmapModes}
+								heatmapMode={this.state.heatmapMode}
 							/>
 							<Box>
 								<Accordion active={0}>
@@ -132,14 +121,13 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 									</AccordionPanel>
 									<AccordionPanel heading="Heatmap Modi">
 										<HeatmapModeForm
-											heatmapModes={this.state.heatmapModes}
-											onChange={this.handleModeChange}
+											heatmapMode={this.state.heatmapMode}
+											onChange={this.handleValueChange}
 										/>
 									</AccordionPanel>
 									<AccordionPanel heading="Konfiguration">
 										<HeatmapConfigForm
 											configObject={this.state.configObject}
-											onSubmit={this.onHeatmapConfigSubmit}
 											onChange={this.handleHeatmapConfigChange}
 										/>
 									</AccordionPanel>

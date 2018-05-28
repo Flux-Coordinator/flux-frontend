@@ -14,6 +14,7 @@ export default class Anchor implements Positionable {
 	anchorId: ?number;
 	networkId: string;
 	position: PositionModel;
+	getValue = () => (this.networkId ? parseInt(this.networkId, 16) : 0);
 
 	constructor(
 		anchorId: ?number,
@@ -45,7 +46,7 @@ export default class Anchor implements Positionable {
 			zposition: this.position.zposition,
 			anchor: {
 				anchorId: 0,
-				networkid: this.networkId
+				networkId: this.networkId
 			}
 		};
 	};

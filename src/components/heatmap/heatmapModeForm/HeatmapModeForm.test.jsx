@@ -3,19 +3,16 @@ import * as React from "react";
 import { shallow } from "enzyme";
 
 import HeatmapModeForm from "./HeatmapModeForm";
-import type { HeatmapModes } from "../../types/Heatmap";
-import type { AllInputTypes } from "../../utils/InputHandler";
+import type { AllInputTypes } from "../../../utils/InputHandler";
+import type { HeatmapMode } from "../../../types/Heatmap";
 
 describe("<HeatmapModeForm />", () => {
 	const onChange = (key: string, value: AllInputTypes) => {};
-	const heatmapModes: HeatmapModes = {
-		showCoverage: false,
-		showAnchors: false
-	};
+	const heatmapMode: HeatmapMode = "DEFAULT";
 
 	it("should render", () => {
 		const wrapper = shallow(
-			<HeatmapModeForm heatmapModes={heatmapModes} onChange={onChange} />
+			<HeatmapModeForm heatmapMode={heatmapMode} onChange={onChange} />
 		);
 		expect(wrapper).toHaveLength(1);
 	});
