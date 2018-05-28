@@ -1,5 +1,5 @@
 // @flow
-export type AllInputTypes = string | number | boolean;
+export type AllInputTypes = string | number | boolean | FileList;
 
 export const inputHandler = (callback: (string, AllInputTypes) => void) => (
 	event: SyntheticEvent<HTMLInputElement>
@@ -24,6 +24,9 @@ export const inputHandler = (callback: (string, AllInputTypes) => void) => (
 				} else {
 					callback(name, parseFloat(event.currentTarget.value));
 				}
+				break;
+			case "file":
+				callback(name, event.currentTarget.files);
 				break;
 			default:
 				break;

@@ -5,7 +5,7 @@ type ConstructorType = {
 	name: string,
 	description: string,
 	measurements: Measurement[] | any,
-	floorPlan: ?string,
+	floorPlan: ?File,
 	floorSpace: ?number,
 	roomId: ?number
 };
@@ -15,14 +15,14 @@ export default class Room {
 	name: string;
 	description: string;
 	measurements: Measurement[];
-	floorPlan: ?string;
+	floorPlan: ?File;
 	floorSpace: ?number;
 
 	constructor(
 		name: string,
 		description: string,
 		measurements: Measurement[] | any,
-		floorPlan: ?string,
+		floorPlan: ?File,
 		floorSpace: ?number,
 		roomId: ?number
 	) {
