@@ -6,10 +6,10 @@ import MeasurementSummary from "../../components/measurements/MeasurementSummary
 import ReadingModel from "../../models/Reading";
 import RoomModel from "../../models/Room";
 import MeasurementModel from "../../models/Measurement";
+import { ToastContext } from "./../../components/toast/ToastContext";
 
 type Props = {
 	room: RoomModel,
-	measurement: MeasurementModel,
 	match: any
 };
 
@@ -29,13 +29,13 @@ export default class MeasurementContainer extends React.Component<
 	keepAliveTimer = null;
 
 	state = {
-		loading: false,
-		currentMeasurement: this.props.measurement
+		loading: true,
+		currentMeasurement: new MeasurementModel(undefined, "", "", 0, 0)
 	};
 
-	getReadings = () => {
+	fetchMeasurement = () => {
 		this.setState({ loading: true });
-		const measurementId = this.props.measurement.measurementId;
+		const measurementId = this.props.match.params.measurementId;
 		if (measurementId != null) {
 			axios
 				.get(`/measurements/${measurementId}`, {
@@ -47,14 +47,13 @@ export default class MeasurementContainer extends React.Component<
 				})
 				.catch(error => {
 					if (!axios.isCancel(error)) {
-						this.setState(
-							({
-								currentMeasurement: this.props.measurement,
-								loading: false
-							}: State)
-						);
+						this.setState({
+							loading: false
+						});
 					}
 				});
+		} else {
+			alert("Konnte die Messung nicht laden.");
 		}
 	};
 
@@ -93,7 +92,7 @@ export default class MeasurementContainer extends React.Component<
 				});
 		} else {
 			alert(
-				"Es gab einen Fehler und die Messung konnte nicht gestartet werden (die Messungs ID ist unbekannt)"
+				"Es gab einen Fehler. Die Messung konnte nicht gestartet werden (die Messungs ID ist unbekannt)"
 			);
 		}
 	};
@@ -144,13 +143,33 @@ export default class MeasurementContainer extends React.Component<
 		});
 	};
 
-	saveMeasurement = (measurement: MeasurementModel) => {
+	saveMeasurement = (showToast?: (toast: ToastMetadata) => void) => {
 		const roomId = this.props.room.roomId;
-		const exportMeasurement = measurement.toDto();
+		const exportMeasurement = this.state.currentMeasurement.toDto();
+		axios
+			.post(`/rooms/${roomId}/measurements`, exportMeasurement, {
+				cancelToken: this.source.token
+			})
+			.then(result => {
+				if (showToast) {
+					showToast({
+						status: "ok",
+						children: "Messung abgespeichert"
+					});
+				}
+			})
+			.catch(error => {
+				if (showToast) {
+					showToast({
+						status: "critical",
+						children: "Messung konnte nicht gespeichert werden"
+					});
+				}
+			});
 	};
 
 	componentDidMount() {
-		this.getReadings();
+		this.fetchMeasurement();
 
 		let serverUri = process.env.REACT_APP_SERVICE_URI;
 		if (serverUri) {
@@ -163,10 +182,10 @@ export default class MeasurementContainer extends React.Component<
 		if (
 			this &&
 			prevProps &&
-			prevProps.measurement.measurementId !==
-				this.props.measurement.measurementId
+			prevState.currentMeasurement.measurementId !==
+				this.state.currentMeasurement.measurementId
 		) {
-			this.getReadings();
+			this.fetchMeasurement();
 		}
 	}
 
@@ -177,13 +196,17 @@ export default class MeasurementContainer extends React.Component<
 
 	render() {
 		return (
-			<MeasurementSummary
-				room={this.props.room}
-				currentMeasurement={this.state.currentMeasurement}
-				onStartMeasurement={this.startMeasurement}
-				isLoading={this.state.loading}
-				onSaveMeasurement={this.saveMeasurement}
-			/>
+			<ToastContext.Consumer>
+				{(showToast: any) => (
+					<MeasurementSummary
+						room={this.props.room}
+						currentMeasurement={this.state.currentMeasurement}
+						onStartMeasurement={this.startMeasurement}
+						onSaveMeasurement={() => this.saveMeasurement(showToast)}
+						isLoading={this.state.loading}
+					/>
+				)}
+			</ToastContext.Consumer>
 		);
 	}
 }
