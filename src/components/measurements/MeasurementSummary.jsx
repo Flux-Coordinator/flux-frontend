@@ -110,7 +110,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 						<Heading tag="h3">Grundriss</Heading>
 					</Header>
 					{this.props.currentMeasurement.readings && (
-						<Box direction="row">
+						<Box direction="row" responsive wrap>
 							<FluxHeatmap
 								readings={this.props.currentMeasurement.readings}
 								anchors={this.props.currentMeasurement.anchors}
@@ -119,7 +119,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 								configObject={this.state.configObject}
 								heatmapMode={this.state.heatmapMode}
 							/>
-							<Box>
+							<Box basis={"medium"} flex pad={{ horizontal: "medium" }}>
 								<Accordion active={0}>
 									<AccordionPanel heading="Transformation">
 										<TransformationForm
