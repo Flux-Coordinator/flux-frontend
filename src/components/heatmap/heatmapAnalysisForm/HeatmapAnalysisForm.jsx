@@ -7,8 +7,8 @@ import FormFields from "grommet/components/FormFields";
 import NumberInput from "grommet/components/NumberInput";
 import Value from "grommet/components/Value";
 import { inputHandler } from "../../../utils/InputHandler";
-import type { AllInputTypes } from "../../../utils/InputHandler";
 import HeatmapData from "../../../models/HeatmapData";
+import type { AllInputTypes } from "../../../utils/InputHandler";
 import type { HeatmapMode } from "../../../types/Heatmap";
 
 type Props = {
@@ -93,50 +93,50 @@ export default class HeatmapAnalysisForm extends React.Component<Props, State> {
 					<fieldset>
 						<FormField
 							label="Maximale Beleuchtungsstärke einschränken (in Lux)"
-							help={"(0 = kein Limit)"}
+							help="(0 = kein Limit)"
 						>
 							<NumberInput
 								disabled={this.props.heatmapMode !== "DEFAULT"}
-								name={"maxLuxValue"}
+								name="maxLuxValue"
 								value={this.props.maxLuxValue}
 								min={0}
 								step={1}
 								onChange={inputHandler(this.props.onChange)}
 							/>
 						</FormField>
-						<Box direction={"row"} pad={{ between: "medium" }}>
+						<Box direction="row" pad={{ between: "medium" }}>
 							<Value
-								label={"Anzahl Messungen"}
+								label="Anzahl Messungen"
 								value={this.state.numberOfReadings}
-								size={"small"}
+								size="small"
 							/>
 							<Value
-								label={"Mittelwert Em"}
+								label="Mittelwert Em"
 								value={this.state.average}
-								units={"lx"}
-								size={"small"}
+								units="lx"
+								size="small"
 							/>
 							<Value
-								label={"Minimalwert Emin"}
+								label="Minimalwert Emin"
 								value={this.state.min}
-								units={"lx"}
-								size={"small"}
+								units="lx"
+								size="small"
 							/>
 							<Value
-								label={"Maximalwert Emax"}
+								label="Maximalwert Emax"
 								value={this.state.max}
-								units={"lx"}
-								size={"small"}
+								units="lx"
+								size="small"
 							/>
 							<Value
-								label={"Gleichmässigkeit Emin/Em"}
+								label="Gleichmässigkeit Emin/Em"
 								value={this.state.uniformity}
-								size={"small"}
+								size="small"
 							/>
 							<Value
-								label={"Ungleichmässigkeit Emin/Emax"}
+								label="Ungleichmässigkeit Emin/Emax"
 								value={this.state.irregularity}
-								size={"small"}
+								size="small"
 							/>
 						</Box>
 					</fieldset>
