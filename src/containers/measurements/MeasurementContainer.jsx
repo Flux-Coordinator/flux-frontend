@@ -9,7 +9,8 @@ import MeasurementModel from "../../models/Measurement";
 
 type Props = {
 	room: RoomModel,
-	measurement: MeasurementModel
+	measurement: MeasurementModel,
+	match: any
 };
 
 type State = {
@@ -143,6 +144,11 @@ export default class MeasurementContainer extends React.Component<
 		});
 	};
 
+	saveMeasurement = (measurement: MeasurementModel) => {
+		const roomId = this.props.room.roomId;
+		const exportMeasurement = measurement.toDto();
+	};
+
 	componentDidMount() {
 		this.getReadings();
 
@@ -176,6 +182,7 @@ export default class MeasurementContainer extends React.Component<
 				currentMeasurement={this.state.currentMeasurement}
 				onStartMeasurement={this.startMeasurement}
 				isLoading={this.state.loading}
+				onSaveMeasurement={this.saveMeasurement}
 			/>
 		);
 	}

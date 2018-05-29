@@ -11,7 +11,7 @@ import type { AllInputTypes } from "../../utils/InputHandler";
 type Props = {
 	transformation: Transformation,
 	onSubmit: () => void,
-	onChange: (string, AllInputTypes) => void
+	onChange: (key: string, value: AllInputTypes) => void
 };
 
 export default function TransformationForm({
@@ -19,6 +19,7 @@ export default function TransformationForm({
 	onSubmit,
 	onChange
 }: Props) {
+	const { scaleFactor, xOffset, yOffset } = transformation;
 	return (
 		<Form heading="Heatmap transformieren" onSubmit={onSubmit}>
 			<FormFields>
@@ -26,7 +27,7 @@ export default function TransformationForm({
 					<FormField label="Skalierungsfaktor">
 						<NumberInput
 							name={"scaleFactor"}
-							value={transformation.scaleFactor}
+							value={scaleFactor}
 							step={0.001}
 							onChange={inputHandler(onChange)}
 						/>
@@ -34,7 +35,7 @@ export default function TransformationForm({
 					<FormField label="Horizontaler Versatz (in Pixel)">
 						<NumberInput
 							name={"xOffset"}
-							value={transformation.xOffset}
+							value={xOffset}
 							step={1}
 							onChange={inputHandler(onChange)}
 						/>
@@ -42,7 +43,7 @@ export default function TransformationForm({
 					<FormField label="Vertikaler Versatz (in Pixel)">
 						<NumberInput
 							name={"yOffset"}
-							value={transformation.yOffset}
+							value={yOffset}
 							step={1}
 							onChange={inputHandler(onChange)}
 						/>

@@ -25,11 +25,13 @@ type Props = {
 	room: RoomModel,
 	currentMeasurement: MeasurementModel,
 	onStartMeasurement: () => void,
-	isLoading?: boolean
+	isLoading?: boolean,
+	onSaveMeasurement: (measurement: MeasurementModel) => void
 };
 
 type State = {
 	transformation: Transformation,
+	currentMeasurement: MeasurementModel,
 	configObject: ConfigObject,
 	heatmapMode: HeatmapMode
 };
@@ -43,11 +45,12 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 			blur: 0.75
 		},
 		transformation: new Transformation(),
+		currentMeasurement: new MeasurementModel(undefined, "", "", 0, 0),
 		heatmapMode: "DEFAULT"
 	};
 
 	static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-		prevState.transformation = nextProps.currentMeasurement.transformation;
+		prevState.currentMeasurement = nextProps.currentMeasurement;
 		return prevState;
 	}
 
@@ -56,11 +59,18 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 	};
 
 	handleTransformationChange = (key: string, value: AllInputTypes) => {
-		this.setState(prevState => ({
-			transformation: Object.assign(({}: any), prevState.transformation, {
-				[key]: parseFloat(value)
-			})
-		}));
+		this.setState(prevState => {
+			const measurement = prevState.currentMeasurement;
+			measurement.transformation = Object.assign(
+				({}: any),
+				measurement.transformation,
+				{
+					[key]: value
+				}
+			);
+			prevState.currentMeasurement = measurement;
+			return prevState;
+		});
 	};
 
 	handleHeatmapConfigChange = (key: string, value: AllInputTypes) => {
@@ -72,7 +82,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 	};
 
 	onTransformationSubmit = () => {
-		alert("submit transformation");
+		this.props.onSaveMeasurement(this.state.currentMeasurement);
 	};
 
 	render() {
@@ -105,7 +115,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 								readings={this.props.currentMeasurement.readings}
 								anchors={this.props.currentMeasurement.anchors}
 								backgroundImage={this.props.room.floorPlan}
-								transformation={this.state.transformation}
+								transformation={this.state.currentMeasurement.transformation}
 								configObject={this.state.configObject}
 								heatmapMode={this.state.heatmapMode}
 							/>
@@ -113,7 +123,9 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 								<Accordion active={0}>
 									<AccordionPanel heading="Transformation">
 										<TransformationForm
-											transformation={this.state.transformation}
+											transformation={
+												this.state.currentMeasurement.transformation
+											}
 											onSubmit={this.onTransformationSubmit}
 											onChange={this.handleTransformationChange}
 										/>
