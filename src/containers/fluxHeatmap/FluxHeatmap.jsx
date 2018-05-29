@@ -8,14 +8,14 @@ import HeatmapData from "../../models/HeatmapData";
 import { Positionable } from "../../types/Positionable";
 import ReactResizeDetector from "react-resize-detector";
 import Transformation from "../../models/Transformation";
-import type { ConfigObject, Container, HeatmapMode } from "../../types/Heatmap";
 import Box from "grommet/components/Box";
 import { PLACEHOLDER_IMAGE, EXAMPLE_IMAGE } from "../../images/ImagesBase64";
 import HeatmapLegend from "./HeatmapLegend";
 import HeatmapTooltip from "./HeatmapTooltip";
 import BrowserPosition from "../../models/BrowserPosition";
-import type { AllInputTypes } from "../../utils/InputHandler";
 import HeatmapAnalysisForm from "../../components/heatmap/heatmapAnalysisForm/HeatmapAnalysisForm";
+import type { ConfigObject, Container, HeatmapMode } from "../../types/Heatmap";
+import type { AllInputTypes } from "../../utils/InputHandler";
 
 const FIXED_HEATMAP_VALUE = 1;
 
@@ -72,6 +72,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	heatmap: Heatmap;
 	heatmapContainer: ?HTMLDivElement;
 	imgElement: ?HTMLImageElement;
+	numberOfReadings: number = 0;
 
 	componentDidMount() {
 		this.heatmap = this.createHeatmapInstance(
@@ -111,9 +112,10 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 				this.setConfig();
 			}
 			if (
-				prevProps.readings.length !== this.props.readings.length ||
+				this.props.readings.length !== this.numberOfReadings ||
 				prevState.maxLuxValue !== this.state.maxLuxValue
 			) {
+				this.numberOfReadings = this.props.readings.length;
 				this.setData();
 			}
 		}
@@ -184,11 +186,9 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		elements: Positionable[],
 		fixedValue: boolean
 	): HeatmapDataPoint[] => {
-		const container = this.state.container;
-		const transformation = this.props.transformation;
+		const { container, maxLuxValue } = this.state;
+		const { transformation, heatmapMode } = this.props;
 		const containerScaleFactor = container.width / container.originalWidth;
-		const heatmapMode = this.props.heatmapMode;
-		const maxLuxValue = this.state.maxLuxValue;
 		return elements.reduce(function(transformedReadings, element) {
 			const x = Math.round(
 				(element.position.xposition * transformation.scaleFactor +

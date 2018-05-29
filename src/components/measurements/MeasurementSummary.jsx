@@ -119,7 +119,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 								configObject={this.state.configObject}
 								heatmapMode={this.state.heatmapMode}
 							/>
-							<Box basis={"medium"} flex pad={{ horizontal: "medium" }}>
+							<Box basis="medium" flex pad={{ horizontal: "medium" }}>
 								<Accordion active={0}>
 									<AccordionPanel heading="Transformation">
 										<TransformationForm
