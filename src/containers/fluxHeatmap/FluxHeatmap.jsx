@@ -72,6 +72,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	heatmap: Heatmap;
 	heatmapContainer: ?HTMLDivElement;
 	imgElement: ?HTMLImageElement;
+	numberOfReadings: number = 0;
 
 	componentDidMount() {
 		this.heatmap = this.createHeatmapInstance(
@@ -111,9 +112,10 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 				this.setConfig();
 			}
 			if (
-				prevProps.readings.length !== this.props.readings.length ||
+				this.props.readings.length !== this.numberOfReadings ||
 				prevState.maxLuxValue !== this.state.maxLuxValue
 			) {
+				this.numberOfReadings = this.props.readings.length;
 				this.setData();
 			}
 		}
