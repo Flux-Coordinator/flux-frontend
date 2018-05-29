@@ -5,12 +5,14 @@ import Heading from "grommet/components/Heading";
 import Project from "../../models/Project";
 import ItemListAnchorButton from "../list/ItemListAnchorButton";
 import ItemListEditButton from "../list/ItemListEditButton";
+import ItemListDeleteButton from "../list/ItemListDeleteButton";
 
 type Props = {
-	item: Project
+	item: Project,
+	onDelete: (item: Project) => void
 };
 
-export default function AnchorProjectItemRenderer({ item, onEdit }: Props) {
+export default function AnchorProjectItemRenderer({ item, onDelete }: Props) {
 	if (item.projectId) {
 		return (
 			<React.Fragment>
@@ -21,6 +23,7 @@ export default function AnchorProjectItemRenderer({ item, onEdit }: Props) {
 					<Heading tag="h5">{item.description}</Heading>
 				</ItemListAnchorButton>
 				<ItemListEditButton path={`/editProject/${item.projectId}`} />
+				<ItemListDeleteButton onClick={() => onDelete(item)} />
 			</React.Fragment>
 		);
 	} else {
