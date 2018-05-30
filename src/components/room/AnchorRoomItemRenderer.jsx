@@ -28,7 +28,7 @@ export default function AnchorProjectItemRenderer({
 					</Heading>
 					<Heading tag="h5">{item.description}</Heading>
 				</ItemListAnchorButton>
-				<Box direction="row" align="center">
+				<Box align="center" direction="row" responsive={false}>
 					<ItemListEditButton path={`${match.url}/editRoom/${item.roomId}`} />
 					<ItemListDeleteButton onClick={() => onDelete(item)} />
 				</Box>

@@ -23,7 +23,7 @@ export default function AnchorProjectItemRenderer({ item, onDelete }: Props) {
 					</Heading>
 					<Heading tag="h5">{item.description}</Heading>
 				</ItemListAnchorButton>
-				<Box direction="row" align="center">
+				<Box direction="row" align="center" responsive={false}>
 					<ItemListEditButton path={`/editProject/${item.projectId}`} />
 					<ItemListDeleteButton onClick={() => onDelete(item)} />
 				</Box>
