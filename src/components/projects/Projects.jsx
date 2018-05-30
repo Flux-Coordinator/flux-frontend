@@ -16,7 +16,8 @@ import type { ToastMetadata } from "./../toast/Toast";
 
 type Props = {
 	projects: Project[],
-	loading: boolean
+	loading: boolean,
+	onDelete: (project: Project) => void
 };
 
 type State = {
@@ -26,7 +27,7 @@ type State = {
 // export default function Projects({ projects, loading }: Props) {
 export default class Projects extends React.Component<Props, State> {
 	render() {
-		const { projects, loading } = this.props;
+		const { projects, loading, onDelete } = this.props;
 		return (
 			<ContentBox heading="Projekte">
 				<Section>
@@ -49,7 +50,9 @@ export default class Projects extends React.Component<Props, State> {
 						items={projects}
 						keyFunc={project => project.projectId}
 						loading={loading}
-						ItemRenderer={AnchorProjectItemRenderer}
+						ItemRenderer={({ item }) => (
+							<AnchorProjectItemRenderer onDelete={onDelete} item={item} />
+						)}
 					/>
 				</Section>
 			</ContentBox>

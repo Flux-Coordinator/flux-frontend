@@ -29,9 +29,9 @@ export default function Room({ match, room }: Props) {
 			</Section>
 			<Route
 				path={`${match.url}/measurements/:measurementId`}
-				component={({ match }) => {
-					return ShowMeasurement({ room, match });
-				}}
+				component={({ match }) => (
+					<MeasurementContainer room={room} match={match} />
+				)}
 			/>
 			<Section>
 				<ItemListHeader
@@ -48,23 +48,6 @@ export default function Room({ match, room }: Props) {
 			</Section>
 		</Article>
 	);
-}
-
-function ShowMeasurement({ room, match }) {
-	let currentMeasurement;
-	if (match.params.measurementId) {
-		currentMeasurement = room.measurements.find(
-			measurement =>
-				measurement.measurementId === parseInt(match.params.measurementId, 10)
-		);
-
-		if (currentMeasurement) {
-			return (
-				<MeasurementContainer measurement={currentMeasurement} room={room} />
-			);
-		}
-	}
-	return null;
 }
 
 Room.defaultProps = {

@@ -1,6 +1,6 @@
 {
 	"short_name": "Flux Coordinator",
-	"name": "Flux Coordinator WebApp",
+	"name": "Flux",
 	"description": "Client für das Flux-Coordinator System",
 	"lang": "de-CH",
 	"icons": [

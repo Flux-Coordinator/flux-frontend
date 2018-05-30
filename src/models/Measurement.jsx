@@ -118,4 +118,16 @@ export default class Measurement {
 			typedAnchors
 		);
 	}
+
+	toDto = () => {
+		const anchorPositions = this.anchors.map(a => a.toAnchorPositionObject());
+		const readingDtos = this.readings.map(r => r.toDTO());
+		const exportMeasurement = Object.assign({}, this, {
+			anchorPositions,
+			readings: readingDtos,
+			...this.transformation
+		});
+		exportMeasurement.anchors = undefined;
+		return exportMeasurement;
+	};
 }
