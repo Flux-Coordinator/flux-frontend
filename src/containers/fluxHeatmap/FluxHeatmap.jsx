@@ -151,6 +151,9 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 				}
 			}
 			const max = this.computeMax(dataPoints);
+			if (max === 0) {
+				dataPoints = [];
+			}
 			const heatmapData = new HeatmapData(0, max, dataPoints);
 			this.setState({ heatmapData: heatmapData });
 			this.heatmap.setData(heatmapData);
