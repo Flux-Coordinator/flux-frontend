@@ -15,10 +15,11 @@ import AnchorMeasurementItemRenderer from "../measurements/AnchorMeasurementItem
 
 type Props = {
 	match: any,
-	room: RoomModel
+	room: RoomModel,
+	onDeleteMeasurement: (item: Measurement) => void
 };
 
-export default function Room({ match, room }: Props) {
+export default function Room({ match, room, onDeleteMeasurement }: Props) {
 	return (
 		<Article pad="medium">
 			<Section pad="none">
@@ -41,9 +42,13 @@ export default function Room({ match, room }: Props) {
 				<ItemsList
 					items={room.measurements}
 					keyFunc={(item: Measurement) => item.measurementId}
-					ItemRenderer={({ item }) =>
-						AnchorMeasurementItemRenderer({ item, match })
-					}
+					ItemRenderer={({ item }) => (
+						<AnchorMeasurementItemRenderer
+							item={item}
+							match={match}
+							onDelete={onDeleteMeasurement}
+						/>
+					)}
 				/>
 			</Section>
 		</Article>

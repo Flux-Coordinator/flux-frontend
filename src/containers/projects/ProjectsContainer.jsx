@@ -9,6 +9,7 @@ import RoomComponent from "./../../components/room/Room";
 import ProjectComponent from "../../components/projects/Project";
 import ProjectsComponent from "../../components/projects/Projects";
 import LoadingComponent from "./../../components/loading/Loading";
+import Measurement from "../../models/Measurement";
 import Room from "../../models/Room";
 import Project from "../../models/Project";
 import { isNumber } from "./../../utils/NumberHelper";
@@ -106,6 +107,10 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 		console.log("Room deleted");
 	};
 
+	onDeleteMeasurement = (item: Measurement) => {
+		console.log("Delete measurement");
+	};
+
 	componentDidMount() {
 		this.loadProjects();
 	}
@@ -133,7 +138,11 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 							match.params.projectId
 						);
 						return foundRoom ? (
-							<RoomComponent room={foundRoom} match={match} />
+							<RoomComponent
+								room={foundRoom}
+								match={match}
+								onDeleteMeasurement={this.onDeleteMeasurement}
+							/>
 						) : (
 							<NotFound info="Raum konnte nicht gefunden werden" />
 						);
@@ -143,7 +152,7 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 					path={`${match.url}/:projectId`}
 					component={({ match }) => (
 						<ProjectComponent
-							onDelete={this.onDeleteRoom}
+							onDeleteRoom={this.onDeleteRoom}
 							projects={projects}
 							loading={loading}
 							match={match}
@@ -154,7 +163,7 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 					path={`${match.url}`}
 					component={({ match }) => (
 						<ProjectsComponent
-							onDelete={this.onDeleteProject}
+							onDeleteProject={this.onDeleteProject}
 							projects={projects}
 							loading={loading}
 							match={match}

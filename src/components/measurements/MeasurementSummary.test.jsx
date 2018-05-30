@@ -29,6 +29,7 @@ describe("<MeasurementSummary />", () => {
 				currentMeasurement={measurement}
 				room={room}
 				onStartMeasurement={() => {}}
+				onSaveMeasurement={() => {}}
 			/>
 		);
 		expect(wrapper).toHaveLength(1);

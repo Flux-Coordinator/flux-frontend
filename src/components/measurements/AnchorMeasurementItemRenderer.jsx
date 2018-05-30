@@ -6,13 +6,19 @@ import Paragraph from "grommet/components/Paragraph";
 import Measurement from "../../models/Measurement";
 import ItemListAnchorButton from "../list/ItemListAnchorButton";
 import ItemListEditButton from "../list/ItemListEditButton";
+import ItemListDeleteButton from "../list/ItemListDeleteButton";
 
 type Props = {
 	item: Measurement,
-	match: any
+	match: any,
+	onDelete: (item: Measurement) => void
 };
 
-export default function AnchorMeasurementItemRenderer({ item, match }: Props) {
+export default function AnchorMeasurementItemRenderer({
+	item,
+	match,
+	onDelete
+}: Props) {
 	if (item.measurementId) {
 		return (
 			<React.Fragment>
@@ -33,6 +39,7 @@ export default function AnchorMeasurementItemRenderer({ item, match }: Props) {
 				<ItemListEditButton
 					path={`${match.url}/editMeasurement/${item.measurementId}`}
 				/>
+				<ItemListDeleteButton onClick={() => onDelete(item)} />
 			</React.Fragment>
 		);
 	} else {

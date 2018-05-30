@@ -73,11 +73,14 @@ export default class MeasurementContainer extends React.Component<
 				.catch(error => {
 					alert(error.response.data);
 				});
-		} else if (this.props.measurement.measurementId != null) {
+		} else if (this.state.currentMeasurement.measurementId != null) {
 			axios
-				.put("/measurements/active/" + this.props.measurement.measurementId, {
-					cancelToken: this.source.token
-				})
+				.put(
+					"/measurements/active/" + this.state.currentMeasurement.measurementId,
+					{
+						cancelToken: this.source.token
+					}
+				)
 				.then(result => {
 					this.setState(prevState => {
 						const measurement = prevState.currentMeasurement;
