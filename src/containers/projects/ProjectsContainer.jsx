@@ -12,7 +12,10 @@ import LoadingComponent from "./../../components/loading/Loading";
 import Measurement from "../../models/Measurement";
 import Room from "../../models/Room";
 import Project from "../../models/Project";
+import { ToastContext } from "./../../components/toast/ToastContext";
 import { isNumber } from "./../../utils/NumberHelper";
+
+import type { ToastMetadata } from "./../../components/toast/Toast";
 
 type Props = {
 	match: any
@@ -103,8 +106,31 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 		}
 	};
 
-	onDeleteRoom = (item: Room) => {
-		console.log("Room deleted");
+	onDeleteRoom = (item: Room, showToast: ToastMetadata) => {
+		const result = window.confirm(
+			"Möchten Sie den Raum wirklich löschen? Achtung: Alle Messungen innerhalb des Raumes werden unwiderruflich gelöscht!"
+		);
+		if (result) {
+			axios
+				.delete(`/rooms/${item.roomId}`)
+				.then(result => {
+					if (showToast) {
+						showToast({
+							status: "ok",
+							children: "Raum wurde erfolgreich gelöscht"
+						});
+					}
+					this.loadProjects();
+				})
+				.catch(error => {
+					if (showToast) {
+						showToast({
+							status: "critical",
+							children: "Der Raum konnte nicht gelöscht werden"
+						});
+					}
+				});
+		}
 	};
 
 	onDeleteMeasurement = (item: Measurement) => {
@@ -128,49 +154,55 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 		}
 
 		return (
-			<Switch>
-				<Route
-					path={`${match.url}/:projectId/rooms/:roomId`}
-					component={({ match }) => {
-						const foundRoom = this.findRoomById(
-							projects,
-							match.params.roomId,
-							match.params.projectId
-						);
-						return foundRoom ? (
-							<RoomComponent
-								room={foundRoom}
-								match={match}
-								onDeleteMeasurement={this.onDeleteMeasurement}
-							/>
-						) : (
-							<NotFound info="Raum konnte nicht gefunden werden" />
-						);
-					}}
-				/>
-				<Route
-					path={`${match.url}/:projectId`}
-					component={({ match }) => (
-						<ProjectComponent
-							onDeleteRoom={this.onDeleteRoom}
-							projects={projects}
-							loading={loading}
-							match={match}
+			<ToastContext.Consumer>
+				{(showToast: any) => (
+					<Switch>
+						<Route
+							path={`${match.url}/:projectId/rooms/:roomId`}
+							component={({ match }) => {
+								const foundRoom = this.findRoomById(
+									projects,
+									match.params.roomId,
+									match.params.projectId
+								);
+								return foundRoom ? (
+									<RoomComponent
+										room={foundRoom}
+										match={match}
+										onDeleteMeasurement={item =>
+											this.onDeleteMeasurement(item, showToast)
+										}
+									/>
+								) : (
+									<NotFound info="Raum konnte nicht gefunden werden" />
+								);
+							}}
 						/>
-					)}
-				/>
-				<Route
-					path={`${match.url}`}
-					component={({ match }) => (
-						<ProjectsComponent
-							onDeleteProject={this.onDeleteProject}
-							projects={projects}
-							loading={loading}
-							match={match}
+						<Route
+							path={`${match.url}/:projectId`}
+							component={({ match }) => (
+								<ProjectComponent
+									onDeleteRoom={this.onDeleteRoom}
+									projects={projects}
+									loading={loading}
+									match={match}
+								/>
+							)}
 						/>
-					)}
-				/>
-			</Switch>
+						<Route
+							path={`${match.url}`}
+							component={({ match }) => (
+								<ProjectsComponent
+									onDeleteProject={this.onDeleteProject}
+									projects={projects}
+									loading={loading}
+									match={match}
+								/>
+							)}
+						/>
+					</Switch>
+				)}
+			</ToastContext.Consumer>
 		);
 	}
 }
