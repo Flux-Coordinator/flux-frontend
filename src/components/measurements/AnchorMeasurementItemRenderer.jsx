@@ -1,5 +1,6 @@
 // @flow
 import * as React from "react";
+import Box from "grommet/components/Box";
 import Heading from "grommet/components/Heading";
 import Paragraph from "grommet/components/Paragraph";
 
@@ -36,10 +37,12 @@ export default function AnchorMeasurementItemRenderer({
 						</strong>
 					</Paragraph>
 				</ItemListAnchorButton>
-				<ItemListEditButton
-					path={`${match.url}/editMeasurement/${item.measurementId}`}
-				/>
-				<ItemListDeleteButton onClick={() => onDelete(item)} />
+				<Box direction="row" responsive={false} align="center">
+					<ItemListEditButton
+						path={`${match.url}/editMeasurement/${item.measurementId}`}
+					/>
+					<ItemListDeleteButton onClick={() => onDelete(item)} />
+				</Box>
 			</React.Fragment>
 		);
 	} else {

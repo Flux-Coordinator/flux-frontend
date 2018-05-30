@@ -1,5 +1,6 @@
 // @flow
 import * as React from "react";
+import Box from "grommet/components/Box";
 import Heading from "grommet/components/Heading";
 
 import Room from "../../models/Room";
@@ -27,8 +28,10 @@ export default function AnchorProjectItemRenderer({
 					</Heading>
 					<Heading tag="h5">{item.description}</Heading>
 				</ItemListAnchorButton>
-				<ItemListEditButton path={`${match.url}/editRoom/${item.roomId}`} />
-				<ItemListDeleteButton onClick={() => onDelete(item)} />
+				<Box direction="row" align="center">
+					<ItemListEditButton path={`${match.url}/editRoom/${item.roomId}`} />
+					<ItemListDeleteButton onClick={() => onDelete(item)} />
+				</Box>
 			</React.Fragment>
 		);
 	} else {
