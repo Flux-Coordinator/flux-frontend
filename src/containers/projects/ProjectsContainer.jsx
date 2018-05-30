@@ -91,7 +91,7 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 		return this.findRoomInProject(project, roomIdInt);
 	};
 
-	onDelete = (item: Project) => {
+	onDeleteProject = (item: Project) => {
 		const result = window.confirm(
 			"Möchten Sie das Projekt wirklich löschen? Achtung: Alle Daten des Projektes werden unwiderruflich gelöscht!"
 		);
@@ -100,6 +100,10 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 		} else {
 			console.log("Not deleted");
 		}
+	};
+
+	onDeleteRoom = (item: Room) => {
+		console.log("Room deleted");
 	};
 
 	componentDidMount() {
@@ -139,6 +143,7 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 					path={`${match.url}/:projectId`}
 					component={({ match }) => (
 						<ProjectComponent
+							onDelete={this.onDeleteRoom}
 							projects={projects}
 							loading={loading}
 							match={match}
@@ -149,7 +154,7 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 					path={`${match.url}`}
 					component={({ match }) => (
 						<ProjectsComponent
-							onDelete={this.onDelete}
+							onDelete={this.onDeleteProject}
 							projects={projects}
 							loading={loading}
 							match={match}
