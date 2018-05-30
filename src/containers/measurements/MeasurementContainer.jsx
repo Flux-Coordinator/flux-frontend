@@ -8,6 +8,8 @@ import RoomModel from "../../models/Room";
 import MeasurementModel from "../../models/Measurement";
 import { ToastContext } from "./../../components/toast/ToastContext";
 
+import type { ToastMetadata } from "./../../components/toast/Toast";
+
 type Props = {
 	room: RoomModel,
 	match: any
