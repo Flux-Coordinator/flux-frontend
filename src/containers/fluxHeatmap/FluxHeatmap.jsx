@@ -41,14 +41,16 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		anchors: [],
 		backgroundImage: PLACEHOLDER_IMAGE,
 		configObject: {
+			absolute: true,
 			radius: 1000,
 			maxOpacity: 0.5,
 			minOpacity: 0,
 			blur: 0.75,
 			gradient: {
-				"0.25": "rgb(0,0,255)",
-				"0.55": "rgb(0,255,0)",
-				"0.85": "yellow",
+				"0.1": "rgb(0,0,255)",
+				"0.3": "rgb(0,255,0)",
+				"0.5": "yellow",
+				"0.8": "orange",
 				"1.0": "rgb(255,0,0)"
 			}
 		},
@@ -150,6 +152,9 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 				}
 			}
 			const max = this.computeMax(dataPoints);
+			if (max === 0) {
+				dataPoints = [];
+			}
 			const heatmapData = new HeatmapData(0, max, dataPoints);
 			this.setState({ heatmapData: heatmapData });
 			this.heatmap.setData(heatmapData);
