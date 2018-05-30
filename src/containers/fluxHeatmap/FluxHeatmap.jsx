@@ -8,12 +8,14 @@ import HeatmapData from "../../models/HeatmapData";
 import { Positionable } from "../../types/Positionable";
 import ReactResizeDetector from "react-resize-detector";
 import Transformation from "../../models/Transformation";
-import type { ConfigObject, Container, HeatmapMode } from "../../types/Heatmap";
 import Box from "grommet/components/Box";
 import { PLACEHOLDER_IMAGE, EXAMPLE_IMAGE } from "../../images/ImagesBase64";
 import HeatmapLegend from "./HeatmapLegend";
 import HeatmapTooltip from "./HeatmapTooltip";
 import BrowserPosition from "../../models/BrowserPosition";
+import HeatmapAnalysisForm from "../../components/heatmap/heatmapAnalysisForm/HeatmapAnalysisForm";
+import type { ConfigObject, Container, HeatmapMode } from "../../types/Heatmap";
+import type { AllInputTypes } from "../../utils/InputHandler";
 
 const FIXED_HEATMAP_VALUE = 1;
 
@@ -29,7 +31,8 @@ type Props = {
 type State = {
 	container: Container,
 	configObject: ConfigObject,
-	heatmapData: HeatmapData
+	heatmapData: HeatmapData,
+	maxLuxValue: number
 };
 
 export default class FluxHeatmap extends React.Component<Props, State> {
@@ -62,12 +65,14 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			loaded: false
 		},
 		configObject: {},
-		heatmapData: new HeatmapData(0, 1, [])
+		heatmapData: new HeatmapData(0, 1, []),
+		maxLuxValue: 0
 	};
 
 	heatmap: Heatmap;
 	heatmapContainer: ?HTMLDivElement;
 	imgElement: ?HTMLImageElement;
+	numberOfReadings: number = 0;
 
 	componentDidMount() {
 		this.heatmap = this.createHeatmapInstance(
@@ -106,7 +111,11 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			if (prevProps.configObject !== this.props.configObject) {
 				this.setConfig();
 			}
-			if (prevProps.readings.length !== this.props.readings.length) {
+			if (
+				this.props.readings.length !== this.numberOfReadings ||
+				prevState.maxLuxValue !== this.state.maxLuxValue
+			) {
+				this.numberOfReadings = this.props.readings.length;
 				this.setData();
 			}
 		}
@@ -177,8 +186,8 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		elements: Positionable[],
 		fixedValue: boolean
 	): HeatmapDataPoint[] => {
-		const container = this.state.container;
-		const transformation = this.props.transformation;
+		const { container, maxLuxValue } = this.state;
+		const { transformation, heatmapMode } = this.props;
 		const containerScaleFactor = container.width / container.originalWidth;
 		return elements.reduce(function(transformedReadings, element) {
 			const x = Math.round(
@@ -198,7 +207,13 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 				value = element.getValue();
 			}
 			if (x >= 0 && y >= 0 && x <= container.width && y <= container.height) {
-				transformedReadings.push(new HeatmapDataPoint(x, y, value));
+				if (
+					heatmapMode !== "DEFAULT" ||
+					maxLuxValue === 0 ||
+					value <= maxLuxValue
+				) {
+					transformedReadings.push(new HeatmapDataPoint(x, y, value));
+				}
 			}
 			return transformedReadings;
 		}, []);
@@ -261,6 +276,10 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		);
 	};
 
+	handleValueChange = (key: string, value: AllInputTypes) => {
+		this.setState({ [key]: value });
+	};
+
 	render() {
 		let { backgroundImage } = this.props;
 		if (!backgroundImage) {
@@ -297,6 +316,14 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 							heatmapData={this.state.heatmapData}
 						/>
 					)}
+				<Box>
+					<HeatmapAnalysisForm
+						heatmapData={this.state.heatmapData}
+						maxLuxValue={this.state.maxLuxValue}
+						heatmapMode={this.props.heatmapMode}
+						onChange={this.handleValueChange}
+					/>
+				</Box>
 			</Box>
 		);
 	}
