@@ -41,6 +41,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		anchors: [],
 		backgroundImage: PLACEHOLDER_IMAGE,
 		configObject: {
+			absolute: true,
 			radius: 1000,
 			maxOpacity: 0.5,
 			minOpacity: 0,

@@ -2,6 +2,7 @@
 
 export type ConfigObject = {
 	container?: ?Element | Text,
+	absolute?: boolean,
 	radius?: number,
 	maxOpacity?: number,
 	minOpacity?: number,
