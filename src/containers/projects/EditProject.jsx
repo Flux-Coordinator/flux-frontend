@@ -121,6 +121,7 @@ export default class EditProject extends React.Component<Props, State> {
 						<FormField label="Name">
 							<TextInput
 								name="name"
+								required
 								placeHolder="Projektname eingeben"
 								value={this.state.project.name}
 								onDOMChange={inputHandler(this.onProjectChanged)}
