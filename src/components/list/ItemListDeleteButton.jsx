@@ -10,11 +10,6 @@ type Props = {
 export default function ItemListDeleteButton({ onClick }: Props) {
 	return (
 		<Button
-			flex
-			justify="center"
-			align="center"
-			plain
-			box
 			icon={<TrashIcon />}
 			hoverIndicator={{ background: "critical" }}
 			onClick={onClick}

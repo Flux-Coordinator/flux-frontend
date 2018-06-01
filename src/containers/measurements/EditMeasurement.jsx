@@ -171,6 +171,7 @@ export default class EditMeasurement extends React.Component<Props, State> {
 							<FormField label="Name">
 								<TextInput
 									name="name"
+									required
 									placeHolder="Namen eingeben"
 									value={measurement.name}
 									onDOMChange={inputHandler(this.onMeasurementChanged)}

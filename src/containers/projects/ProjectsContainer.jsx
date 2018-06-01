@@ -9,9 +9,15 @@ import RoomComponent from "./../../components/room/Room";
 import ProjectComponent from "../../components/projects/Project";
 import ProjectsComponent from "../../components/projects/Projects";
 import LoadingComponent from "./../../components/loading/Loading";
+import ConfirmationOverlay from "./../confirmationOverlay/ConfirmationOverlay";
+import Measurement from "../../models/Measurement";
 import Room from "../../models/Room";
 import Project from "../../models/Project";
+import { ToastContext } from "./../../components/toast/ToastContext";
 import { isNumber } from "./../../utils/NumberHelper";
+
+import type { ConfirmationOverlayProps } from "./../confirmationOverlay/ConfirmationOverlay";
+import type { ToastMetadata } from "./../../components/toast/Toast";
 
 type Props = {
 	match: any
@@ -19,7 +25,8 @@ type Props = {
 
 type State = {
 	loading: boolean,
-	projects: Project[]
+	projects: Project[],
+	confirmationOverlayProps?: ConfirmationOverlayProps
 };
 
 export default class ProjectsContainer extends React.Component<Props, State> {
@@ -91,15 +98,136 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 		return this.findRoomInProject(project, roomIdInt);
 	};
 
-	onDelete = (item: Project) => {
-		const result = window.confirm(
-			"Möchten Sie das Projekt wirklich löschen? Achtung: Alle Daten des Projektes werden unwiderruflich gelöscht!"
-		);
-		if (result) {
-			console.log("Project deleted");
-		} else {
-			console.log("Not deleted");
-		}
+	deleteProject = (
+		item: Project,
+		showToast: (toast: ToastMetadata) => void
+	) => {
+		axios
+			.delete(`/projects/${item.projectId}`)
+			.then(result => {
+				if (showToast) {
+					showToast({
+						status: "ok",
+						children: "Das Projekt wurde erfolgreich gelöscht"
+					});
+				}
+				this.loadProjects();
+			})
+			.catch(error => {
+				if (showToast) {
+					showToast({
+						status: "critical",
+						children: "Das Projekt konnte nicht gelöscht werden"
+					});
+				}
+				this.loadProjects();
+			});
+	};
+
+	deleteRoom = (item: Room, showToast: (toast: ToastMetadata) => void) => {
+		axios
+			.delete(`/rooms/${item.roomId}`)
+			.then(result => {
+				if (showToast) {
+					showToast({
+						status: "ok",
+						children: "Der Raum wurde erfolgreich gelöscht"
+					});
+				}
+				this.loadProjects();
+			})
+			.catch(error => {
+				if (showToast) {
+					showToast({
+						status: "critical",
+						children: "Der Raum konnte nicht gelöscht werden"
+					});
+				}
+				this.loadProjects();
+			});
+	};
+
+	deleteMeasurement = (
+		item: Measurement,
+		showToast: (toast: ToastMetadata) => void
+	) => {
+		axios
+			.delete(`/measurements/${item.measurementId}`)
+			.then(result => {
+				if (showToast) {
+					showToast({
+						status: "ok",
+						children: "Die Messung wurde erfolgreich gelöscht"
+					});
+				}
+				this.loadProjects();
+			})
+			.catch(error => {
+				if (showToast) {
+					showToast({
+						status: "critical",
+						children: "Die Messung konnte nicht gelöscht werden"
+					});
+				}
+				this.loadProjects();
+			});
+	};
+
+	confirmProjectDeletion = (
+		item: Project,
+		showToast: (toast: ToastMetadata) => void
+	) => {
+		const onAccept = () => {
+			this.deleteProject(item, showToast);
+			this.closeConfirmationOverlay();
+		};
+		const confirmationProps: ConfirmationOverlayProps = {
+			onAccept: onAccept,
+			onReject: this.closeConfirmationOverlay,
+			children:
+				"Wenn Sie das Projekt löschen, werden alle Räume und Messungen des Projektes unwiderruflich gelöscht!"
+		};
+		this.setState({ confirmationOverlayProps: confirmationProps });
+	};
+
+	confirmRoomDeletion = (
+		item: Room,
+		showToast: (toast: ToastMetadata) => void
+	) => {
+		const onAccept = () => {
+			this.deleteRoom(item, showToast);
+			this.closeConfirmationOverlay();
+		};
+		const confirmationProps: ConfirmationOverlayProps = {
+			onAccept: onAccept,
+			onReject: this.closeConfirmationOverlay,
+			children:
+				"Wenn Sie den Raum löschen, werden alle Messungen des Raumes unwiderruflich gelöscht!"
+		};
+		this.setState({ confirmationOverlayProps: confirmationProps });
+	};
+
+	confirmMeasurementDeletion = (
+		item: Measurement,
+		showToast: (toast: ToastMetadata) => void
+	) => {
+		const onAccept = () => {
+			this.deleteMeasurement(item, showToast);
+			this.closeConfirmationOverlay();
+		};
+		const confirmationProps: ConfirmationOverlayProps = {
+			onAccept: onAccept,
+			onReject: this.closeConfirmationOverlay,
+			children:
+				"Wenn Sie die Messung löschen, werden alle Messwerte der Messung unwiderruflich gelöscht!"
+		};
+		this.setState({ confirmationOverlayProps: confirmationProps });
+	};
+
+	closeConfirmationOverlay = () => {
+		this.setState({
+			confirmationOverlayProps: undefined
+		});
 	};
 
 	componentDidMount() {
@@ -119,44 +247,64 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 		}
 
 		return (
-			<Switch>
-				<Route
-					path={`${match.url}/:projectId/rooms/:roomId`}
-					component={({ match }) => {
-						const foundRoom = this.findRoomById(
-							projects,
-							match.params.roomId,
-							match.params.projectId
-						);
-						return foundRoom ? (
-							<RoomComponent room={foundRoom} match={match} />
-						) : (
-							<NotFound info="Raum konnte nicht gefunden werden" />
-						);
-					}}
-				/>
-				<Route
-					path={`${match.url}/:projectId`}
-					component={({ match }) => (
-						<ProjectComponent
-							projects={projects}
-							loading={loading}
-							match={match}
-						/>
-					)}
-				/>
-				<Route
-					path={`${match.url}`}
-					component={({ match }) => (
-						<ProjectsComponent
-							onDelete={this.onDelete}
-							projects={projects}
-							loading={loading}
-							match={match}
-						/>
-					)}
-				/>
-			</Switch>
+			<ToastContext.Consumer>
+				{(showToast: any) => (
+					<React.Fragment>
+						{this.state.confirmationOverlayProps && (
+							<ConfirmationOverlay {...this.state.confirmationOverlayProps} />
+						)}
+						<Switch>
+							<Route
+								path={`${match.url}/:projectId/rooms/:roomId`}
+								component={({ match }) => {
+									const foundRoom = this.findRoomById(
+										projects,
+										match.params.roomId,
+										match.params.projectId
+									);
+									return foundRoom ? (
+										<RoomComponent
+											room={foundRoom}
+											match={match}
+											onDeleteMeasurement={item =>
+												this.confirmMeasurementDeletion(item, showToast)
+											}
+										/>
+									) : (
+										<NotFound info="Raum konnte nicht gefunden werden" />
+									);
+								}}
+							/>
+							<Route
+								path={`${match.url}/:projectId`}
+								component={({ match }) => (
+									<ProjectComponent
+										onDeleteRoom={item =>
+											this.confirmRoomDeletion(item, showToast)
+										}
+										projects={projects}
+										loading={loading}
+										match={match}
+									/>
+								)}
+							/>
+							<Route
+								path={`${match.url}`}
+								component={({ match }) => (
+									<ProjectsComponent
+										onDeleteProject={item =>
+											this.confirmProjectDeletion(item, showToast)
+										}
+										projects={projects}
+										loading={loading}
+										match={match}
+									/>
+								)}
+							/>
+						</Switch>
+					</React.Fragment>
+				)}
+			</ToastContext.Consumer>
 		);
 	}
 }

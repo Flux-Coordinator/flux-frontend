@@ -159,6 +159,7 @@ export default class EditRoom extends React.Component<Props, State> {
 						<FormField label="Name">
 							<TextInput
 								name="name"
+								required
 								placeHolder="Raumname eingeben"
 								value={room.name}
 								onDOMChange={inputHandler(this.onRoomChanged)}

@@ -45,6 +45,7 @@ export default function AnchorEditFieldset({
 			<FormField label="Anchor ID">
 				<TextInput
 					name="networkId"
+					required
 					placeHolder={`Netzwerkidentifikation von Anchor ${displayingIndex}`}
 					value={anchor.networkId}
 					onDOMChange={inputHandler(onAnchorChanged)}

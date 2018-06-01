@@ -8,14 +8,5 @@ type Props = {
 };
 
 export default function ItemListEditButton({ path }: Props) {
-	return (
-		<Button
-			flex
-			justify="center"
-			align="center"
-			box
-			icon={<EditIcon />}
-			path={path}
-		/>
-	);
+	return <Button icon={<EditIcon />} path={path} />;
 }

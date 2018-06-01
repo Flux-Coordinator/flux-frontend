@@ -5,13 +5,15 @@ import Box from "grommet/components/Box";
 import NotFound from "../../components/notfound/NotFound";
 import ContentBox from "../contentBox/ContentBox";
 import ProjectModel from "../../models/Project";
+import RoomModel from "../../models/Room";
 import ItemsList from "../list/ItemsList";
 import ItemListHeader from "./../list/ItemListHeader";
 import AnchorRoomItemRenderer from "../room/AnchorRoomItemRenderer";
 
 type Props = {
 	projects: ProjectModel[],
-	match: any
+	match: any,
+	onDeleteRoom: (item: RoomModel) => void
 };
 
 function findProject(projects: ProjectModel[], projectId: number) {
@@ -20,7 +22,7 @@ function findProject(projects: ProjectModel[], projectId: number) {
 	);
 }
 
-export default function Project({ projects, match }: Props) {
+export default function Project({ projects, match, onDeleteRoom }: Props) {
 	const project = findProject(projects, match.params.projectId);
 
 	if (!project) {
@@ -37,7 +39,13 @@ export default function Project({ projects, match }: Props) {
 				<ItemsList
 					items={project.rooms}
 					keyFunc={item => item.roomId}
-					ItemRenderer={({ item }) => AnchorRoomItemRenderer({ item, match })}
+					ItemRenderer={({ item }) => (
+						<AnchorRoomItemRenderer
+							item={item}
+							match={match}
+							onDelete={onDeleteRoom}
+						/>
+					)}
 				/>
 			</Box>
 		</ContentBox>
