@@ -140,7 +140,6 @@ export default class EditMeasurement extends React.Component<Props, State> {
 					anchorIndex={index}
 					anchor={a}
 					onAnchorValueChanged={this.onAnchorChanged}
-					anchorIdSuggestions={this.state.anchorSuggestions}
 				/>
 			);
 		});

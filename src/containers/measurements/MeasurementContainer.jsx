@@ -150,6 +150,11 @@ export default class MeasurementContainer extends React.Component<
 
 	saveMeasurement = (showToast?: (toast: ToastMetadata) => void) => {
 		const roomId = this.props.room.roomId;
+
+		if (!roomId) {
+			return;
+		}
+
 		const exportMeasurement = this.state.currentMeasurement.toDto();
 		axios
 			.post(`/rooms/${roomId}/measurements`, exportMeasurement, {

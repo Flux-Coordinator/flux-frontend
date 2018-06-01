@@ -6,6 +6,6 @@ import ItemListDeleteButton from "./ItemListDeleteButton";
 
 describe("<ItemListDeleteButton />", () => {
 	it("should render", () => {
-		shallow(<ItemListDeleteButton path="" />);
+		shallow(<ItemListDeleteButton onClick={() => {}} path="" />);
 	});
 });
