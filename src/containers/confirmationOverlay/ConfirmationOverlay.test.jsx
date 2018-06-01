@@ -10,10 +10,6 @@ describe("<ConfirmationOverlay />", () => {
 	});
 
 	it("should render with callback props", () => {
-		shallow(
-			<ConfirmationOverlay onAccept={() => null} onReject={() => null}>
-				Test
-			</ConfirmationOverlay>
-		);
+		shallow(<ConfirmationOverlay>Test</ConfirmationOverlay>);
 	});
 });

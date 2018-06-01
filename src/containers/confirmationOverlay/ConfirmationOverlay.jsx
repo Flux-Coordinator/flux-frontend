@@ -34,15 +34,12 @@ export default class ConfirmationOverlay extends React.Component<
 
 	onConfirmationChanged = (key: string, value: AllInputTypes) => {
 		this.setState({
-			criticalConfirmation: value
+			criticalConfirmation: value ? true : false
 		});
 	};
 
 	render() {
 		const { children, onAccept, onReject } = this.props;
-		const onClose = () => {
-			onReject();
-		};
 
 		const isSubmitAllowed = () => {
 			if (this.state.criticalConfirmation) return onAccept;
@@ -50,7 +47,7 @@ export default class ConfirmationOverlay extends React.Component<
 		};
 
 		return (
-			<Layer align="left" overlayClose closer onClose={onClose}>
+			<Layer align="left" overlayClose closer onClose={onReject}>
 				<Form>
 					<Header>
 						<Heading>Bestätigen</Heading>

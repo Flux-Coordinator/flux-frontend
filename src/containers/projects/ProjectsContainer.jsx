@@ -102,8 +102,13 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 		item: Project,
 		showToast: (toast: ToastMetadata) => void
 	) => {
+		const { projectId } = item;
+		if (!projectId) {
+			return;
+		}
+
 		axios
-			.delete(`/projects/${item.projectId}`)
+			.delete(`/projects/${projectId}`)
 			.then(result => {
 				if (showToast) {
 					showToast({
@@ -125,8 +130,13 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 	};
 
 	deleteRoom = (item: Room, showToast: (toast: ToastMetadata) => void) => {
+		const { roomId } = item;
+		if (!roomId) {
+			return;
+		}
+
 		axios
-			.delete(`/rooms/${item.roomId}`)
+			.delete(`/rooms/${roomId}`)
 			.then(result => {
 				if (showToast) {
 					showToast({
@@ -151,8 +161,13 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 		item: Measurement,
 		showToast: (toast: ToastMetadata) => void
 	) => {
+		const { measurementId } = item;
+		if (!measurementId) {
+			return;
+		}
+
 		axios
-			.delete(`/measurements/${item.measurementId}`)
+			.delete(`/measurements/${measurementId}`)
 			.then(result => {
 				if (showToast) {
 					showToast({

@@ -22,7 +22,7 @@ const FIXED_HEATMAP_VALUE = 1;
 type Props = {
 	readings: ReadingModel[],
 	anchors: AnchorModel[],
-	backgroundImage: string,
+	backgroundImage?: ?string,
 	configObject: ConfigObject,
 	transformation: Transformation,
 	heatmapMode: HeatmapMode
