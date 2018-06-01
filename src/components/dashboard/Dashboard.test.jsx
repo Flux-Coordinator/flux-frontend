@@ -4,8 +4,13 @@ import { shallow } from "enzyme";
 
 import Dashboard from "./Dashboard";
 
+import type { ServerState } from "./../../types/ServerState";
+
 describe("<Dashboard />", () => {
 	it("should render", () => {
-		shallow(<Dashboard serverReachable={false} />);
+		const serverState: ServerState = {
+			connectionState: "UNKNOWN"
+		};
+		shallow(<Dashboard serverState={serverState} />);
 	});
 });

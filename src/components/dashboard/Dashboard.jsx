@@ -1,6 +1,7 @@
 // @flow
 import * as React from "react";
 import Status from "grommet/components/icons/Status";
+import Anchor from "grommet/components/Anchor";
 import Header from "grommet/components/Header";
 import Heading from "grommet/components/Heading";
 import Box from "grommet/components/Box";
@@ -11,66 +12,142 @@ import Card from "grommet/components/Card";
 import ContentBox from "./../contentBox/ContentBox";
 import Measurement from "./../../models/Measurement";
 
+import type { ServerState } from "./../../types/ServerState";
+
 type Props = {
-	serverReachable: boolean,
-	activeMeasurement?: Measurement
+	serverState: ServerState,
+	activeMeasurement?: ?Measurement
 };
 
-function ServerStatus({ serverReachable }: { serverReachable: boolean }) {
-	let description = (
-		<Box>
-			<Status size="small" value="disabled" /> Nicht verfügbar
-		</Box>
-	);
-	if (serverReachable) {
-		description = (
-			<Box>
-				<Status size="small" value="ok" /> Bereit
-			</Box>
-		);
+type DefaultCardProps = {
+	label: string,
+	heading: string,
+	children: React.Node,
+	anchorPath?: string,
+	anchorLabel?: React.Node
+};
+
+function DefaultCard({
+	label,
+	heading,
+	children,
+	anchorPath,
+	anchorLabel
+}: DefaultCardProps) {
+	const grommetCardProps = { label, heading };
+	let link;
+	if (anchorPath) {
+		link = <Anchor path={anchorPath} primary label={anchorLabel} />;
 	}
 
 	return (
 		<Card
-			label="Status"
-			heading="Server"
+			description={children}
+			link={link}
 			headingStrong={false}
+			responsive={false}
 			textSize="xsmall"
+			basis="full"
 			colorIndex="neutral-1-t"
-			description={description}
+			{...grommetCardProps}
 		/>
+	);
+}
+
+function ServerStatus({ serverState }: { serverState: ServerState }) {
+	let description: React.Node;
+	switch (serverState.connectionState) {
+		case "CONNECTED":
+			description = (
+				<Box pad={{ between: "small" }}>
+					<Box direction="row" responsive={false}>
+						<Status size="small" value="ok" /> Bereit
+					</Box>
+					<Box>URI: {serverState.uri}</Box>
+				</Box>
+			);
+			break;
+		case "DISCONNECTED":
+			description = (
+				<Box pad={{ between: "small" }}>
+					<Box direction="row" responsive={false}>
+						<Status size="small" value="disabled" /> Nicht verfügbar
+					</Box>
+					<Box>URI: {serverState.uri}</Box>
+				</Box>
+			);
+			break;
+		default:
+			description = (
+				<Box pad={{ between: "small" }}>
+					<Box direction="row" responsive={false}>
+						<Status size="small" value="unknown" /> Unbekannt
+					</Box>
+					<Box>URI: {serverState.uri}</Box>
+				</Box>
+			);
+			break;
+	}
+
+	return (
+		<DefaultCard label="Status" heading="Server">
+			{description}
+		</DefaultCard>
 	);
 }
 
 function ActiveMeasurement({
 	activeMeasurement
 }: {
-	activeMeasurement?: Measurement
+	activeMeasurement?: ?Measurement
 }) {
 	let description = <Box>Keine aktive Messung</Box>;
-	let link;
+	let link: string;
 
 	if (activeMeasurement) {
-		description = <Box>{activeMeasurement.name}</Box>;
+		description = (
+			<Box pad={{ vertical: "small" }}>{activeMeasurement.name}</Box>
+		);
+		const { projectId, roomId, measurementId } = activeMeasurement;
+		if (projectId && roomId && measurementId) {
+			link = `/projects/${projectId}/rooms/${roomId}/measurements/${measurementId}`;
+		}
 	}
 
 	return (
-		<Card
+		<DefaultCard
 			label="Aktive"
 			heading="Messung"
-			headingStrong={false}
-			textSize="xsmall"
-			colorIndex="neutral-1-t"
-			link={link}
-			description={description}
-		/>
+			anchorLabel="Zur Messung"
+			anchorPath={link}
+		>
+			{description}
+		</DefaultCard>
 	);
 }
 
-export default function Dashboard({
-	serverReachable,
-	activeMeasurement
-}: Props) {
+function SensorStatus({ sensorReachable }: { sensorReachable: boolean }) {
+	let description = (
+		<Box direction="row">
+			<Status size="small" value="disabled" /> Nicht verfügbar
+		</Box>
+	);
+	if (sensorReachable) {
+		description = (
+			<Box direction="row">
+				<Status size="small" value="ok" /> Bereit
+			</Box>
+		);
+	}
+
+	return (
+		<DefaultCard label="Status" heading="Sensor">
+			{description}
+		</DefaultCard>
+	);
+}
+
+export default function Dashboard({ serverState, activeMeasurement }: Props) {
 	return (
 		<ContentBox heading="Dashboard">
 			<Box>
@@ -79,34 +156,15 @@ export default function Dashboard({
 				</Header>
 				<Tiles flush={false}>
 					<Tile>
-						<ServerStatus serverReachable={serverReachable} />
+						<ServerStatus serverState={serverState} />
 					</Tile>
 					<Tile>
-						<Card
-							label="Status"
-							heading="Sensor"
-							headingStrong={false}
-							textSize="xsmall"
-							colorIndex="neutral-1-t"
-							description={""}
-						/>
+						<SensorStatus sensorReachable={false} />
 					</Tile>
 					<Tile>
 						<ActiveMeasurement activeMeasurement={activeMeasurement} />
 					</Tile>
 				</Tiles>
-
-				{/* <div>Platform: Cloud</div>
-				<div>
-					Status: Bereit <Status size="small" value="ok" />
-				</div>
-				<div>
-					Sensoren:
-					<ul>
-						<li>Pozyx</li>
-						<li>Lux Meter</li>
-					</ul>
-				</div> */}
 			</Box>
 		</ContentBox>
 	);

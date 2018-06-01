@@ -5,20 +5,27 @@ import axios, { CancelToken, CancelTokenSource } from "axios";
 import Dashboard from "./../../components/dashboard/Dashboard";
 import Measurement from "./../../models/Measurement";
 
+import type { ServerState, ConnectionState } from "./../../types/ServerState";
+
 type Props = {};
 
 type State = {
-	serverReachable: boolean,
-	activeMeasurement: Measurement
+	serverState: ServerState,
+	activeMeasurement: ?Measurement
 };
 
-export default class DashboardContainer extends React.PureComponent<
-	Props,
-	State
-> {
+export default class DashboardContainer extends React.Component<Props, State> {
 	isUnmounted = false;
 	source: CancelTokenSource = CancelToken.source();
 	timeout: TimeoutID;
+
+	state = {
+		serverState: {
+			connectionState: "UNKNOWN",
+			uri: axios.defaults.baseURL
+		},
+		activeMeasurement: undefined
+	};
 
 	fetchActiveMeasurement = () => {
 		axios
@@ -27,27 +34,33 @@ export default class DashboardContainer extends React.PureComponent<
 			})
 			.then(result => {
 				let activeMeasurement: Measurement;
-				if (result.status === 204) {
+				if (result.status === 200) {
 					activeMeasurement = Measurement.fromObject(result.data);
 				}
-				this.setState({
-					serverReachable: true,
-					activeMeasurement
-				});
+				this.updateState("CONNECTED", activeMeasurement);
 				this.resetFetchTimeout();
 			})
 			.catch(error => {
-				this.setState({
-					serverReachable: false,
-					activeMeasurement: undefined
-				});
+				this.updateState("DISCONNECTED", undefined);
 				this.resetFetchTimeout();
 			});
 	};
 
+	updateState = (
+		serverConnection: ConnectionState,
+		activeMeasurement?: Measurement
+	) => {
+		this.setState(prevState => {
+			prevState.serverState.connectionState = serverConnection;
+			prevState.activeMeasurement = activeMeasurement;
+
+			return prevState;
+		});
+	};
+
 	resetFetchTimeout = (milliseconds: number = 3000) => {
 		if (!this.isUnmounted) {
-			this.timeout = setTimeout(this.fetchActiveMeasurement);
+			this.timeout = setTimeout(this.fetchActiveMeasurement, milliseconds);
 		}
 	};
 
@@ -64,6 +77,11 @@ export default class DashboardContainer extends React.PureComponent<
 	}
 
 	render() {
-		return <Dashboard />;
+		return (
+			<Dashboard
+				serverState={this.state.serverState}
+				activeMeasurement={this.state.activeMeasurement}
+			/>
+		);
 	}
 }

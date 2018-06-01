@@ -16,7 +16,9 @@ type ConstructorType = {
 	scaleFactor: number,
 	creator?: string,
 	readings?: Reading[],
-	anchorPositions?: Anchor[]
+	anchorPositions?: Anchor[],
+	roomId: number,
+	projectId: number
 };
 
 export default class Measurement {
@@ -30,6 +32,8 @@ export default class Measurement {
 	creator: string;
 	readings: Reading[];
 	anchors: Anchor[];
+	roomId: ?number;
+	projectId: ?number;
 
 	constructor(
 		measurementId?: number,
@@ -43,7 +47,9 @@ export default class Measurement {
 		measurementState?: MeasurementState = "READY",
 		creator?: string = "",
 		readings?: Reading[] = [],
-		anchors?: Anchor[] = []
+		anchors?: Anchor[] = [],
+		roomId?: number,
+		projectId?: number
 	) {
 		this.measurementId = measurementId;
 		this.name = name;
@@ -53,6 +59,8 @@ export default class Measurement {
 		this.creator = creator;
 		this.readings = readings;
 		this.anchors = anchors;
+		this.roomId = roomId;
+		this.projectId = projectId;
 
 		if (typeof startDate === "number" || typeof startDate === "string") {
 			this.startDate = new Date(startDate);
@@ -79,7 +87,9 @@ export default class Measurement {
 		scaleFactor,
 		creator,
 		readings,
-		anchorPositions
+		anchorPositions,
+		roomId,
+		projectId
 	}: ConstructorType) {
 		const typedReadings: Reading[] = [];
 		if (readings != null) {
@@ -115,7 +125,9 @@ export default class Measurement {
 			measurementState,
 			creator,
 			typedReadings,
-			typedAnchors
+			typedAnchors,
+			roomId,
+			projectId
 		);
 	}
 
