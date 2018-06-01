@@ -202,7 +202,7 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 			onAccept: onAccept,
 			onReject: this.closeConfirmationOverlay,
 			children:
-				"Wenn Sie den Raum wirklich löschen, werden alle Messungen im Raum unwiderruflich gelöscht!"
+				"Wenn Sie den Raum löschen, werden alle Messungen des Raumes unwiderruflich gelöscht!"
 		};
 		this.setState({ confirmationOverlayProps: confirmationProps });
 	};
@@ -219,7 +219,7 @@ export default class ProjectsContainer extends React.Component<Props, State> {
 			onAccept: onAccept,
 			onReject: this.closeConfirmationOverlay,
 			children:
-				"Wenn Sie die Messung wirklich löschen, werden alle Messwerte der Messung unwiderruflich gelöscht!"
+				"Wenn Sie die Messung löschen, werden alle Messwerte der Messung unwiderruflich gelöscht!"
 		};
 		this.setState({ confirmationOverlayProps: confirmationProps });
 	};
