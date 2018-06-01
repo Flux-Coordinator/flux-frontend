@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import axios, { CancelToken } from "axios";
+import axios, { CancelToken, CancelTokenSource } from "axios";
 import ContentBox from "../../components/contentBox/ContentBox";
 
 import ImportComponent from "../../components/importexport/Import";
@@ -15,7 +15,7 @@ export default class ImportExportContainer extends React.Component<
 	Props,
 	Status
 > {
-	source: any = CancelToken.source();
+	source: CancelTokenSource = CancelToken.source();
 	state = {
 		showWizard: false
 	};

@@ -1,10 +1,10 @@
 // @flow
-import React from "react";
+import * as React from "react";
 import GrommetApp from "grommet/components/App";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import axios from "axios";
 
-import Dashboard from "../../components/dashboard/Dashboard";
+import DashboardContainer from "./../dashboard/DashboardContainer";
 import NotFound from "../../components/notfound/NotFound";
 import ProjectsContainer from "./../projects/ProjectsContainer";
 import Layout from "../layout/Layout";
@@ -64,7 +64,7 @@ export default class App extends React.Component<Prop, State> {
 								<Route path="/projects" component={ProjectsContainer} />
 								<Route path="/import" exact component={ImportExportContainer} />
 								<Route path="/login" component={Login} />
-								<Route path="/" exact component={Dashboard} />
+								<Route path="/" exact component={DashboardContainer} />
 								<Route component={NotFound} />
 							</Switch>
 						</Layout>

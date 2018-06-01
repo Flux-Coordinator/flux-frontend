@@ -6,6 +6,6 @@ import Dashboard from "./Dashboard";
 
 describe("<Dashboard />", () => {
 	it("should render", () => {
-		shallow(<Dashboard />);
+		shallow(<Dashboard serverReachable={false} />);
 	});
 });
