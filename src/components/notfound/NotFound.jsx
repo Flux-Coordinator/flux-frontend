@@ -4,11 +4,13 @@ import ContentBox from "../contentBox/ContentBox";
 
 type Props = {
 	info?: string,
-	match: any
+	match?: any
 };
 
 function NotFound({ info, match }: Props) {
-	console.log(match);
+	if (match) {
+		console.log(match);
+	}
 	return <ContentBox heading="Seite nicht gefunden!">{info}</ContentBox>;
 }
 
