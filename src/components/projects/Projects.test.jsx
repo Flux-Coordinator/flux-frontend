@@ -13,7 +13,7 @@ describe("<Projects />", () => {
 				<Projects
 					loading={false}
 					projects={DataGenerator.createProjects(10)}
-					onDelete={() => {}}
+					onDeleteProject={() => {}}
 				/>
 			</MemoryRouter>
 		);
