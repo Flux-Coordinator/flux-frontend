@@ -77,7 +77,7 @@ export default class App extends React.Component<Prop, State> {
 										component={ImportExportContainer}
 									/>
 									<PrivateRoute path="/" exact component={DashboardContainer} />
-									<Route component={NotFound} />
+									<PrivateRoute component={NotFound} />
 								</Switch>
 							</Layout>
 						</Switch>
