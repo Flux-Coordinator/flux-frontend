@@ -3,10 +3,12 @@ import * as React from "react";
 import ContentBox from "../contentBox/ContentBox";
 
 type Props = {
-	info?: string
+	info?: string,
+	match: any
 };
 
-function NotFound({ info }: Props) {
+function NotFound({ info, match }: Props) {
+	console.log(match);
 	return <ContentBox heading="Seite nicht gefunden!">{info}</ContentBox>;
 }
 

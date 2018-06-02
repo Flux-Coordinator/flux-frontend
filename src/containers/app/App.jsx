@@ -14,6 +14,7 @@ import EditRoom from "./../../containers/rooms/EditRoom";
 import EditMeasurement from "./../../containers/measurements/EditMeasurement";
 import Login from "../login/LoginContainer";
 import Toast from "./../../components/toast/Toast";
+import PrivateRoute from "./../../components/routing/PrivateRoute";
 import { ToastContext } from "./../../components/toast/ToastContext";
 
 import type { ToastMetadata } from "./../../components/toast/Toast";
@@ -41,33 +42,45 @@ export default class App extends React.Component<Prop, State> {
 			<ToastContext.Provider value={(this.showToast: any)}>
 				<GrommetApp centered={false}>
 					<Router>
-						<Layout>
-							<Switch>
-								<Route path="/editProject/:projectId" component={EditProject} />
-								<Route path="/editProject" component={EditProject} />
-								<Route
-									path="/projects/:projectId/editRoom/:roomId"
-									component={EditRoom}
-								/>
-								<Route
-									path="/projects/:projectId/editRoom"
-									component={EditRoom}
-								/>
-								<Route
-									path="/projects/:projectId/rooms/:roomId/editMeasurement/:measurementId"
-									component={EditMeasurement}
-								/>
-								<Route
-									path="/projects/:projectId/rooms/:roomId/editMeasurement"
-									component={EditMeasurement}
-								/>
-								<Route path="/projects" component={ProjectsContainer} />
-								<Route path="/import" exact component={ImportExportContainer} />
-								<Route path="/login" component={Login} />
-								<Route path="/" exact component={DashboardContainer} />
-								<Route component={NotFound} />
-							</Switch>
-						</Layout>
+						<Switch>
+							<Route path="/login" component={Login} />
+							<Layout>
+								<Switch>
+									<PrivateRoute
+										path="/editProject/:projectId"
+										component={EditProject}
+									/>
+									<PrivateRoute path="/editProject" component={EditProject} />
+									<PrivateRoute
+										path="/projects/:projectId/editRoom/:roomId"
+										component={EditRoom}
+									/>
+									<PrivateRoute
+										path="/projects/:projectId/editRoom"
+										component={EditRoom}
+									/>
+									<PrivateRoute
+										path="/projects/:projectId/rooms/:roomId/editMeasurement/:measurementId"
+										component={EditMeasurement}
+									/>
+									<PrivateRoute
+										path="/projects/:projectId/rooms/:roomId/editMeasurement"
+										component={EditMeasurement}
+									/>
+									<PrivateRoute
+										path="/projects"
+										component={ProjectsContainer}
+									/>
+									<PrivateRoute
+										path="/import"
+										exact
+										component={ImportExportContainer}
+									/>
+									<PrivateRoute path="/" exact component={DashboardContainer} />
+									<Route component={NotFound} />
+								</Switch>
+							</Layout>
+						</Switch>
 					</Router>
 					<Toast
 						metadata={this.state.toast}
