@@ -4,7 +4,7 @@ import { Route, Redirect } from "react-router-dom";
 
 import AuthenticationService from "./../../utils/AuthenticationService";
 
-export default function PrivateRoute({ component: Component, ...rest }: any) {
+export default function ProtectedRoute({ component: Component, ...rest }: any) {
 	return (
 		<Route
 			{...rest}

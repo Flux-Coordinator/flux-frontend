@@ -14,7 +14,7 @@ import EditRoom from "./../../containers/rooms/EditRoom";
 import EditMeasurement from "./../../containers/measurements/EditMeasurement";
 import Login from "../login/LoginContainer";
 import Toast from "./../../components/toast/Toast";
-import PrivateRoute from "./../../components/routing/PrivateRoute";
+import ProtectedRoute from "./../../components/routing/ProtectedRoute";
 import { ToastContext } from "./../../components/toast/ToastContext";
 
 import type { ToastMetadata } from "./../../components/toast/Toast";
@@ -46,38 +46,42 @@ export default class App extends React.Component<Prop, State> {
 							<Route path="/login" component={Login} />
 							<Layout>
 								<Switch>
-									<PrivateRoute
+									<ProtectedRoute
 										path="/editProject/:projectId"
 										component={EditProject}
 									/>
-									<PrivateRoute path="/editProject" component={EditProject} />
-									<PrivateRoute
+									<ProtectedRoute path="/editProject" component={EditProject} />
+									<ProtectedRoute
 										path="/projects/:projectId/editRoom/:roomId"
 										component={EditRoom}
 									/>
-									<PrivateRoute
+									<ProtectedRoute
 										path="/projects/:projectId/editRoom"
 										component={EditRoom}
 									/>
-									<PrivateRoute
+									<ProtectedRoute
 										path="/projects/:projectId/rooms/:roomId/editMeasurement/:measurementId"
 										component={EditMeasurement}
 									/>
-									<PrivateRoute
+									<ProtectedRoute
 										path="/projects/:projectId/rooms/:roomId/editMeasurement"
 										component={EditMeasurement}
 									/>
-									<PrivateRoute
+									<ProtectedRoute
 										path="/projects"
 										component={ProjectsContainer}
 									/>
-									<PrivateRoute
+									<ProtectedRoute
 										path="/import"
 										exact
 										component={ImportExportContainer}
 									/>
-									<PrivateRoute path="/" exact component={DashboardContainer} />
-									<PrivateRoute component={NotFound} />
+									<ProtectedRoute
+										path="/"
+										exact
+										component={DashboardContainer}
+									/>
+									<ProtectedRoute component={NotFound} />
 								</Switch>
 							</Layout>
 						</Switch>

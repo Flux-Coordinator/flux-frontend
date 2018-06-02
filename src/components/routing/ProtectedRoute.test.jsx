@@ -3,14 +3,14 @@ import * as React from "react";
 import { MemoryRouter } from "react-router";
 import { mount } from "enzyme";
 
-import PrivateRoute from "./PrivateRoute";
+import ProtectedRoute from "./ProtectedRoute";
 import NotFound from "./../notfound/NotFound";
 
-describe("<PrivateRoute />", () => {
+describe("ProtectedRoute", () => {
 	it("should render", () => {
 		mount(
 			<MemoryRouter>
-				<PrivateRoute path="/import" component={<NotFound />} />
+				<ProtectedRoute path="/import" component={<NotFound />} />
 			</MemoryRouter>
 		);
 	});
