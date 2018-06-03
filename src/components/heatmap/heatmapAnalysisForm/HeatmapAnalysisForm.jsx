@@ -1,6 +1,7 @@
 // @flow
 import * as React from "react";
 import Form from "../../form/Form";
+import Heading from "grommet/components/Heading";
 import Box from "grommet/components/Box";
 import FormField from "grommet/components/FormField";
 import FormFields from "grommet/components/FormFields";
@@ -91,78 +92,81 @@ export default class HeatmapAnalysisForm extends React.Component<Props, State> {
 
 	render() {
 		return (
-			<Form heading="Auswertung">
-				<FormFields>
-					<fieldset>
-						<FormField
-							label="Maximale Beleuchtungsstärke einschränken (in Lux)"
-							help="(0 = kein Limit)"
-						>
-							<NumberInput
-								disabled={
-									this.props.heatmapMode !== "DEFAULT" &&
-									this.props.heatmapMode !== "COVERAGE"
-								}
-								name="maxLuxValue"
-								value={this.props.maxLuxValue}
-								min={0}
-								step={1}
-								onChange={inputHandler(this.props.onChange)}
-							/>
-						</FormField>
-						<FormField
-							label="Gefilterte Werte miteinbeziehen"
-							help="(Zu hohe Werte werden auf den oben festgelegten Maximalwert herabgesetzt.)"
-						>
-							<CheckBox
-								disabled={
-									this.props.heatmapMode !== "DEFAULT" &&
-									this.props.heatmapMode !== "COVERAGE"
-								}
-								name="includeFilteredValues"
-								checked={this.props.includeFilteredValues}
-								onChange={inputHandler(this.props.onChange)}
-								toggle={true}
-							/>
-						</FormField>
-						<Box direction="row" pad={{ between: "medium" }}>
-							<Value
-								label="Anzahl Messungen"
-								value={this.state.numberOfReadings}
-								size="small"
-							/>
-							<Value
-								label="Mittelwert Em"
-								value={this.state.average}
-								units="lx"
-								size="small"
-							/>
-							<Value
-								label="Minimalwert Emin"
-								value={this.state.min}
-								units="lx"
-								size="small"
-							/>
-							<Value
-								label="Maximalwert Emax"
-								value={this.state.max}
-								units="lx"
-								size="small"
-							/>
-							<Value
-								label="Gleichmässigkeit Emin/Em"
-								value={this.state.uniformity}
-								size="small"
-							/>
-							<Value
-								label="Ungleichmässigkeit Emin/Emax"
-								value={this.state.irregularity}
-								size="small"
-							/>
-						</Box>
-					</fieldset>
-				</FormFields>
-			</Form>
+			<Box>
+				<Heading tag="h3">Auswertung</Heading>
+				<Form>
+					<FormFields>
+						<fieldset>
+							<FormField
+								label="Maximale Beleuchtungsstärke einschränken (in Lux)"
+								help="(0 = kein Limit)"
+							>
+								<NumberInput
+									disabled={
+										this.props.heatmapMode !== "DEFAULT" &&
+										this.props.heatmapMode !== "COVERAGE"
+									}
+									name="maxLuxValue"
+									value={this.props.maxLuxValue}
+									min={0}
+									step={1}
+									onChange={inputHandler(this.props.onChange)}
+								/>
+							</FormField>
+							<FormField
+								label="Gefilterte Werte miteinbeziehen"
+								help="(Zu hohe Werte werden auf den oben festgelegten Maximalwert herabgesetzt.)"
+							>
+								<CheckBox
+									disabled={
+										this.props.heatmapMode !== "DEFAULT" &&
+										this.props.heatmapMode !== "COVERAGE"
+									}
+									name="includeFilteredValues"
+									checked={this.props.includeFilteredValues}
+									onChange={inputHandler(this.props.onChange)}
+									toggle={true}
+								/>
+							</FormField>
+							<Box direction="row" pad={{ between: "medium" }}>
+								<Value
+									label="Anzahl Messungen"
+									value={this.state.numberOfReadings}
+									size="small"
+								/>
+								<Value
+									label="Mittelwert Em"
+									value={this.state.average}
+									units="lx"
+									size="small"
+								/>
+								<Value
+									label="Minimalwert Emin"
+									value={this.state.min}
+									units="lx"
+									size="small"
+								/>
+								<Value
+									label="Maximalwert Emax"
+									value={this.state.max}
+									units="lx"
+									size="small"
+								/>
+								<Value
+									label="Gleichmässigkeit Emin/Em"
+									value={this.state.uniformity}
+									size="small"
+								/>
+								<Value
+									label="Ungleichmässigkeit Emin/Emax"
+									value={this.state.irregularity}
+									size="small"
+								/>
+							</Box>
+						</fieldset>
+					</FormFields>
+				</Form>
+			</Box>
 		);
 	}
 }
