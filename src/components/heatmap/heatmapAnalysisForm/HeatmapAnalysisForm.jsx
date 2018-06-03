@@ -99,7 +99,10 @@ export default class HeatmapAnalysisForm extends React.Component<Props, State> {
 							help="(0 = kein Limit)"
 						>
 							<NumberInput
-								disabled={this.props.heatmapMode !== "DEFAULT"}
+								disabled={
+									this.props.heatmapMode !== "DEFAULT" &&
+									this.props.heatmapMode !== "COVERAGE"
+								}
 								name="maxLuxValue"
 								value={this.props.maxLuxValue}
 								min={0}
@@ -112,7 +115,10 @@ export default class HeatmapAnalysisForm extends React.Component<Props, State> {
 							help="(Zu hohe Werte werden auf den oben festgelegten Maximalwert herabgesetzt.)"
 						>
 							<CheckBox
-								disabled={this.props.heatmapMode !== "DEFAULT"}
+								disabled={
+									this.props.heatmapMode !== "DEFAULT" &&
+									this.props.heatmapMode !== "COVERAGE"
+								}
 								name="includeFilteredValues"
 								checked={this.props.includeFilteredValues}
 								onChange={inputHandler(this.props.onChange)}

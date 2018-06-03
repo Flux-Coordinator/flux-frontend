@@ -188,7 +188,11 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			return 0;
 		}
 		const maxLuxValue = this.state.maxLuxValue;
-		if (maxLuxValue > 0 && this.state.includeFilteredValues) {
+		if (
+			maxLuxValue > 0 &&
+			this.state.includeFilteredValues &&
+			this.props.heatmapMode === "DEFAULT"
+		) {
 			return maxLuxValue;
 		}
 		return Math.max(...dataPoints.map(d => d.value));
@@ -214,19 +218,29 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 						transformation.yOffset) *
 						containerScaleFactor
 				);
-			let value = FIXED_HEATMAP_VALUE;
-			if (!fixedValue && element.getValue != null) {
-				value = element.getValue();
-			}
 			if (x >= 0 && y >= 0 && x <= container.width && y <= container.height) {
+				let measuredValue = 0;
+				if (element.getValue != null) {
+					measuredValue = element.getValue();
+				}
+				let transformedValue = measuredValue;
+				let transformedMaxLuxValue = maxLuxValue;
+				if (fixedValue) {
+					transformedValue = FIXED_HEATMAP_VALUE;
+					transformedMaxLuxValue = FIXED_HEATMAP_VALUE;
+				}
 				if (
-					heatmapMode !== "DEFAULT" ||
+					(heatmapMode !== "DEFAULT" && heatmapMode !== "COVERAGE") ||
 					maxLuxValue === 0 ||
-					value <= maxLuxValue
+					measuredValue <= maxLuxValue
 				) {
-					transformedReadings.push(new HeatmapDataPoint(x, y, value));
+					transformedReadings.push(
+						new HeatmapDataPoint(x, y, transformedValue)
+					);
 				} else if (includeFilteredValues) {
-					transformedReadings.push(new HeatmapDataPoint(x, y, maxLuxValue));
+					transformedReadings.push(
+						new HeatmapDataPoint(x, y, transformedMaxLuxValue)
+					);
 				}
 			}
 			return transformedReadings;
