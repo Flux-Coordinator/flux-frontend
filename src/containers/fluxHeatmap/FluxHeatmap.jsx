@@ -222,28 +222,32 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 						containerScaleFactor
 				);
 			if (x >= 0 && y >= 0 && x <= container.width && y <= container.height) {
-				let measuredValue = 0;
+				let value = 0;
 				if (element.getValue != null) {
-					measuredValue = element.getValue();
+					value = element.getValue();
 				}
-				let transformedValue = measuredValue;
-				let transformedMaxLuxValue = maxLuxValue;
-				if (fixedValue) {
-					transformedValue = FIXED_HEATMAP_VALUE;
-					transformedMaxLuxValue = FIXED_HEATMAP_VALUE;
-				}
-				if (
-					(heatmapMode !== "DEFAULT" && heatmapMode !== "COVERAGE") ||
-					maxLuxValue === 0 ||
-					measuredValue <= maxLuxValue
-				) {
-					transformedReadings.push(
-						new HeatmapDataPoint(x, y, transformedValue)
-					);
-				} else if (includeFilteredValues) {
-					transformedReadings.push(
-						new HeatmapDataPoint(x, y, transformedMaxLuxValue)
-					);
+				if (value > 0 || heatmapMode === "ANCHORS") {
+					if (
+						(heatmapMode !== "DEFAULT" && heatmapMode !== "COVERAGE") ||
+						maxLuxValue === 0 ||
+						value <= maxLuxValue
+					) {
+						transformedReadings.push(
+							new HeatmapDataPoint(
+								x,
+								y,
+								fixedValue ? FIXED_HEATMAP_VALUE : value
+							)
+						);
+					} else if (includeFilteredValues) {
+						transformedReadings.push(
+							new HeatmapDataPoint(
+								x,
+								y,
+								fixedValue ? FIXED_HEATMAP_VALUE : maxLuxValue
+							)
+						);
+					}
 				}
 			}
 			return transformedReadings;
@@ -373,8 +377,8 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 								</tr>
 							</thead>
 							<tbody>
-								{this.props.anchors.map(anchor => (
-									<TableRow>
+								{this.props.anchors.map((anchor, i) => (
+									<TableRow key={i}>
 										<td>{anchor.networkId}</td>
 										<td>{anchor.position.xposition}</td>
 										<td>{anchor.position.yposition}</td>
