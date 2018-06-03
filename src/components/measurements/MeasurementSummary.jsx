@@ -119,7 +119,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 							<Box
 								direction="row"
 								pad={{ between: "small" }}
-								responsive="false"
+								responsive={false}
 							>
 								<span>Vermesser:</span>
 								<span>{this.props.currentMeasurement.creator}</span>
@@ -127,7 +127,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 							<Box
 								direction="row"
 								pad={{ between: "small" }}
-								responsive="false"
+								responsive={false}
 							>
 								<span>Zeitraum:</span>
 								<Timestamp value={this.props.currentMeasurement.startDate} />
