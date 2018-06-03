@@ -9,6 +9,9 @@ import { Positionable } from "../../types/Positionable";
 import ReactResizeDetector from "react-resize-detector";
 import Transformation from "../../models/Transformation";
 import Box from "grommet/components/Box";
+import Heading from "grommet/components/Heading";
+import Table from "grommet/components/Table";
+import TableRow from "grommet/components/TableRow";
 import { PLACEHOLDER_IMAGE, EXAMPLE_IMAGE } from "../../images/ImagesBase64";
 import HeatmapLegend from "./HeatmapLegend";
 import HeatmapTooltip from "./HeatmapTooltip";
@@ -356,6 +359,33 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 						heatmapMode={this.props.heatmapMode}
 						onChange={this.handleValueChange}
 					/>
+				</Box>
+				<Box>
+					<Heading tag="h3">Pozyx Anchors</Heading>
+					{this.props.anchors.length > 0 ? (
+						<Table selectable>
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>X</th>
+									<th>Y</th>
+									<th>Z</th>
+								</tr>
+							</thead>
+							<tbody>
+								{this.props.anchors.map(anchor => (
+									<TableRow>
+										<td>{anchor.networkId}</td>
+										<td>{anchor.position.xposition}</td>
+										<td>{anchor.position.yposition}</td>
+										<td>{anchor.position.zposition}</td>
+									</TableRow>
+								))}
+							</tbody>
+						</Table>
+					) : (
+						<span>Es sind keine Anchors für diese Messung konfiguriert.</span>
+					)}
 				</Box>
 			</Box>
 		);
