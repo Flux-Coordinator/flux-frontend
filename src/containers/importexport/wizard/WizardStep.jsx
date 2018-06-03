@@ -11,7 +11,7 @@ type Props = {
 	heading: React.Node,
 	subheading?: React.Node,
 	children: React.Node,
-	onSubmit: () => void,
+	onSubmit?: ?() => void,
 	isLastStep?: boolean
 };
 

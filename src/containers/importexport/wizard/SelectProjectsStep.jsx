@@ -51,9 +51,20 @@ export default class SelectProjectsStep extends React.Component<
 
 	static getDerivedStateFromProps(nextProps: StepProps, prevState: State) {
 		return {
-			returnData: nextProps.projects,
-			selected: null
+			returnData: nextProps.projects
 		};
+	}
+
+	get isValidState() {
+		const { selected } = this.state;
+		if (selected != null) {
+			if (!Array.isArray(selected)) {
+				return true;
+			} else {
+				return selected.length > 0;
+			}
+		}
+		return false;
 	}
 
 	render() {
@@ -61,7 +72,7 @@ export default class SelectProjectsStep extends React.Component<
 			<WizardStep
 				heading="Schritt 1: Wählen Sie die Projekte aus"
 				subheading={this.subheading}
-				onSubmit={this.onNext}
+				onSubmit={this.isValidState ? this.onNext : null}
 			>
 				<ItemsList
 					ItemRenderer={ProjectItemRenderer}

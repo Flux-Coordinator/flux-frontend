@@ -43,7 +43,7 @@ export default class ExportWizard extends React.Component<Props, State> {
 			});
 		} else {
 			// If it's the last step -> Send the data!
-			const rooms = [].concat.apply([], data.map(p => p.rooms));
+			const rooms = [].concat.apply([], data.map(p => (p.rooms: any)));
 			const measurements = [].concat.apply([], rooms.map(r => r.measurements));
 			const exportBody = measurements.map(m => ({
 				measurementId: m.measurementId
@@ -95,7 +95,7 @@ export default class ExportWizard extends React.Component<Props, State> {
 	}
 
 	render() {
-		let Step = this.state.steps[this.state.currentStep];
+		const Step = this.state.steps[this.state.currentStep];
 		return (
 			<Step
 				projects={this.state.projects}
