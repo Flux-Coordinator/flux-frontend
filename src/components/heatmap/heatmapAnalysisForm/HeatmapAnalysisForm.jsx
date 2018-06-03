@@ -73,8 +73,8 @@ export default class HeatmapAnalysisForm extends React.Component<Props, State> {
 		).value;
 		const uniformity = min / average;
 		const irregularity = min / max;
-		const uniformityRatio = 1 / uniformity;
-		const irregularityRatio = 1 / irregularity;
+		const uniformityRatio = uniformity > 0 ? 1 / uniformity : 0;
+		const irregularityRatio = uniformity > 0 ? 1 / irregularity : 0;
 		return {
 			numberOfReadings: numberOfReadings,
 			average: Math.round(average),
