@@ -18,6 +18,7 @@ describe("<HeatmapAnalysisForm />", () => {
 				heatmapData={heatmapData}
 				maxLuxValue={maxLuxValue}
 				heatmapMode={heatmapMode}
+				includeFilteredValues={true}
 			/>
 		);
 		expect(wrapper).toHaveLength(1);
