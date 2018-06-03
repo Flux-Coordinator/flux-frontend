@@ -1,19 +1,21 @@
 // @flow
 import * as React from "react";
-import Heatmap from "heatmapjs/build/heatmap.js";
+import Box from "grommet/components/Box";
+import Heatmap from "@flux-coordinator/heatmapjs";
+import ReactResizeDetector from "react-resize-detector";
+
+import HeatmapLegend from "./HeatmapLegend";
+import HeatmapTooltip from "./HeatmapTooltip";
+import HeatmapAnalysisForm from "../../components/heatmap/heatmapAnalysisForm/HeatmapAnalysisForm";
 import ReadingModel from "../../models/Reading";
 import AnchorModel from "../../models/Anchor";
 import HeatmapDataPoint from "../../models/HeatmapDataPoint";
 import HeatmapData from "../../models/HeatmapData";
-import { Positionable } from "../../types/Positionable";
-import ReactResizeDetector from "react-resize-detector";
 import Transformation from "../../models/Transformation";
-import Box from "grommet/components/Box";
-import { PLACEHOLDER_IMAGE, EXAMPLE_IMAGE } from "../../images/ImagesBase64";
-import HeatmapLegend from "./HeatmapLegend";
-import HeatmapTooltip from "./HeatmapTooltip";
 import BrowserPosition from "../../models/BrowserPosition";
-import HeatmapAnalysisForm from "../../components/heatmap/heatmapAnalysisForm/HeatmapAnalysisForm";
+import { Positionable } from "../../types/Positionable";
+import { PLACEHOLDER_IMAGE, EXAMPLE_IMAGE } from "../../images/ImagesBase64";
+
 import type { ConfigObject, Container, HeatmapMode } from "../../types/Heatmap";
 import type { AllInputTypes } from "../../utils/InputHandler";
 

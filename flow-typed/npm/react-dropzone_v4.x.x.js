@@ -1,10 +1,10 @@
-// flow-typed signature: 0f438b01cd242c8c36dd2104174ed78c
-// flow-typed version: 36aaaa262e/react-dropzone_v4.x.x/flow_>=v0.53.x
+// flow-typed signature: 9ac31766c640244f765f8c181e0159b0
+// flow-typed version: 80022b0008/react-dropzone_v4.x.x/flow_>=v0.53.x
 
 declare module "react-dropzone" {
 	declare type ChildrenProps = {
 		draggedFiles: Array<File>,
-		acceptedFile: Array<File>,
+		acceptedFiles: Array<File>,
 		rejectedFiles: Array<File>,
 		isDragActive: boolean,
 		isDragAccept: boolean,
