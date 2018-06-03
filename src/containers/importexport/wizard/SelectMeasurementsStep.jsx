@@ -112,7 +112,8 @@ export default class SelectMeasurementsStep extends React.Component<
 		return (
 			<WizardStep
 				heading="Schritt 3: Wählen Sie die Messungen aus"
-				onNext={() => this.props.onNext(this.state.projects)}
+				onSubmit={() => this.props.onNext(this.state.projects)}
+				isLastStep
 			>
 				{projects && projects.map(p => this.RenderProject(p))}
 			</WizardStep>

@@ -80,7 +80,7 @@ export default class SelectRoomsStep extends React.Component<StepProps, State> {
 		return (
 			<WizardStep
 				heading="Schritt 2: Wählen Sie die Räume aus"
-				onNext={() => this.props.onNext(this.state.selectedProjects)}
+				onSubmit={() => this.props.onNext(this.state.selectedProjects)}
 			>
 				{projects &&
 					projects.map(p => (

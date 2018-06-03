@@ -26,7 +26,8 @@ export default class SelectProjectsStep extends React.Component<
 		selected: null
 	};
 
-	subheading: string = "Sie können mit CTRL + Mausclick mehrere Projekte auswählen.";
+	subheading: string =
+		"Sie können mit CTRL + Mausclick mehrere Projekte auswählen.";
 
 	onNext = () => {
 		const selected = this.state.selected;
@@ -60,7 +61,7 @@ export default class SelectProjectsStep extends React.Component<
 			<WizardStep
 				heading="Schritt 1: Wählen Sie die Projekte aus"
 				subheading={this.subheading}
-				onNext={this.onNext}
+				onSubmit={this.onNext}
 			>
 				<ItemsList
 					ItemRenderer={ProjectItemRenderer}
