@@ -1,5 +1,6 @@
 // @flow
 import * as React from "react";
+import Heading from "grommet/components/Heading";
 
 import WizardStep from "./WizardStep";
 import ItemsList from "./../../../components/list/ItemsList";
@@ -88,5 +89,9 @@ export default class SelectProjectsStep extends React.Component<
 }
 
 function ProjectItemRenderer({ item }: { item: Project }) {
-	return <div className="custom-list-anchor">{item.name}</div>;
+	return (
+		<Heading className="custom-list-anchor" tag="h4">
+			{item.name}
+		</Heading>
+	);
 }

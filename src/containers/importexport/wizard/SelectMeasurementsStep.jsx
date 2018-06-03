@@ -132,7 +132,11 @@ export default class SelectMeasurementsStep extends React.Component<
 }
 
 function MeasurementItemRenderer({ item }: { item: Measurement }) {
-	return <div className="custom-list-anchor">{item.description}</div>;
+	return (
+		<Heading className="custom-list-anchor" tag="h4">
+			{item.name}
+		</Heading>
+	);
 }
 
 function getItemsFromArrayByIndex<T>(
