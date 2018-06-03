@@ -15,7 +15,7 @@ type Props = {
 
 export default function HeatmapConfigForm({ configObject, onChange }: Props) {
 	return (
-		<Form heading="Heatmap bearbeiten">
+		<Form>
 			<FormFields>
 				<fieldset>
 					<FormField label="Radius (in Millimeter)">

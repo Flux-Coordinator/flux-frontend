@@ -15,7 +15,7 @@ type Props = {
 
 export default function HeatmapModeForm({ heatmapMode, onChange }: Props) {
 	return (
-		<Form heading="Modi aktivieren">
+		<Form>
 			<FormFields>
 				<fieldset>
 					<FormField>
