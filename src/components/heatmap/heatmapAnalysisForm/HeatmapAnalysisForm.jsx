@@ -112,6 +112,7 @@ export default class HeatmapAnalysisForm extends React.Component<Props, State> {
 							help="(Zu hohe Werte werden auf den oben festgelegten Maximalwert herabgesetzt.)"
 						>
 							<CheckBox
+								disabled={this.props.heatmapMode !== "DEFAULT"}
 								name="includeFilteredValues"
 								checked={this.props.includeFilteredValues}
 								onChange={inputHandler(this.props.onChange)}
