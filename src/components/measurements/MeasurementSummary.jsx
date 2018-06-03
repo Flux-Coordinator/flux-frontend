@@ -120,8 +120,15 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 								heatmapMode={this.state.heatmapMode}
 							/>
 							<Box basis="medium" flex pad={{ horizontal: "medium" }}>
+								<Heading tag="h3" margin="none" pad="none">
+									Einstellungen
+								</Heading>
+								<HeatmapModeForm
+									heatmapMode={this.state.heatmapMode}
+									onChange={this.handleValueChange}
+								/>
 								<Accordion active={0}>
-									<AccordionPanel heading="Transformation">
+									<AccordionPanel heading="Heatmap transformieren">
 										<TransformationForm
 											transformation={
 												this.state.currentMeasurement.transformation
@@ -130,13 +137,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 											onChange={this.handleTransformationChange}
 										/>
 									</AccordionPanel>
-									<AccordionPanel heading="Heatmap Modi">
-										<HeatmapModeForm
-											heatmapMode={this.state.heatmapMode}
-											onChange={this.handleValueChange}
-										/>
-									</AccordionPanel>
-									<AccordionPanel heading="Konfiguration">
+									<AccordionPanel heading="Heatmap konfigurieren">
 										<HeatmapConfigForm
 											configObject={this.state.configObject}
 											onChange={this.handleHeatmapConfigChange}
