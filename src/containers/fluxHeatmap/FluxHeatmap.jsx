@@ -12,7 +12,7 @@ import Box from "grommet/components/Box";
 import Heading from "grommet/components/Heading";
 import Table from "grommet/components/Table";
 import TableRow from "grommet/components/TableRow";
-import { PLACEHOLDER_IMAGE, EXAMPLE_IMAGE } from "../../images/ImagesBase64";
+import { PLACEHOLDER_IMAGE } from "../../images/ImagesBase64";
 import HeatmapLegend from "./HeatmapLegend";
 import HeatmapTooltip from "./HeatmapTooltip";
 import BrowserPosition from "../../models/BrowserPosition";
@@ -314,7 +314,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	render() {
 		let { backgroundImage } = this.props;
 		if (!backgroundImage) {
-			backgroundImage = EXAMPLE_IMAGE;
+			backgroundImage = PLACEHOLDER_IMAGE;
 		}
 
 		return (
