@@ -27,7 +27,9 @@ type State = {
 	min: number,
 	max: number,
 	uniformity: number,
-	irregularity: number
+	irregularity: number,
+	uniformityRatio: number,
+	irregularityRatio: number
 };
 
 export default class HeatmapAnalysisForm extends React.Component<Props, State> {
@@ -37,7 +39,9 @@ export default class HeatmapAnalysisForm extends React.Component<Props, State> {
 		min: 0,
 		max: 0,
 		uniformity: 0,
-		irregularity: 0
+		irregularity: 0,
+		uniformityRatio: 0,
+		irregularityRatio: 0
 	};
 
 	static getDerivedStateFromProps(nextProps: Props, prevState: State) {
@@ -69,13 +73,17 @@ export default class HeatmapAnalysisForm extends React.Component<Props, State> {
 		).value;
 		const uniformity = min / average;
 		const irregularity = min / max;
+		const uniformityRatio = 1 / uniformity;
+		const irregularityRatio = 1 / irregularity;
 		return {
 			numberOfReadings: numberOfReadings,
 			average: Math.round(average),
 			min: Math.floor(min),
 			max: Math.ceil(max),
 			uniformity: Math.round(uniformity * 100) / 100,
-			irregularity: Math.round(irregularity * 100) / 100
+			irregularity: Math.round(irregularity * 100) / 100,
+			uniformityRatio: Math.round(uniformityRatio * 100) / 100,
+			irregularityRatio: Math.round(irregularityRatio * 100) / 100
 		};
 	}
 
@@ -86,7 +94,9 @@ export default class HeatmapAnalysisForm extends React.Component<Props, State> {
 			min: 0,
 			max: 0,
 			uniformity: 0,
-			irregularity: 0
+			irregularity: 0,
+			uniformityRatio: 0,
+			irregularityRatio: 0
 		};
 	}
 
@@ -154,12 +164,16 @@ export default class HeatmapAnalysisForm extends React.Component<Props, State> {
 								/>
 								<Value
 									label="Gleichmässigkeit Emin/Em"
-									value={this.state.uniformity}
+									value={`1:${this.state.uniformityRatio}${"\xa0"}(${
+										this.state.uniformity
+									})`}
 									size="small"
 								/>
 								<Value
 									label="Ungleichmässigkeit Emin/Emax"
-									value={this.state.irregularity}
+									value={`1:${this.state.irregularityRatio}${"\xa0"}(${
+										this.state.irregularity
+									})`}
 									size="small"
 								/>
 							</Box>
