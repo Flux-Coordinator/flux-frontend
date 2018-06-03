@@ -98,7 +98,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 		}
 
 		return (
-			<Section margin="none">
+			<Section pad="none">
 				<Header size="small">
 					<Heading margin="none" tag="h3">
 						Aktuelle Messung ({this.props.currentMeasurement.name})

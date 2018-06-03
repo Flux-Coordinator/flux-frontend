@@ -21,7 +21,9 @@ type Props = {
 
 export default function Room({ match, room, onDeleteMeasurement }: Props) {
 	return (
-		<Article pad="medium">
+		<Article
+			pad={{ horizontal: "medium", vertical: "medium", between: "medium" }}
+		>
 			<Section pad="none">
 				<Heading tag="h2" margin="none" pad="medium">
 					{room.name}
@@ -34,7 +36,7 @@ export default function Room({ match, room, onDeleteMeasurement }: Props) {
 					<MeasurementContainer room={room} match={match} />
 				)}
 			/>
-			<Section>
+			<Section pad="none">
 				<ItemListHeader
 					header="Messungen"
 					path={`${match.url}/editMeasurement`}
