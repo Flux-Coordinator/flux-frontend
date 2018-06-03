@@ -315,35 +315,39 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		}
 
 		return (
-			<Box size="xlarge">
-				<HeatmapTooltip
-					getValueCallback={this.getValueForTooltip}
-					heatmapMode={this.props.heatmapMode}
-				>
-					<div
-						ref={heatmapContainer => (this.heatmapContainer = heatmapContainer)}
+			<Box size="xlarge" pad={{ between: "medium" }}>
+				<Box>
+					<HeatmapTooltip
+						getValueCallback={this.getValueForTooltip}
+						heatmapMode={this.props.heatmapMode}
 					>
-						<img
-							ref={imgElement => (this.imgElement = imgElement)}
-							onLoad={this.setContainerState}
-							src={backgroundImage}
-							alt={"heatmap"}
-						/>
-						<ReactResizeDetector
-							skipOnMount
-							handleWidth
-							handleHeight
-							onResize={this.setContainerState}
-						/>
-					</div>
-				</HeatmapTooltip>
-				{this.state.configObject.gradient &&
-					this.props.heatmapMode !== "ANCHORS" && (
-						<HeatmapLegend
-							heatmapGradient={this.state.configObject.gradient}
-							heatmapData={this.state.heatmapData}
-						/>
-					)}
+						<div
+							ref={heatmapContainer =>
+								(this.heatmapContainer = heatmapContainer)
+							}
+						>
+							<img
+								ref={imgElement => (this.imgElement = imgElement)}
+								onLoad={this.setContainerState}
+								src={backgroundImage}
+								alt={"heatmap"}
+							/>
+							<ReactResizeDetector
+								skipOnMount
+								handleWidth
+								handleHeight
+								onResize={this.setContainerState}
+							/>
+						</div>
+					</HeatmapTooltip>
+					{this.state.configObject.gradient &&
+						this.props.heatmapMode !== "ANCHORS" && (
+							<HeatmapLegend
+								heatmapGradient={this.state.configObject.gradient}
+								heatmapData={this.state.heatmapData}
+							/>
+						)}
+				</Box>
 				<Box>
 					<HeatmapAnalysisForm
 						heatmapData={this.state.heatmapData}
