@@ -5,6 +5,7 @@ import Box from "grommet/components/Box";
 import FormField from "grommet/components/FormField";
 import FormFields from "grommet/components/FormFields";
 import NumberInput from "grommet/components/NumberInput";
+import CheckBox from "grommet/components/CheckBox";
 import Value from "grommet/components/Value";
 import { inputHandler } from "../../../utils/InputHandler";
 import HeatmapData from "../../../models/HeatmapData";
@@ -14,6 +15,7 @@ import type { HeatmapMode } from "../../../types/Heatmap";
 type Props = {
 	heatmapData: HeatmapData,
 	maxLuxValue: number,
+	includeFilteredValues: boolean,
 	heatmapMode: HeatmapMode,
 	onChange: (string, AllInputTypes) => void
 };
@@ -40,13 +42,14 @@ export default class HeatmapAnalysisForm extends React.Component<Props, State> {
 	static getDerivedStateFromProps(nextProps: Props, prevState: State) {
 		if (
 			nextProps.heatmapData.data &&
-			nextProps.heatmapData.data.length !== prevState.numberOfReadings &&
+			(nextProps.heatmapData.data.length !== prevState.numberOfReadings ||
+				nextProps.maxLuxValue !== prevState.max) &&
 			nextProps.heatmapMode === "DEFAULT"
 		) {
 			if (nextProps.heatmapData.data.length !== 0) {
 				return HeatmapAnalysisForm.calculateHeatmapAnalysis(nextProps);
 			} else {
-				return HeatmapAnalysisForm.getDefaultHeatmapAnalysis();
+				return HeatmapAnalysisForm.getEmptyHeatmapAnalysis();
 			}
 		}
 		return null;
@@ -75,7 +78,7 @@ export default class HeatmapAnalysisForm extends React.Component<Props, State> {
 		};
 	}
 
-	static getDefaultHeatmapAnalysis(): State {
+	static getEmptyHeatmapAnalysis(): State {
 		return {
 			numberOfReadings: 0,
 			average: 0,
@@ -102,6 +105,17 @@ export default class HeatmapAnalysisForm extends React.Component<Props, State> {
 								min={0}
 								step={1}
 								onChange={inputHandler(this.props.onChange)}
+							/>
+						</FormField>
+						<FormField
+							label="Gefilterte Werte miteinbeziehen"
+							help="(Zu hohe Werte werden auf den oben festgelegten Maximalwert herabgesetzt.)"
+						>
+							<CheckBox
+								name="includeFilteredValues"
+								checked={this.props.includeFilteredValues}
+								onChange={inputHandler(this.props.onChange)}
+								toggle={true}
 							/>
 						</FormField>
 						<Box direction="row" pad={{ between: "medium" }}>

@@ -32,7 +32,8 @@ type State = {
 	container: Container,
 	configObject: ConfigObject,
 	heatmapData: HeatmapData,
-	maxLuxValue: number
+	maxLuxValue: number,
+	includeFilteredValues: boolean
 };
 
 export default class FluxHeatmap extends React.Component<Props, State> {
@@ -68,7 +69,8 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		},
 		configObject: {},
 		heatmapData: new HeatmapData(0, 1, []),
-		maxLuxValue: 0
+		maxLuxValue: 0,
+		includeFilteredValues: true
 	};
 
 	heatmap: Heatmap;
@@ -115,7 +117,8 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			}
 			if (
 				this.props.readings.length !== this.numberOfReadings ||
-				prevState.maxLuxValue !== this.state.maxLuxValue
+				prevState.maxLuxValue !== this.state.maxLuxValue ||
+				prevState.includeFilteredValues !== this.state.includeFilteredValues
 			) {
 				this.numberOfReadings = this.props.readings.length;
 				this.setData();
@@ -184,6 +187,10 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		if (dataPoints.length === 0) {
 			return 0;
 		}
+		const maxLuxValue = this.state.maxLuxValue;
+		if (maxLuxValue > 0 && this.state.includeFilteredValues) {
+			return maxLuxValue;
+		}
 		return Math.max(...dataPoints.map(d => d.value));
 	};
 
@@ -191,7 +198,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		elements: Positionable[],
 		fixedValue: boolean
 	): HeatmapDataPoint[] => {
-		const { container, maxLuxValue } = this.state;
+		const { container, maxLuxValue, includeFilteredValues } = this.state;
 		const { transformation, heatmapMode } = this.props;
 		const containerScaleFactor = container.width / container.originalWidth;
 		return elements.reduce(function(transformedReadings, element) {
@@ -218,6 +225,8 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 					value <= maxLuxValue
 				) {
 					transformedReadings.push(new HeatmapDataPoint(x, y, value));
+				} else if (includeFilteredValues) {
+					transformedReadings.push(new HeatmapDataPoint(x, y, maxLuxValue));
 				}
 			}
 			return transformedReadings;
@@ -325,6 +334,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 					<HeatmapAnalysisForm
 						heatmapData={this.state.heatmapData}
 						maxLuxValue={this.state.maxLuxValue}
+						includeFilteredValues={this.state.includeFilteredValues}
 						heatmapMode={this.props.heatmapMode}
 						onChange={this.handleValueChange}
 					/>
