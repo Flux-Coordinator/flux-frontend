@@ -53,7 +53,7 @@ export default function WizardStep({
 				</Heading>
 			</Box>
 			<Box pad={{ vertical: "medium" }}>{children}</Box>
-			<Box align={"end"}>{button}</Box>
+			<Box align="end">{button}</Box>
 		</Section>
 	);
 }
