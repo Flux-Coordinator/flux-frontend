@@ -1,14 +1,18 @@
 // @flow
 import * as React from "react";
+import Box from "grommet/components/Box";
 import Section from "grommet/components/Section";
 import Header from "grommet/components/Header";
 import Title from "grommet/components/Title";
 import Button from "grommet/components/Button";
 import Dropzone from "react-dropzone";
+import DocumentUploadIcon from "grommet/components/icons/base/DocumentUpload";
+
 import type { DZFile as File } from "../../types/File";
 
 type Props = {
-	onUpload: (file: ?File) => void
+	onUpload: (file: ?File) => void,
+	isLoading: boolean
 };
 
 type State = {
@@ -37,6 +41,10 @@ export default class Import extends React.Component<Props, State> {
 	};
 
 	render() {
+		let uploadHandler;
+		if (!this.props.isLoading) {
+			uploadHandler = () => this.props.onUpload(this.state.file);
+		}
 		return (
 			<Section>
 				<Header size="small">
@@ -47,16 +55,23 @@ export default class Import extends React.Component<Props, State> {
 					multiple={false}
 					accept="application/json"
 				>
-					<p>
-						Ziehen Sie die Datei mit den Daten, die Sie importieren möchten in
-						dieses Feld.
-					</p>
+					Ziehen Sie die Datei mit den Daten, die Sie importieren möchten in
+					dieses Feld.
 				</Dropzone>
 				{this.state.file && (
-					<Button
-						label={`${this.state.file.name} hochladen`}
-						onClick={() => this.props.onUpload(this.state.file)}
-					/>
+					<Box pad={{ vertical: "small", between: "small" }}>
+						<Box>
+							<strong>Datei</strong>
+							<br />
+							{this.state.file.name}
+						</Box>
+						<Button
+							icon={<DocumentUploadIcon />}
+							primary
+							label={`Hochladen`}
+							onClick={uploadHandler}
+						/>
+					</Box>
 				)}
 			</Section>
 		);
