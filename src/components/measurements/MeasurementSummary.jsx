@@ -124,7 +124,14 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 								responsive={false}
 							>
 								<span>Vermesser:</span>
-								<span>{this.props.currentMeasurement.creator}</span>
+								{this.props.currentMeasurement.creator != null &&
+								this.props.currentMeasurement.creator !== "" ? (
+									<span>{this.props.currentMeasurement.creator}</span>
+								) : (
+									<span>
+										<em>unbekannt</em>
+									</span>
+								)}
 							</Box>
 							<Box
 								direction="row"
@@ -132,9 +139,23 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 								responsive={false}
 							>
 								<span>Zeitraum:</span>
-								<Timestamp value={this.props.currentMeasurement.startDate} />
-								<FormNextLink size="small" />
-								<Timestamp value={this.props.currentMeasurement.endDate} />
+								{this.props.currentMeasurement.startDate != null ? (
+									<Box
+										direction="row"
+										pad={{ between: "small" }}
+										responsive={false}
+									>
+										<Timestamp
+											value={this.props.currentMeasurement.startDate}
+										/>
+										<FormNextLink size="small" />
+										<Timestamp value={this.props.currentMeasurement.endDate} />
+									</Box>
+								) : (
+									<span>
+										<em>nicht verfügbar</em>
+									</span>
+								)}
 							</Box>
 						</Box>
 					</Box>
