@@ -11,6 +11,7 @@ type Props = {};
 
 type State = {
 	serverState: ServerState,
+	sensorConnectionState: ConnectionState,
 	activeMeasurement: ?Measurement
 };
 
@@ -24,6 +25,7 @@ export default class DashboardContainer extends React.Component<Props, State> {
 			connectionState: "UNKNOWN",
 			uri: axios.defaults.baseURL
 		},
+		sensorConnectionState: "UNKNOWN",
 		activeMeasurement: undefined
 	};
 
@@ -80,6 +82,7 @@ export default class DashboardContainer extends React.Component<Props, State> {
 		return (
 			<Dashboard
 				serverState={this.state.serverState}
+				sensorConnectionState={this.state.sensorConnectionState}
 				activeMeasurement={this.state.activeMeasurement}
 			/>
 		);

@@ -12,10 +12,11 @@ import Card from "grommet/components/Card";
 import ContentBox from "./../contentBox/ContentBox";
 import Measurement from "./../../models/Measurement";
 
-import type { ServerState } from "./../../types/ServerState";
+import type { ConnectionState, ServerState } from "./../../types/ServerState";
 
 type Props = {
 	serverState: ServerState,
+	sensorConnectionState: ConnectionState,
 	activeMeasurement?: ?Measurement
 };
 
@@ -126,18 +127,34 @@ function ActiveMeasurement({
 	);
 }
 
-function SensorStatus({ sensorReachable }: { sensorReachable: boolean }) {
-	let description = (
-		<Box direction="row">
-			<Status size="small" value="disabled" /> Nicht verfügbar
-		</Box>
-	);
-	if (sensorReachable) {
-		description = (
-			<Box direction="row">
-				<Status size="small" value="ok" /> Bereit
-			</Box>
-		);
+function SensorStatus({
+	sensorConnectionState
+}: {
+	sensorConnectionState: ConnectionState
+}) {
+	let description: React.Node;
+	switch (sensorConnectionState) {
+		case "CONNECTED":
+			description = (
+				<Box direction="row">
+					<Status size="small" value="ok" /> Bereit
+				</Box>
+			);
+			break;
+		case "DISCONNECTED":
+			description = (
+				<Box direction="row">
+					<Status size="small" value="disabled" /> Nicht verfügbar
+				</Box>
+			);
+			break;
+		default:
+			description = (
+				<Box direction="row">
+					<Status size="small" value="unknown" /> Unbekannt
+				</Box>
+			);
+			break;
 	}
 
 	return (
@@ -147,7 +164,11 @@ function SensorStatus({ sensorReachable }: { sensorReachable: boolean }) {
 	);
 }
 
-export default function Dashboard({ serverState, activeMeasurement }: Props) {
+export default function Dashboard({
+	serverState,
+	sensorConnectionState,
+	activeMeasurement
+}: Props) {
 	return (
 		<ContentBox heading="Dashboard">
 			<Box>
@@ -159,7 +180,7 @@ export default function Dashboard({ serverState, activeMeasurement }: Props) {
 						<ServerStatus serverState={serverState} />
 					</Tile>
 					<Tile>
-						<SensorStatus sensorReachable={false} />
+						<SensorStatus sensorConnectionState={sensorConnectionState} />
 					</Tile>
 					<Tile>
 						<ActiveMeasurement activeMeasurement={activeMeasurement} />
