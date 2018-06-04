@@ -3,6 +3,7 @@ import * as React from "react";
 import Heading from "grommet/components/Heading";
 import Section from "grommet/components/Section";
 import Article from "grommet/components/Article";
+import Paragraph from "grommet/components/Paragraph";
 // eslint-disable-next-line
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
@@ -21,12 +22,14 @@ type Props = {
 
 export default function Room({ match, room, onDeleteMeasurement }: Props) {
 	return (
-		<Article pad="medium">
+		<Article
+			pad={{ horizontal: "medium", vertical: "medium", between: "medium" }}
+		>
 			<Section pad="none">
 				<Heading tag="h2" margin="none" pad="medium">
 					{room.name}
 				</Heading>
-				<Heading tag="h4">{room.description}</Heading>
+				<Paragraph margin="none">{room.description}</Paragraph>
 			</Section>
 			<Route
 				path={`${match.url}/measurements/:measurementId`}
@@ -34,7 +37,7 @@ export default function Room({ match, room, onDeleteMeasurement }: Props) {
 					<MeasurementContainer room={room} match={match} />
 				)}
 			/>
-			<Section>
+			<Section pad="none">
 				<ItemListHeader
 					header="Messungen"
 					path={`${match.url}/editMeasurement`}

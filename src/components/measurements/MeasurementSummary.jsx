@@ -2,6 +2,9 @@
 import * as React from "react";
 import Header from "grommet/components/Header";
 import Heading from "grommet/components/Heading";
+import Paragraph from "grommet/components/Paragraph";
+import Timestamp from "grommet/components/Timestamp";
+import FormNextLink from "grommet/components/icons/base/FormNextLink";
 import Box from "grommet/components/Box";
 import Accordion from "grommet/components/Accordion";
 import AccordionPanel from "grommet/components/AccordionPanel";
@@ -39,8 +42,8 @@ type State = {
 export default class MeasurementSummary extends React.Component<Props, State> {
 	state = {
 		configObject: {
-			radius: 1000,
-			maxOpacity: 0.5,
+			radius: 500,
+			maxOpacity: 0.75,
 			minOpacity: 0,
 			blur: 0.75
 		},
@@ -98,17 +101,66 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 		}
 
 		return (
-			<Section margin="none">
-				<Header size="small">
-					<Heading margin="none" tag="h3">
-						Aktuelle Messung ({this.props.currentMeasurement.name})
-					</Heading>
-					<Button icon={icon} onClick={this.props.onStartMeasurement} />
-				</Header>
+			<Section
+				pad={{ horizontal: "none", vertical: "none", between: "medium" }}
+			>
 				<Box>
 					<Header size="small">
-						<Heading tag="h3">Grundriss</Heading>
+						<Heading margin="none" tag="h3">
+							Aktuelle Messung ({this.props.currentMeasurement.name})
+						</Heading>
+						<Button icon={icon} onClick={this.props.onStartMeasurement} />
 					</Header>
+					<Box direction="row" pad={{ between: "medium" }} responsive wrap>
+						<Box size="xlarge">
+							<Paragraph margin="none">
+								{this.props.currentMeasurement.description}
+							</Paragraph>
+						</Box>
+						<Box>
+							<Box
+								direction="row"
+								pad={{ between: "small" }}
+								responsive={false}
+							>
+								<span>Vermesser:</span>
+								{this.props.currentMeasurement.creator != null &&
+								this.props.currentMeasurement.creator !== "" ? (
+									<span>{this.props.currentMeasurement.creator}</span>
+								) : (
+									<span>
+										<em>unbekannt</em>
+									</span>
+								)}
+							</Box>
+							<Box
+								direction="row"
+								pad={{ between: "small" }}
+								responsive={false}
+							>
+								<span>Zeitraum:</span>
+								{this.props.currentMeasurement.startDate != null ? (
+									<Box
+										direction="row"
+										pad={{ between: "small" }}
+										responsive={false}
+									>
+										<Timestamp
+											value={this.props.currentMeasurement.startDate}
+										/>
+										<FormNextLink size="small" />
+										<Timestamp value={this.props.currentMeasurement.endDate} />
+									</Box>
+								) : (
+									<span>
+										<em>nicht verfügbar</em>
+									</span>
+								)}
+							</Box>
+						</Box>
+					</Box>
+				</Box>
+				<Box>
 					{this.props.currentMeasurement.readings && (
 						<Box direction="row" responsive wrap>
 							<FluxHeatmap
@@ -120,8 +172,15 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 								heatmapMode={this.state.heatmapMode}
 							/>
 							<Box basis="medium" flex pad={{ horizontal: "medium" }}>
+								<Heading tag="h3" margin="none" pad="none">
+									Einstellungen
+								</Heading>
+								<HeatmapModeForm
+									heatmapMode={this.state.heatmapMode}
+									onChange={this.handleValueChange}
+								/>
 								<Accordion active={0}>
-									<AccordionPanel heading="Transformation">
+									<AccordionPanel heading="Heatmap transformieren">
 										<TransformationForm
 											transformation={
 												this.state.currentMeasurement.transformation
@@ -130,13 +189,7 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 											onChange={this.handleTransformationChange}
 										/>
 									</AccordionPanel>
-									<AccordionPanel heading="Heatmap Modi">
-										<HeatmapModeForm
-											heatmapMode={this.state.heatmapMode}
-											onChange={this.handleValueChange}
-										/>
-									</AccordionPanel>
-									<AccordionPanel heading="Konfiguration">
+									<AccordionPanel heading="Heatmap konfigurieren">
 										<HeatmapConfigForm
 											configObject={this.state.configObject}
 											onChange={this.handleHeatmapConfigChange}

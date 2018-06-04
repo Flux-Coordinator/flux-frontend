@@ -8,7 +8,7 @@ import Box from "grommet/components/Box";
 import Button from "grommet/components/Button";
 
 type Props = {
-	heading: React.Node,
+	heading?: React.Node,
 	children: React.Node,
 	onSubmit?: () => void
 };
@@ -25,17 +25,21 @@ export default function Form({ heading, children, onSubmit }: Props) {
 				}
 			}}
 		>
-			<Header justify="between">
-				<Heading tag="h2" margin="none" pad="medium">
-					{heading}
-				</Heading>
-			</Header>
-			<Box>{children}</Box>
-			{onSubmit && (
-				<Footer pad={{ vertical: "medium" }}>
-					<Button label="Übermitteln" type="submit" primary />
-				</Footer>
-			)}
+			<Box pad={{ between: "medium" }}>
+				{heading && (
+					<Header justify="between">
+						<Heading tag="h2" margin="none" pad="medium">
+							{heading}
+						</Heading>
+					</Header>
+				)}
+				<Box>{children}</Box>
+				{onSubmit && (
+					<Footer>
+						<Button label="Übermitteln" type="submit" primary />
+					</Footer>
+				)}
+			</Box>
 		</GrommetForm>
 	);
 }

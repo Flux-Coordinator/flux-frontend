@@ -1,6 +1,9 @@
 // @flow
 import * as React from "react";
 import Box from "grommet/components/Box";
+import Heading from "grommet/components/Heading";
+import Table from "grommet/components/Table";
+import TableRow from "grommet/components/TableRow";
 import Heatmap from "@flux-coordinator/heatmapjs";
 import ReactResizeDetector from "react-resize-detector";
 
@@ -14,7 +17,7 @@ import HeatmapData from "../../models/HeatmapData";
 import Transformation from "../../models/Transformation";
 import BrowserPosition from "../../models/BrowserPosition";
 import { Positionable } from "../../types/Positionable";
-import { PLACEHOLDER_IMAGE, EXAMPLE_IMAGE } from "../../images/ImagesBase64";
+import { PLACEHOLDER_IMAGE } from "../../images/ImagesBase64";
 
 import type { ConfigObject, Container, HeatmapMode } from "../../types/Heatmap";
 import type { AllInputTypes } from "../../utils/InputHandler";
@@ -34,7 +37,8 @@ type State = {
 	container: Container,
 	configObject: ConfigObject,
 	heatmapData: HeatmapData,
-	maxLuxValue: number
+	maxLuxValue: number,
+	includeFilteredValues: boolean
 };
 
 export default class FluxHeatmap extends React.Component<Props, State> {
@@ -44,8 +48,8 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		backgroundImage: PLACEHOLDER_IMAGE,
 		configObject: {
 			absolute: true,
-			radius: 1000,
-			maxOpacity: 0.5,
+			radius: 500,
+			maxOpacity: 0.75,
 			minOpacity: 0,
 			blur: 0.75,
 			gradient: {
@@ -70,7 +74,8 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		},
 		configObject: {},
 		heatmapData: new HeatmapData(0, 1, []),
-		maxLuxValue: 0
+		maxLuxValue: 0,
+		includeFilteredValues: true
 	};
 
 	heatmap: Heatmap;
@@ -117,7 +122,8 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 			}
 			if (
 				this.props.readings.length !== this.numberOfReadings ||
-				prevState.maxLuxValue !== this.state.maxLuxValue
+				prevState.maxLuxValue !== this.state.maxLuxValue ||
+				prevState.includeFilteredValues !== this.state.includeFilteredValues
 			) {
 				this.numberOfReadings = this.props.readings.length;
 				this.setData();
@@ -186,6 +192,14 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		if (dataPoints.length === 0) {
 			return 0;
 		}
+		const maxLuxValue = this.state.maxLuxValue;
+		if (
+			maxLuxValue > 0 &&
+			this.state.includeFilteredValues &&
+			this.props.heatmapMode === "DEFAULT"
+		) {
+			return maxLuxValue;
+		}
 		return Math.max(...dataPoints.map(d => d.value));
 	};
 
@@ -193,7 +207,7 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 		elements: Positionable[],
 		fixedValue: boolean
 	): HeatmapDataPoint[] => {
-		const { container, maxLuxValue } = this.state;
+		const { container, maxLuxValue, includeFilteredValues } = this.state;
 		const { transformation, heatmapMode } = this.props;
 		const containerScaleFactor = container.width / container.originalWidth;
 		return elements.reduce(function(transformedReadings, element) {
@@ -209,17 +223,33 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 						transformation.yOffset) *
 						containerScaleFactor
 				);
-			let value = FIXED_HEATMAP_VALUE;
-			if (!fixedValue && element.getValue != null) {
-				value = element.getValue();
-			}
 			if (x >= 0 && y >= 0 && x <= container.width && y <= container.height) {
-				if (
-					heatmapMode !== "DEFAULT" ||
-					maxLuxValue === 0 ||
-					value <= maxLuxValue
-				) {
-					transformedReadings.push(new HeatmapDataPoint(x, y, value));
+				let value = 0;
+				if (element.getValue != null) {
+					value = element.getValue();
+				}
+				if (value > 0 || heatmapMode === "ANCHORS") {
+					if (
+						(heatmapMode !== "DEFAULT" && heatmapMode !== "COVERAGE") ||
+						maxLuxValue === 0 ||
+						value <= maxLuxValue
+					) {
+						transformedReadings.push(
+							new HeatmapDataPoint(
+								x,
+								y,
+								fixedValue ? FIXED_HEATMAP_VALUE : value
+							)
+						);
+					} else if (includeFilteredValues) {
+						transformedReadings.push(
+							new HeatmapDataPoint(
+								x,
+								y,
+								fixedValue ? FIXED_HEATMAP_VALUE : maxLuxValue
+							)
+						);
+					}
 				}
 			}
 			return transformedReadings;
@@ -290,46 +320,78 @@ export default class FluxHeatmap extends React.Component<Props, State> {
 	render() {
 		let { backgroundImage } = this.props;
 		if (!backgroundImage) {
-			backgroundImage = EXAMPLE_IMAGE;
+			backgroundImage = PLACEHOLDER_IMAGE;
 		}
 
 		return (
-			<Box size="xlarge">
-				<HeatmapTooltip
-					getValueCallback={this.getValueForTooltip}
-					heatmapMode={this.props.heatmapMode}
-				>
-					<div
-						ref={heatmapContainer => (this.heatmapContainer = heatmapContainer)}
+			<Box size="xlarge" pad={{ between: "medium" }}>
+				<Box>
+					<HeatmapTooltip
+						getValueCallback={this.getValueForTooltip}
+						heatmapMode={this.props.heatmapMode}
 					>
-						<img
-							ref={imgElement => (this.imgElement = imgElement)}
-							onLoad={this.setContainerState}
-							src={backgroundImage}
-							alt={"heatmap"}
-						/>
-						<ReactResizeDetector
-							skipOnMount
-							handleWidth
-							handleHeight
-							onResize={this.setContainerState}
-						/>
-					</div>
-				</HeatmapTooltip>
-				{this.state.configObject.gradient &&
-					this.props.heatmapMode !== "ANCHORS" && (
-						<HeatmapLegend
-							heatmapGradient={this.state.configObject.gradient}
-							heatmapData={this.state.heatmapData}
-						/>
-					)}
+						<div
+							ref={heatmapContainer =>
+								(this.heatmapContainer = heatmapContainer)
+							}
+						>
+							<img
+								ref={imgElement => (this.imgElement = imgElement)}
+								onLoad={this.setContainerState}
+								src={backgroundImage}
+								alt={"heatmap"}
+							/>
+							<ReactResizeDetector
+								skipOnMount
+								handleWidth
+								handleHeight
+								onResize={this.setContainerState}
+							/>
+						</div>
+					</HeatmapTooltip>
+					{this.state.configObject.gradient &&
+						this.props.heatmapMode !== "ANCHORS" && (
+							<HeatmapLegend
+								heatmapGradient={this.state.configObject.gradient}
+								heatmapData={this.state.heatmapData}
+							/>
+						)}
+				</Box>
 				<Box>
 					<HeatmapAnalysisForm
 						heatmapData={this.state.heatmapData}
 						maxLuxValue={this.state.maxLuxValue}
+						includeFilteredValues={this.state.includeFilteredValues}
 						heatmapMode={this.props.heatmapMode}
 						onChange={this.handleValueChange}
 					/>
+				</Box>
+				<Box>
+					<Heading tag="h3">Pozyx Anchors</Heading>
+					{this.props.anchors.length > 0 ? (
+						<Table selectable>
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>X</th>
+									<th>Y</th>
+									<th>Z</th>
+								</tr>
+							</thead>
+							<tbody>
+								{this.props.anchors.map((anchor, i) => (
+									<TableRow key={i}>
+										<td>{anchor.networkId}</td>
+										<td>{anchor.position.xposition}</td>
+										<td>{anchor.position.yposition}</td>
+										<td>{anchor.position.zposition}</td>
+									</TableRow>
+								))}
+							</tbody>
+						</Table>
+					) : (
+						<span>Es sind keine Anchors für diese Messung konfiguriert.</span>
+					)}
 				</Box>
 			</Box>
 		);

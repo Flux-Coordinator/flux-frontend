@@ -14,42 +14,42 @@ type Props = {
 	onChange: (key: string, value: AllInputTypes) => void
 };
 
-export default function TransformationForm({
-	transformation,
-	onSubmit,
-	onChange
-}: Props) {
-	const { scaleFactor, xOffset, yOffset } = transformation;
-	return (
-		<Form heading="Heatmap transformieren" onSubmit={onSubmit}>
-			<FormFields>
-				<fieldset>
-					<FormField label="Skalierungsfaktor">
-						<NumberInput
-							name={"scaleFactor"}
-							value={scaleFactor}
-							step={0.001}
-							onChange={inputHandler(onChange)}
-						/>
-					</FormField>
-					<FormField label="Horizontaler Versatz (in Pixel)">
-						<NumberInput
-							name={"xOffset"}
-							value={xOffset}
-							step={1}
-							onChange={inputHandler(onChange)}
-						/>
-					</FormField>
-					<FormField label="Vertikaler Versatz (in Pixel)">
-						<NumberInput
-							name={"yOffset"}
-							value={yOffset}
-							step={1}
-							onChange={inputHandler(onChange)}
-						/>
-					</FormField>
-				</fieldset>
-			</FormFields>
-		</Form>
-	);
+export default class TransformationForm extends React.Component<Props> {
+	render() {
+		const { scaleFactor, xOffset, yOffset } = this.props.transformation;
+		const { onSubmit, onChange } = this.props;
+
+		return (
+			<Form onSubmit={onSubmit}>
+				<FormFields>
+					<fieldset>
+						<FormField label="Skalierungsfaktor">
+							<NumberInput
+								name={"scaleFactor"}
+								value={scaleFactor}
+								step={0.001}
+								onChange={inputHandler(onChange)}
+							/>
+						</FormField>
+						<FormField label="Horizontaler Versatz (in Pixel)">
+							<NumberInput
+								name={"xOffset"}
+								value={xOffset}
+								step={1}
+								onChange={inputHandler(onChange)}
+							/>
+						</FormField>
+						<FormField label="Vertikaler Versatz (in Pixel)">
+							<NumberInput
+								name={"yOffset"}
+								value={yOffset}
+								step={1}
+								onChange={inputHandler(onChange)}
+							/>
+						</FormField>
+					</fieldset>
+				</FormFields>
+			</Form>
+		);
+	}
 }
