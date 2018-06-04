@@ -111,10 +111,12 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 						</Heading>
 						<Button icon={icon} onClick={this.props.onStartMeasurement} />
 					</Header>
-					<Box direction="row" pad={{ between: "small" }} responsive wrap>
-						<Paragraph margin="none">
-							{this.props.currentMeasurement.description}
-						</Paragraph>
+					<Box direction="row" pad={{ between: "medium" }} responsive wrap>
+						<Box size="xlarge">
+							<Paragraph margin="none">
+								{this.props.currentMeasurement.description}
+							</Paragraph>
+						</Box>
 						<Box>
 							<Box
 								direction="row"
