@@ -18,7 +18,8 @@ type State = {
 export default class DashboardContainer extends React.Component<Props, State> {
 	isUnmounted = false;
 	source: CancelTokenSource = CancelToken.source();
-	interval: IntervalID;
+	fetchMeasurementTimeout: TimeoutID;
+	getSensorTimeout: TimeoutID;
 
 	state = {
 		serverState: {
@@ -27,11 +28,6 @@ export default class DashboardContainer extends React.Component<Props, State> {
 		},
 		sensorConnectionState: "UNKNOWN",
 		activeMeasurement: undefined
-	};
-
-	onUpdate = () => {
-		this.fetchActiveMeasurement();
-		this.getSensorActivity();
 	};
 
 	fetchActiveMeasurement = () => {
@@ -45,9 +41,11 @@ export default class DashboardContainer extends React.Component<Props, State> {
 					activeMeasurement = Measurement.fromObject(result.data);
 				}
 				this.updateState("CONNECTED", activeMeasurement);
+				this.resetFetchMeasurementTimeout();
 			})
 			.catch(error => {
 				this.updateState("DISCONNECTED", undefined);
+				this.resetFetchMeasurementTimeout();
 			});
 	};
 
@@ -60,9 +58,11 @@ export default class DashboardContainer extends React.Component<Props, State> {
 				if (result.status === 200) {
 					this.setState({ sensorConnectionState: "CONNECTED" });
 				}
+				this.resetGetSensorTimeout();
 			})
 			.catch(error => {
 				this.setState({ sensorConnectionState: "DISCONNECTED" });
+				this.resetGetSensorTimeout();
 			});
 	};
 
@@ -78,20 +78,36 @@ export default class DashboardContainer extends React.Component<Props, State> {
 		});
 	};
 
-	setInterval = (timeoutMilliseconds: number = 3000) => {
+	resetFetchMeasurementTimeout = (timeoutMilliseconds: number = 3000) => {
 		if (!this.isUnmounted) {
-			this.interval = setInterval(this.onUpdate, timeoutMilliseconds);
+			this.fetchMeasurementTimeout = setTimeout(
+				this.fetchActiveMeasurement,
+				timeoutMilliseconds
+			);
+		}
+	};
+
+	resetGetSensorTimeout = (timeoutMilliseconds: number = 3000) => {
+		if (!this.isUnmounted) {
+			this.getSensorTimeout = setTimeout(
+				this.getSensorActivity,
+				timeoutMilliseconds
+			);
 		}
 	};
 
 	componentDidMount() {
-		this.setInterval();
+		this.fetchActiveMeasurement();
+		this.getSensorActivity();
 	}
 
 	componentWillUnmount() {
 		this.isUnmounted = true;
-		if (this.interval) {
-			clearInterval(this.interval);
+		if (this.fetchMeasurementTimeout) {
+			clearTimeout(this.fetchMeasurementTimeout);
+		}
+		if (this.getSensorTimeout) {
+			clearTimeout(this.getSensorTimeout);
 		}
 		this.source.cancel();
 	}
