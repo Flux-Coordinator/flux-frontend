@@ -57,6 +57,8 @@ export default class DashboardContainer extends React.Component<Props, State> {
 			.then(result => {
 				if (result.status === 200) {
 					this.setState({ sensorConnectionState: "CONNECTED" });
+				} else if (result.status === 204) {
+					this.setState({ sensorConnectionState: "DISCONNECTED" });
 				}
 				this.resetGetSensorTimeout();
 			})
