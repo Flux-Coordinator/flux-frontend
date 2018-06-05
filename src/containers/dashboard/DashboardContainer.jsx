@@ -11,19 +11,22 @@ type Props = {};
 
 type State = {
 	serverState: ServerState,
+	sensorConnectionState: ConnectionState,
 	activeMeasurement: ?Measurement
 };
 
 export default class DashboardContainer extends React.Component<Props, State> {
 	isUnmounted = false;
 	source: CancelTokenSource = CancelToken.source();
-	timeout: TimeoutID;
+	fetchMeasurementTimeout: TimeoutID;
+	getSensorTimeout: TimeoutID;
 
 	state = {
 		serverState: {
 			connectionState: "UNKNOWN",
 			uri: axios.defaults.baseURL
 		},
+		sensorConnectionState: "UNKNOWN",
 		activeMeasurement: undefined
 	};
 
@@ -38,11 +41,28 @@ export default class DashboardContainer extends React.Component<Props, State> {
 					activeMeasurement = Measurement.fromObject(result.data);
 				}
 				this.updateState("CONNECTED", activeMeasurement);
-				this.resetFetchTimeout();
+				this.resetFetchMeasurementTimeout();
 			})
 			.catch(error => {
 				this.updateState("DISCONNECTED", undefined);
-				this.resetFetchTimeout();
+				this.resetFetchMeasurementTimeout();
+			});
+	};
+
+	getSensorActivity = () => {
+		axios
+			.get("/sensors", {
+				cancelToken: this.source.token
+			})
+			.then(result => {
+				if (result.status === 200) {
+					this.setState({ sensorConnectionState: "CONNECTED" });
+				}
+				this.resetGetSensorTimeout();
+			})
+			.catch(error => {
+				this.setState({ sensorConnectionState: "DISCONNECTED" });
+				this.resetGetSensorTimeout();
 			});
 	};
 
@@ -58,20 +78,36 @@ export default class DashboardContainer extends React.Component<Props, State> {
 		});
 	};
 
-	resetFetchTimeout = (milliseconds: number = 3000) => {
+	resetFetchMeasurementTimeout = (timeoutMilliseconds: number = 3000) => {
 		if (!this.isUnmounted) {
-			this.timeout = setTimeout(this.fetchActiveMeasurement, milliseconds);
+			this.fetchMeasurementTimeout = setTimeout(
+				this.fetchActiveMeasurement,
+				timeoutMilliseconds
+			);
+		}
+	};
+
+	resetGetSensorTimeout = (timeoutMilliseconds: number = 3000) => {
+		if (!this.isUnmounted) {
+			this.getSensorTimeout = setTimeout(
+				this.getSensorActivity,
+				timeoutMilliseconds
+			);
 		}
 	};
 
 	componentDidMount() {
 		this.fetchActiveMeasurement();
+		this.getSensorActivity();
 	}
 
 	componentWillUnmount() {
 		this.isUnmounted = true;
-		if (this.timeout) {
-			clearTimeout(this.timeout);
+		if (this.fetchMeasurementTimeout) {
+			clearTimeout(this.fetchMeasurementTimeout);
+		}
+		if (this.getSensorTimeout) {
+			clearTimeout(this.getSensorTimeout);
 		}
 		this.source.cancel();
 	}
@@ -80,6 +116,7 @@ export default class DashboardContainer extends React.Component<Props, State> {
 		return (
 			<Dashboard
 				serverState={this.state.serverState}
+				sensorConnectionState={this.state.sensorConnectionState}
 				activeMeasurement={this.state.activeMeasurement}
 			/>
 		);
