@@ -29,7 +29,6 @@ export default class App extends React.Component<Prop, State> {
 	constructor() {
 		super();
 		(axios.defaults: Object).baseURL = process.env.REACT_APP_SERVICE_URI; // Sets the default URL for the rest of the applications lifetime.
-		// axios.defaults.headers.common['Authorization'] = AuthenticationService.token;
 	}
 
 	state = {};
