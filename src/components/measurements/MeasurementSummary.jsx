@@ -140,17 +140,19 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 							>
 								<span>Zeitraum:</span>
 								{this.props.currentMeasurement.startDate != null ? (
-									<Box
-										direction="row"
-										pad={{ between: "small" }}
-										responsive={false}
-									>
+									<React.Fragment>
 										<Timestamp
 											value={this.props.currentMeasurement.startDate}
 										/>
-										<FormNextLink size="small" />
-										<Timestamp value={this.props.currentMeasurement.endDate} />
-									</Box>
+										{this.props.currentMeasurement.endDate != null && (
+											<React.Fragment>
+												<FormNextLink size="small" />
+												<Timestamp
+													value={this.props.currentMeasurement.endDate}
+												/>
+											</React.Fragment>
+										)}
+									</React.Fragment>
 								) : (
 									<span>
 										<em>nicht verfügbar</em>
