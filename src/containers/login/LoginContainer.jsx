@@ -46,6 +46,8 @@ export default class LoginContainer extends React.Component<Props, State> {
 			)
 			.then(result => {
 				AuthenticationService.login(result.data, login.rememberMe);
+				axios.defaults.headers.common["Authorization"] =
+					AuthenticationService.token;
 				this.setState({ shouldRedirect: true });
 			})
 			.catch(error => {
