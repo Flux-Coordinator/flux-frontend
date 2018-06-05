@@ -59,7 +59,6 @@ export default class ImportExportContainer extends React.Component<
 	};
 
 	render() {
-		console.log(this.state.isLoading);
 		return (
 			<ToastContext.Consumer>
 				{(showToast: any) => (

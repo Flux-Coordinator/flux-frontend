@@ -40,11 +40,11 @@ export default class DashboardContainer extends React.Component<Props, State> {
 				if (result.status === 200) {
 					activeMeasurement = Measurement.fromObject(result.data);
 				}
-				this.updateState("CONNECTED", activeMeasurement);
+				this.updateActiveMeasurement("CONNECTED", activeMeasurement);
 				this.resetFetchMeasurementTimeout();
 			})
 			.catch(error => {
-				this.updateState("DISCONNECTED", undefined);
+				this.updateActiveMeasurement("DISCONNECTED", undefined);
 				this.resetFetchMeasurementTimeout();
 			});
 	};
@@ -68,7 +68,7 @@ export default class DashboardContainer extends React.Component<Props, State> {
 			});
 	};
 
-	updateState = (
+	updateActiveMeasurement = (
 		serverConnection: ConnectionState,
 		activeMeasurement?: Measurement
 	) => {
