@@ -1,16 +1,18 @@
 // @flow
 import * as React from "react";
 import Section from "grommet/components/Section";
-import Header from "grommet/components/Header";
 import Heading from "grommet/components/Heading";
 import Box from "grommet/components/Box";
 import Button from "grommet/components/Button";
+import SaveIcon from "grommet/components/icons/base/Save";
+import NextIcon from "grommet/components/icons/base/Next";
 
 type Props = {
 	heading: React.Node,
 	subheading?: React.Node,
 	children: React.Node,
-	onNext: () => void
+	onSubmit?: ?() => void,
+	isLastStep?: boolean
 };
 
 /**
@@ -21,24 +23,37 @@ export default function WizardStep({
 	heading,
 	subheading,
 	children,
-	onNext
+	onSubmit,
+	isLastStep
 }: Props) {
+	let button: React.Node;
+	if (isLastStep) {
+		button = (
+			<Button
+				primary
+				label="Exportieren"
+				icon={<SaveIcon />}
+				onClick={onSubmit}
+			/>
+		);
+	} else {
+		button = (
+			<Button primary label="Weiter" icon={<NextIcon />} onClick={onSubmit} />
+		);
+	}
+
 	return (
 		<Section pad="none">
-			<Header>
+			<Box>
 				<Heading tag="h3" margin="none" pad="small">
 					{heading}
 				</Heading>
-			</Header>
-			<Header size="small">
 				<Heading tag="h4" margin="none" pad="small">
 					{subheading}
 				</Heading>
-			</Header>
-			<Box>{children}</Box>
-			<Box>
-				<Button label="Next" onClick={onNext} />
 			</Box>
+			<Box pad={{ vertical: "medium" }}>{children}</Box>
+			<Box align="end">{button}</Box>
 		</Section>
 	);
 }
