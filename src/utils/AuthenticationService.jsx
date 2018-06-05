@@ -1,3 +1,4 @@
+import axios from "axios";
 const STORAGE_KEY = "LOGIN_TOKEN";
 
 export default class AuthenticationService {
@@ -12,6 +13,7 @@ export default class AuthenticationService {
 		} else {
 			sessionStorage.setItem(STORAGE_KEY, token);
 		}
+		axios.defaults.headers.common["Authorization"] = token;
 	};
 
 	/**
@@ -21,15 +23,17 @@ export default class AuthenticationService {
 	static logout = () => {
 		localStorage.removeItem(STORAGE_KEY);
 		sessionStorage.removeItem(STORAGE_KEY);
+		delete axios.defaults.headers.common["Authorization"];
 	};
 
 	/**
 	 * Returns true, if there is an authentication token stored.
 	 * It is still possible that the token was invalidated by the server.
 	 */
-	static get isLoggedIn() {
-		return (
-			localStorage.getItem(STORAGE_KEY) || sessionStorage.getItem(STORAGE_KEY)
-		);
+	static get token() {
+		const token =
+			localStorage.getItem(STORAGE_KEY) || sessionStorage.getItem(STORAGE_KEY);
+		axios.defaults.headers.common["Authorization"] = token;
+		return token;
 	}
 }
