@@ -192,6 +192,7 @@ export default class MeasurementContainer extends React.Component<
 		if (
 			this &&
 			prevProps &&
+			prevState.currentMeasurement.measurementId != null &&
 			prevState.currentMeasurement.measurementId !==
 				this.state.currentMeasurement.measurementId
 		) {
