@@ -8,8 +8,8 @@ type ConstructorType = {
 	measurementId: number,
 	name: string,
 	description: string,
-	startDate: Date,
-	endDate: Date,
+	startDate: ?Date,
+	endDate: ?Date,
 	measurementState: MeasurementState,
 	xOffset: number,
 	yOffset: number,
@@ -25,8 +25,8 @@ export default class Measurement {
 	measurementId: ?number;
 	name: string;
 	description: string;
-	startDate: Date;
-	endDate: Date;
+	startDate: ?Date;
+	endDate: ?Date;
 	measurementState: MeasurementState;
 	transformation: Transformation;
 	creator: string;
@@ -42,8 +42,8 @@ export default class Measurement {
 		xOffset: number,
 		yOffset: number,
 		scaleFactor: number = 1.0,
-		startDate?: Date = new Date(),
-		endDate?: Date = new Date(),
+		startDate?: ?Date = null,
+		endDate?: ?Date = null,
 		measurementState?: MeasurementState = "READY",
 		creator?: string = "",
 		readings?: Reading[] = [],
