@@ -21,9 +21,6 @@ export default function NavMenu({ onNavigate }: Props) {
 			<Anchor path="/import" onClick={onNavigate}>
 				Import / Export
 			</Anchor>
-			<Anchor path="/settings" onClick={onNavigate}>
-				Einstellungen
-			</Anchor>
 			<Anchor
 				path="/login"
 				onClick={() => {
