@@ -30,7 +30,7 @@ export default function Project({ projects, match, onDeleteRoom }: Props) {
 	}
 
 	return (
-		<ContentBox heading={project.name}>
+		<ContentBox heading={project.name} subheading={project.description}>
 			<Box>
 				<ItemListHeader
 					header="Räume"
