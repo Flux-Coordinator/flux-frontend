@@ -140,7 +140,7 @@ export default class HeatmapAnalysisForm extends React.Component<Props, State> {
 							</FormField>
 							<Box direction="row" pad={{ between: "medium" }}>
 								<Value
-									label="Anzahl Messungen"
+									label="Anzahl Messwerte"
 									value={this.state.numberOfReadings}
 									size="small"
 								/>
