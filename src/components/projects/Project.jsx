@@ -1,6 +1,5 @@
 // @flow
 import * as React from "react";
-import Box from "grommet/components/Box";
 
 import NotFound from "../../components/notfound/NotFound";
 import ContentBox from "../contentBox/ContentBox";
@@ -31,23 +30,21 @@ export default function Project({ projects, match, onDeleteRoom }: Props) {
 
 	return (
 		<ContentBox heading={project.name} subheading={project.description}>
-			<Box>
-				<ItemListHeader
-					header="Räume"
-					path={`/projects/${match.params.projectId}/editRoom`}
-				/>
-				<ItemsList
-					items={project.rooms}
-					keyFunc={item => item.roomId}
-					ItemRenderer={({ item }) => (
-						<AnchorRoomItemRenderer
-							item={item}
-							match={match}
-							onDelete={onDeleteRoom}
-						/>
-					)}
-				/>
-			</Box>
+			<ItemListHeader
+				header="Räume"
+				path={`/projects/${match.params.projectId}/editRoom`}
+			/>
+			<ItemsList
+				items={project.rooms}
+				keyFunc={item => item.roomId}
+				ItemRenderer={({ item }) => (
+					<AnchorRoomItemRenderer
+						item={item}
+						match={match}
+						onDelete={onDeleteRoom}
+					/>
+				)}
+			/>
 		</ContentBox>
 	);
 }
