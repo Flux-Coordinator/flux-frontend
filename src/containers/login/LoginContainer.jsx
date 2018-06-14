@@ -7,6 +7,7 @@ import Image from "grommet/components/Image";
 import { Redirect } from "react-router-dom";
 
 import Img from "../../images/logo.svg";
+import AuthenticationService from "./../../utils/AuthenticationService";
 
 type Props = {};
 
@@ -44,7 +45,9 @@ export default class LoginContainer extends React.Component<Props, State> {
 				{ cancelToken: this.source.token }
 			)
 			.then(result => {
-				localStorage.setItem("TOKEN", result.data);
+				AuthenticationService.login(result.data, login.rememberMe);
+				axios.defaults.headers.common["Authorization"] =
+					AuthenticationService.token;
 				this.setState({ shouldRedirect: true });
 			})
 			.catch(error => {

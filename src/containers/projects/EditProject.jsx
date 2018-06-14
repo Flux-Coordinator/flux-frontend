@@ -8,7 +8,10 @@ import { Redirect } from "react-router-dom";
 
 import Form from "./../../components/form/Form";
 import Project from "../../models/Project";
+import { ToastContext } from "./../../components/toast/ToastContext";
+import { inputHandler } from "../../utils/InputHandler";
 
+import type { AllInputTypes } from "../../utils/InputHandler";
 import type { ToastMetadata } from "./../../components/toast/Toast";
 
 type Props = {
@@ -17,7 +20,7 @@ type Props = {
 
 type State = {
 	project: Project,
-	loading: boolean,
+	isLoading: boolean,
 	shouldRedirect: boolean,
 	toast?: ToastMetadata
 };
@@ -25,13 +28,17 @@ type State = {
 export default class EditProject extends React.Component<Props, State> {
 	source: CancelTokenSource = CancelToken.source();
 	state = {
-		project: new Project("uninitialized project", []),
-		loading: true,
+		project: new Project(
+			"Nicht initialisiertes Projekt",
+			"Wahrscheinlich gab es einen Fehler in der Anwendung!",
+			[]
+		),
+		isLoading: true,
 		shouldRedirect: false
 	};
 
 	fetchProject = (projectId: number) => {
-		return axios.get("/projects/" + projectId, {
+		return axios.get(`/projects/${projectId}`, {
 			cancelToken: this.source.token
 		});
 	};
@@ -42,84 +49,95 @@ export default class EditProject extends React.Component<Props, State> {
 		});
 	};
 
-	onTitleChanged = (event: SyntheticEvent<HTMLInputElement>) => {
-		const target = event.currentTarget;
-		const value = target.value;
-
-		this.setState(prevState => {
-			prevState.project.name = value;
+	onProjectChanged = (key: string, value: AllInputTypes) => {
+		this.setState((prevState, props) => {
+			prevState.project = Object.assign(prevState.project, {
+				[key]: value
+			});
 			return prevState;
 		});
 	};
 
-	onSubmit = () => {
+	onSubmit = (showToast?: (toast: ToastMetadata) => void) => {
+		this.setState({ isLoading: true });
 		this.saveProject(this.state.project)
 			.then(result => {
 				if (result.status === 201) {
-					const toast: ToastMetadata = {
-						status: "ok",
-						children: "Projekt abgespeichert"
-					};
-					this.setState({ toast: toast, shouldRedirect: true });
+					if (showToast) {
+						showToast({
+							status: "ok",
+							children: "Projekt abgespeichert"
+						});
+					}
+					this.setState({ shouldRedirect: true });
 				}
 			})
 			.catch(error => {
-				const toast: ToastMetadata = {
-					status: "critical",
-					children: "Projekt konnte nicht gespeichert werden"
-				};
-				this.setState({ toast: toast });
+				this.setState({ isLoading: false });
+				if (showToast) {
+					showToast({
+						status: "critical",
+						children: "Projekt konnte nicht gespeichert werden"
+					});
+				}
 			});
 	};
 
 	componentDidMount() {
-		const projectId = this.props.match.params.projectId;
-
-		let project: Project;
+		const { projectId } = this.props.match.params;
 
 		if (typeof projectId === "undefined") {
 			this.setState({
-				project: new Project("", []),
-				loading: false
+				project: new Project("", "", []),
+				isLoading: false
 			});
 		} else {
 			this.fetchProject(projectId).then(result => {
 				const project = Project.fromObject(result.data);
 				this.setState({
 					project: project,
-					loading: false
+					isLoading: false
 				});
 			});
 		}
-
-		return {
-			project: project
-		};
 	}
 
 	render() {
-		if (this.state.loading) {
+		if (this.state.shouldRedirect) {
+			return <Redirect to="/projects" />;
+		}
+
+		if (this.state.isLoading) {
 			return <Loading />;
 		}
+
 		return (
-			<Form heading="Projekt bearbeiten" onSubmit={this.onSubmit}>
-				<FormField label="Name">
-					<TextInput
-						name="name"
-						placeholder="Projektname eingeben"
-						value={this.state.project.name}
-						onDOMChange={this.onTitleChanged}
-					/>
-				</FormField>
-				{this.state.shouldRedirect && (
-					<Redirect
-						to={{
-							pathname: "/projects",
-							state: { toast: this.state.toast }
-						}}
-					/>
+			<ToastContext.Consumer>
+				{(showToast: any) => (
+					<Form
+						heading="Projekt bearbeiten"
+						onSubmit={() => this.onSubmit(showToast)}
+					>
+						<FormField label="Name">
+							<TextInput
+								name="name"
+								required
+								placeHolder="Projektname eingeben"
+								value={this.state.project.name}
+								onDOMChange={inputHandler(this.onProjectChanged)}
+							/>
+						</FormField>
+						<FormField label="Beschreibung">
+							<TextInput
+								name="description"
+								placeHolder="Beschreibung des Projektes"
+								value={this.state.project.description}
+								onDOMChange={inputHandler(this.onProjectChanged)}
+							/>
+						</FormField>
+					</Form>
 				)}
-			</Form>
+			</ToastContext.Consumer>
 		);
 	}
 }

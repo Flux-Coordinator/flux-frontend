@@ -3,6 +3,8 @@ import * as React from "react";
 import Menu from "grommet/components/Menu";
 import Anchor from "grommet/components/Anchor";
 
+import AuthenticationService from "./../../utils/AuthenticationService";
+
 type Props = {
 	onNavigate: ?() => void
 };
@@ -19,10 +21,15 @@ export default function NavMenu({ onNavigate }: Props) {
 			<Anchor path="/import" onClick={onNavigate}>
 				Import / Export
 			</Anchor>
-			<Anchor path="/settings" onClick={onNavigate}>
-				Einstellungen
-			</Anchor>
-			<Anchor path="/login" onClick={onNavigate}>
+			<Anchor
+				path="/login"
+				onClick={() => {
+					AuthenticationService.logout();
+					if (onNavigate) {
+						onNavigate();
+					}
+				}}
+			>
 				Abmelden
 			</Anchor>
 		</Menu>

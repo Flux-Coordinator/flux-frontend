@@ -1,68 +1,51 @@
 // @flow
 import * as React from "react";
-import Header from "grommet/components/Header";
-import Heading from "grommet/components/Heading";
 import Section from "grommet/components/Section";
-import Article from "grommet/components/Article";
 // eslint-disable-next-line
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import ProjectModel from "../../models/Project";
-import Measurement from "../../models/Measurement";
-import RoomModel from "../../models/Room";
+import ContentBox from "../contentBox/ContentBox";
 import ItemsList from "../list/ItemsList";
+import ItemListHeader from "./../list/ItemListHeader";
 import MeasurementContainer from "../../containers/measurements/MeasurementContainer";
 import AnchorMeasurementItemRenderer from "../measurements/AnchorMeasurementItemRenderer";
+import RoomModel from "../../models/Room";
+import Measurement from "../../models/Measurement";
 
 type Props = {
 	match: any,
 	room: RoomModel,
-	parentProject: ProjectModel
+	onDeleteMeasurement: (item: Measurement) => void
 };
 
-export default function Room({ match, room, parentProject }: Props) {
+export default function Room({ match, room, onDeleteMeasurement }: Props) {
 	return (
-		<Article pad="medium">
-			<Section pad="none">
-				<Heading tag="h2" margin="none" pad="medium">
-					{room.name}
-				</Heading>
-				<Heading tag="h4">{room.description}</Heading>
-			</Section>
+		<ContentBox heading={room.name} subheading={room.description}>
 			<Route
 				path={`${match.url}/measurements/:measurementId`}
-				component={({ match }) => {
-					return ShowMeasurement({ room, match });
-				}}
+				component={({ match }) => (
+					<MeasurementContainer room={room} match={match} />
+				)}
 			/>
-			<Section>
-				<Header size="small">
-					<Heading tag="h3">Messungen</Heading>
-				</Header>
+			<Section pad="none">
+				<ItemListHeader
+					header="Messungen"
+					path={`${match.url}/editMeasurement`}
+				/>
 				<ItemsList
 					items={room.measurements}
 					keyFunc={(item: Measurement) => item.measurementId}
-					ItemRenderer={({ item }) =>
-						AnchorMeasurementItemRenderer({ item, match })
-					}
+					ItemRenderer={({ item }) => (
+						<AnchorMeasurementItemRenderer
+							item={item}
+							match={match}
+							onDelete={onDeleteMeasurement}
+						/>
+					)}
 				/>
 			</Section>
-		</Article>
+		</ContentBox>
 	);
-}
-
-function ShowMeasurement({ room, match }) {
-	let currentMeasurement: ?Measurement = null;
-	if (match.params.measurementId) {
-		currentMeasurement = room.measurements.find(
-			measurement =>
-				measurement.measurementId === parseInt(match.params.measurementId, 10)
-		);
-		return (
-			<MeasurementContainer measurement={currentMeasurement} room={room} />
-		);
-	}
-	return null;
 }
 
 Room.defaultProps = {

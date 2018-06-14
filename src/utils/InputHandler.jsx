@@ -1,7 +1,7 @@
 // @flow
-export type allInputTypes = string | number | boolean;
+export type AllInputTypes = string | number | boolean | FileList;
 
-export const inputHandler = (callback: (string, allInputTypes) => void) => (
+export const inputHandler = (callback: (string, AllInputTypes) => void) => (
 	event: SyntheticEvent<HTMLInputElement>
 ) => {
 	if (
@@ -14,9 +14,19 @@ export const inputHandler = (callback: (string, allInputTypes) => void) => (
 			case "checkbox":
 				callback(name, event.currentTarget.checked);
 				break;
+			case "radio":
 			case "text":
-			case "number":
 				callback(name, event.currentTarget.value);
+				break;
+			case "number":
+				if (event.currentTarget.value === "") {
+					callback(name, 0);
+				} else {
+					callback(name, parseFloat(event.currentTarget.value));
+				}
+				break;
+			case "file":
+				callback(name, event.currentTarget.files);
 				break;
 			default:
 				break;

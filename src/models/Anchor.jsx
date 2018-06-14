@@ -14,6 +14,7 @@ export default class Anchor implements Positionable {
 	anchorId: ?number;
 	networkId: string;
 	position: PositionModel;
+	getValue = () => (this.networkId ? parseInt(this.networkId, 16) : 0);
 
 	constructor(
 		anchorId: ?number,
@@ -36,4 +37,17 @@ export default class Anchor implements Positionable {
 	}: ConstructorType) {
 		return new Anchor(anchorId, networkId, xposition, yposition, zposition);
 	}
+
+	toAnchorPositionObject = () => {
+		return {
+			anchorPositionId: this.anchorId,
+			xposition: this.position.xposition,
+			yposition: this.position.yposition,
+			zposition: this.position.zposition,
+			anchor: {
+				anchorId: 0,
+				networkId: this.networkId
+			}
+		};
+	};
 }

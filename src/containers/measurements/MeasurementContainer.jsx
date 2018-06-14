@@ -6,10 +6,13 @@ import MeasurementSummary from "../../components/measurements/MeasurementSummary
 import ReadingModel from "../../models/Reading";
 import RoomModel from "../../models/Room";
 import MeasurementModel from "../../models/Measurement";
+import { ToastContext } from "./../../components/toast/ToastContext";
+
+import type { ToastMetadata } from "./../../components/toast/Toast";
 
 type Props = {
 	room: RoomModel,
-	measurement: MeasurementModel
+	match: any
 };
 
 type State = {
@@ -28,40 +31,62 @@ export default class MeasurementContainer extends React.Component<
 	keepAliveTimer = null;
 
 	state = {
-		loading: false,
-		currentMeasurement: this.props.measurement
+		loading: true,
+		currentMeasurement: new MeasurementModel(undefined, "", "", 0, 0)
 	};
 
-	getReadings = () => {
+	fetchMeasurement = () => {
 		this.setState({ loading: true });
-		axios
-			.get(`/measurements/${this.props.measurement.measurementId}`, {
-				cancelToken: this.source.token
-			})
-			.then(result => {
-				const measurement = MeasurementModel.fromObject(result.data);
-				this.setState({ currentMeasurement: measurement, loading: false });
-			})
-			.catch(error => {
-				if (!axios.isCancel(error)) {
-					this.setState(
-						({
-							currentMeasurement: this.props.measurement,
+		const measurementId = this.props.match.params.measurementId;
+		if (measurementId != null) {
+			axios
+				.get(`/measurements/${measurementId}`, {
+					cancelToken: this.source.token
+				})
+				.then(result => {
+					const measurement = MeasurementModel.fromObject(result.data);
+					this.setState({ currentMeasurement: measurement, loading: false });
+				})
+				.catch(error => {
+					if (!axios.isCancel(error)) {
+						this.setState({
 							loading: false
-						}: State)
-					);
-				}
-			});
+						});
+					}
+				});
+		} else {
+			alert("Konnte die Messung nicht laden.");
+		}
 	};
 
 	startMeasurement = () => {
-		if (this.state.currentMeasurement.state === "RUNNING") {
+		if (this.state.currentMeasurement.measurementState === "RUNNING") {
 			axios
 				.delete("/measurements/active", { cancelToken: this.source.token })
 				.then(result => {
 					this.setState(prevState => {
 						const measurement = prevState.currentMeasurement;
-						measurement.state = "DONE";
+						measurement.measurementState = "DONE";
+						return {
+							currentMeasurement: measurement
+						};
+					});
+				})
+				.catch(error => {
+					alert(error.response.data);
+				});
+		} else if (this.state.currentMeasurement.measurementId != null) {
+			axios
+				.put(
+					"/measurements/active/" + this.state.currentMeasurement.measurementId,
+					{
+						cancelToken: this.source.token
+					}
+				)
+				.then(result => {
+					this.setState(prevState => {
+						const measurement = prevState.currentMeasurement;
+						measurement.measurementState = "RUNNING";
 						return {
 							currentMeasurement: measurement
 						};
@@ -71,22 +96,9 @@ export default class MeasurementContainer extends React.Component<
 					alert(error.response.data);
 				});
 		} else {
-			axios
-				.put("/measurements/active/" + this.props.measurement.measurementId, {
-					cancelToken: this.source.token
-				})
-				.then(result => {
-					this.setState(prevState => {
-						const measurement = prevState.currentMeasurement;
-						measurement.state = "RUNNING";
-						return {
-							currentMeasurement: measurement
-						};
-					});
-				})
-				.catch(error => {
-					alert(error.response.data);
-				});
+			alert(
+				"Es gab einen Fehler. Die Messung konnte nicht gestartet werden (die Messungs ID ist unbekannt)"
+			);
 		}
 	};
 
@@ -136,12 +148,42 @@ export default class MeasurementContainer extends React.Component<
 		});
 	};
 
+	saveMeasurement = (showToast?: (toast: ToastMetadata) => void) => {
+		const roomId = this.props.room.roomId;
+
+		if (!roomId) {
+			return;
+		}
+
+		const exportMeasurement = this.state.currentMeasurement.toDto();
+		axios
+			.post(`/rooms/${roomId}/measurements`, exportMeasurement, {
+				cancelToken: this.source.token
+			})
+			.then(result => {
+				if (showToast) {
+					showToast({
+						status: "ok",
+						children: "Messung abgespeichert"
+					});
+				}
+			})
+			.catch(error => {
+				if (showToast) {
+					showToast({
+						status: "critical",
+						children: "Messung konnte nicht gespeichert werden"
+					});
+				}
+			});
+	};
+
 	componentDidMount() {
-		this.getReadings();
+		this.fetchMeasurement();
 
 		let serverUri = process.env.REACT_APP_SERVICE_URI;
 		if (serverUri) {
-			serverUri = serverUri.replace(/(http(s?))/gi, "ws");
+			serverUri = serverUri.replace(/(http)/gi, "ws");
 			this.openWebsocket(`${serverUri}/streamMeasurements`);
 		}
 	}
@@ -150,10 +192,11 @@ export default class MeasurementContainer extends React.Component<
 		if (
 			this &&
 			prevProps &&
-			prevProps.measurement.measurementId !==
-				this.props.measurement.measurementId
+			prevState.currentMeasurement.measurementId != null &&
+			prevState.currentMeasurement.measurementId !==
+				this.state.currentMeasurement.measurementId
 		) {
-			this.getReadings();
+			this.fetchMeasurement();
 		}
 	}
 
@@ -164,12 +207,17 @@ export default class MeasurementContainer extends React.Component<
 
 	render() {
 		return (
-			<MeasurementSummary
-				room={this.props.room}
-				currentMeasurement={this.state.currentMeasurement}
-				onStartMeasurement={this.startMeasurement}
-				isLoading={this.state.loading}
-			/>
+			<ToastContext.Consumer>
+				{(showToast: any) => (
+					<MeasurementSummary
+						room={this.props.room}
+						currentMeasurement={this.state.currentMeasurement}
+						onStartMeasurement={this.startMeasurement}
+						onSaveMeasurement={() => this.saveMeasurement(showToast)}
+						isLoading={this.state.loading}
+					/>
+				)}
+			</ToastContext.Consumer>
 		);
 	}
 }

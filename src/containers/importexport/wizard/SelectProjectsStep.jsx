@@ -1,5 +1,6 @@
 // @flow
 import * as React from "react";
+import Heading from "grommet/components/Heading";
 
 import WizardStep from "./WizardStep";
 import ItemsList from "./../../../components/list/ItemsList";
@@ -26,7 +27,8 @@ export default class SelectProjectsStep extends React.Component<
 		selected: null
 	};
 
-	subheading: string = "Sie können mit CTRL + Mausclick mehrere Projekte auswählen.";
+	subheading: string =
+		"Sie können mit CTRL + Mausclick mehrere Projekte auswählen.";
 
 	onNext = () => {
 		const selected = this.state.selected;
@@ -50,9 +52,20 @@ export default class SelectProjectsStep extends React.Component<
 
 	static getDerivedStateFromProps(nextProps: StepProps, prevState: State) {
 		return {
-			returnData: nextProps.projects,
-			selected: null
+			returnData: nextProps.projects
 		};
+	}
+
+	get isValidState() {
+		const { selected } = this.state;
+		if (selected != null) {
+			if (!Array.isArray(selected)) {
+				return true;
+			} else {
+				return selected.length > 0;
+			}
+		}
+		return false;
 	}
 
 	render() {
@@ -60,7 +73,7 @@ export default class SelectProjectsStep extends React.Component<
 			<WizardStep
 				heading="Schritt 1: Wählen Sie die Projekte aus"
 				subheading={this.subheading}
-				onNext={this.onNext}
+				onSubmit={this.isValidState ? this.onNext : null}
 			>
 				<ItemsList
 					ItemRenderer={ProjectItemRenderer}
@@ -76,5 +89,9 @@ export default class SelectProjectsStep extends React.Component<
 }
 
 function ProjectItemRenderer({ item }: { item: Project }) {
-	return item.name;
+	return (
+		<Heading className="custom-list-anchor" tag="h4">
+			{item.name}
+		</Heading>
+	);
 }

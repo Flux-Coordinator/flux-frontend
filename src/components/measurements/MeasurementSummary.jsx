@@ -2,6 +2,9 @@
 import * as React from "react";
 import Header from "grommet/components/Header";
 import Heading from "grommet/components/Heading";
+import Paragraph from "grommet/components/Paragraph";
+import Timestamp from "grommet/components/Timestamp";
+import FormNextLink from "grommet/components/icons/base/FormNextLink";
 import Box from "grommet/components/Box";
 import Accordion from "grommet/components/Accordion";
 import AccordionPanel from "grommet/components/AccordionPanel";
@@ -14,78 +17,75 @@ import RoomModel from "../../models/Room";
 import MeasurementModel from "../../models/Measurement";
 import Transformation from "../../models/Transformation";
 import FluxHeatmap from "../../containers/fluxHeatmap/FluxHeatmap";
-import type { ConfigObject, HeatmapModes } from "../../types/Heatmap";
+import type { ConfigObject, HeatmapMode } from "../../types/Heatmap";
 import TransformationForm from "../transformationForm/TransformationForm";
-import HeatmapConfigForm from "../heatmapConfigForm/HeatmapConfigForm";
-import { EXAMPLE_IMAGE } from "../../images/ImagesBase64";
-import HeatmapModeForm from "../heatmapModeForm/HeatmapModeForm";
-import type { allInputTypes } from "../../utils/InputHandler";
+import HeatmapConfigForm from "../heatmap/heatmapConfigForm/HeatmapConfigForm";
+import HeatmapModeForm from "../heatmap/heatmapModeForm/HeatmapModeForm";
+import type { AllInputTypes } from "../../utils/InputHandler";
 import Loading from "../loading/Loading";
 
 type Props = {
 	room: RoomModel,
 	currentMeasurement: MeasurementModel,
 	onStartMeasurement: () => void,
-	isLoading?: boolean
+	isLoading?: boolean,
+	onSaveMeasurement: (measurement: MeasurementModel) => void
 };
 
 type State = {
 	transformation: Transformation,
+	currentMeasurement: MeasurementModel,
 	configObject: ConfigObject,
-	heatmapModes: HeatmapModes
+	heatmapMode: HeatmapMode
 };
 
 export default class MeasurementSummary extends React.Component<Props, State> {
 	state = {
 		configObject: {
-			radius: 10,
-			maxOpacity: 0.5,
+			radius: 500,
+			maxOpacity: 0.75,
 			minOpacity: 0,
 			blur: 0.75
 		},
 		transformation: new Transformation(),
-		heatmapModes: {
-			showCoverage: false,
-			showAnchors: false
-		}
+		currentMeasurement: new MeasurementModel(undefined, "", "", 0, 0),
+		heatmapMode: "DEFAULT"
 	};
 
-	componentDidMount() {
-		this.setState({
-			transformation: this.props.room.transformation
-		});
+	static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+		prevState.currentMeasurement = nextProps.currentMeasurement;
+		return prevState;
 	}
 
-	handleTransformationChange = (key: string, value: allInputTypes) => {
-		this.setState((prevState, props) => ({
-			transformation: Object.assign(prevState.transformation, {
-				[key]: parseFloat(value)
-			})
-		}));
+	handleValueChange = (key: string, value: AllInputTypes) => {
+		this.setState({ [key]: value });
 	};
 
-	handleModeChange = (key: string, value: allInputTypes) => {
-		this.setState((prevState, props) => ({
-			heatmapModes: Object.assign(prevState.heatmapModes, {
-				[key]: value
-			})
-		}));
+	handleTransformationChange = (key: string, value: AllInputTypes) => {
+		this.setState(prevState => {
+			const measurement = prevState.currentMeasurement;
+			measurement.transformation = Object.assign(
+				({}: any),
+				measurement.transformation,
+				{
+					[key]: value
+				}
+			);
+			prevState.currentMeasurement = measurement;
+			return prevState;
+		});
 	};
 
-	handleHeatmapConfigChange = (key: string, value: allInputTypes) => {
-		this.setState((prevState, props) => ({
-			configObject: Object.assign(prevState.configObject, {
+	handleHeatmapConfigChange = (key: string, value: AllInputTypes) => {
+		this.setState(prevState => ({
+			configObject: Object.assign({}, prevState.configObject, {
 				[key]: parseFloat(value)
 			})
 		}));
 	};
 
 	onTransformationSubmit = () => {
-		alert("submit transformation");
-	};
-
-	onHeatmapConfigSubmit = () => {
-		alert("submit config");
+		this.props.onSaveMeasurement(this.state.currentMeasurement);
 	};
 
 	render() {
@@ -94,53 +94,106 @@ export default class MeasurementSummary extends React.Component<Props, State> {
 		}
 
 		let icon: React.Node;
-		if (this.props.currentMeasurement.state === "RUNNING") {
+		if (this.props.currentMeasurement.measurementState === "RUNNING") {
 			icon = <PauseIcon colorIndex="warning" />;
 		} else {
 			icon = <PlayIcon colorIndex="ok" />;
 		}
 
 		return (
-			<Section margin="none">
-				<Header size="small">
-					<Heading margin="none" tag="h3">
-						Aktuelle Messung ({this.props.currentMeasurement.measurementId})
-					</Heading>
-					<Button icon={icon} onClick={this.props.onStartMeasurement} />
-				</Header>
+			<Section
+				pad={{ horizontal: "none", vertical: "none", between: "medium" }}
+			>
 				<Box>
 					<Header size="small">
-						<Heading tag="h3">Grundriss</Heading>
+						<Heading margin="none" tag="h3">
+							Aktuelle Messung ({this.props.currentMeasurement.name})
+						</Heading>
+						<Button icon={icon} onClick={this.props.onStartMeasurement} />
 					</Header>
+					<Box direction="row" pad={{ between: "medium" }} responsive wrap>
+						<Box size="xlarge">
+							<Paragraph margin="none">
+								{this.props.currentMeasurement.description}
+							</Paragraph>
+						</Box>
+						<Box>
+							<Box
+								direction="row"
+								pad={{ between: "small" }}
+								responsive={false}
+							>
+								<span>Vermesser:</span>
+								{this.props.currentMeasurement.creator != null &&
+								this.props.currentMeasurement.creator !== "" ? (
+									<span>{this.props.currentMeasurement.creator}</span>
+								) : (
+									<span>
+										<em>unbekannt</em>
+									</span>
+								)}
+							</Box>
+							<Box
+								direction="row"
+								pad={{ between: "small" }}
+								responsive={false}
+							>
+								<span>Zeitraum:</span>
+								{this.props.currentMeasurement.startDate != null ? (
+									<React.Fragment>
+										<Timestamp
+											value={this.props.currentMeasurement.startDate}
+										/>
+										{this.props.currentMeasurement.endDate != null && (
+											<React.Fragment>
+												<FormNextLink size="small" />
+												<Timestamp
+													value={this.props.currentMeasurement.endDate}
+												/>
+											</React.Fragment>
+										)}
+									</React.Fragment>
+								) : (
+									<span>
+										<em>nicht verfügbar</em>
+									</span>
+								)}
+							</Box>
+						</Box>
+					</Box>
+				</Box>
+				<Box>
 					{this.props.currentMeasurement.readings && (
-						<Box direction="row">
+						<Box direction="row" responsive wrap>
 							<FluxHeatmap
 								readings={this.props.currentMeasurement.readings}
 								anchors={this.props.currentMeasurement.anchors}
-								backgroundImage={EXAMPLE_IMAGE}
-								transformation={this.state.transformation}
+								backgroundImage={this.props.room.floorPlan}
+								transformation={this.state.currentMeasurement.transformation}
 								configObject={this.state.configObject}
-								heatmapModes={this.state.heatmapModes}
+								heatmapMode={this.state.heatmapMode}
 							/>
-							<Box>
+							<Box basis="medium" flex pad={{ horizontal: "medium" }}>
+								<Heading tag="h3" margin="none" pad="none">
+									Einstellungen
+								</Heading>
+								<HeatmapModeForm
+									heatmapMode={this.state.heatmapMode}
+									onChange={this.handleValueChange}
+								/>
 								<Accordion active={0}>
-									<AccordionPanel heading="Transformation">
+									<AccordionPanel heading="Heatmap transformieren">
 										<TransformationForm
-											transformation={this.state.transformation}
+											transformation={
+												this.state.currentMeasurement.transformation
+											}
 											onSubmit={this.onTransformationSubmit}
 											onChange={this.handleTransformationChange}
 										/>
 									</AccordionPanel>
-									<AccordionPanel heading="Heatmap Modi">
-										<HeatmapModeForm
-											heatmapModes={this.state.heatmapModes}
-											onChange={this.handleModeChange}
-										/>
-									</AccordionPanel>
-									<AccordionPanel heading="Konfiguration">
+									<AccordionPanel heading="Heatmap konfigurieren">
 										<HeatmapConfigForm
 											configObject={this.state.configObject}
-											onSubmit={this.onHeatmapConfigSubmit}
 											onChange={this.handleHeatmapConfigChange}
 										/>
 									</AccordionPanel>

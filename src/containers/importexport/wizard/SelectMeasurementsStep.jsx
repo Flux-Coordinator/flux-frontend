@@ -1,7 +1,6 @@
 // @flow
 import * as React from "react";
 import Section from "grommet/components/Section";
-import Header from "grommet/components/Header";
 import Heading from "grommet/components/Heading";
 import Box from "grommet/components/Box";
 
@@ -30,6 +29,9 @@ export default class SelectMeasurementsStep extends React.Component<
 		returnData: this.props.projects,
 		projects: []
 	};
+
+	subheading: string =
+		"Sie können mit CTRL + Mausclick mehrere Projekte auswählen.";
 
 	getMeasurementsOfRoom = (
 		data: Project[],
@@ -85,14 +87,12 @@ export default class SelectMeasurementsStep extends React.Component<
 		});
 	};
 
-	RenderProject = (project: Project) => {
+	RenderProjectRooms = (project: Project) => {
 		return project.rooms.map(r => (
-			<Section pad="none" key={r.roomId}>
-				<Header margin="none" pad="none" size="small">
-					<Heading tag="h4" strong>
-						{r.name}
-					</Heading>
-				</Header>
+			<Section pad={{ vertical: "small" }} key={r.roomId}>
+				<Heading tag="h4" strong>
+					{r.name}
+				</Heading>
 				<Box>
 					<ItemsList
 						ItemRenderer={MeasurementItemRenderer}
@@ -107,21 +107,40 @@ export default class SelectMeasurementsStep extends React.Component<
 		));
 	};
 
+	get isValidState() {
+		// The state is valid when there is at least one measurement selected.
+		const { projects } = this.state;
+		const rooms = [].concat.apply([], projects.map(p => p.rooms));
+		const measurements = [].concat.apply([], rooms.map(r => r.measurements));
+
+		return measurements.length > 0;
+	}
+
 	render() {
 		const projects = this.props.projects;
+		const onSubmit = this.isValidState
+			? () => this.props.onNext(this.state.projects)
+			: null;
+
 		return (
 			<WizardStep
 				heading="Schritt 3: Wählen Sie die Messungen aus"
-				onNext={() => this.props.onNext(this.state.projects)}
+				subheading={this.subheading}
+				onSubmit={onSubmit}
+				isLastStep
 			>
-				{projects && projects.map(p => this.RenderProject(p))}
+				{projects && projects.map(p => this.RenderProjectRooms(p))}
 			</WizardStep>
 		);
 	}
 }
 
 function MeasurementItemRenderer({ item }: { item: Measurement }) {
-	return item.description;
+	return (
+		<Heading className="custom-list-anchor" tag="h4">
+			{item.name}
+		</Heading>
+	);
 }
 
 function getItemsFromArrayByIndex<T>(

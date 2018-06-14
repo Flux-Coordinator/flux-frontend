@@ -1,7 +1,6 @@
 // @flow
 import * as React from "react";
 import Section from "grommet/components/Section";
-import Header from "grommet/components/Header";
 import Heading from "grommet/components/Heading";
 import Box from "grommet/components/Box";
 
@@ -25,22 +24,21 @@ export default class SelectRoomsStep extends React.Component<StepProps, State> {
 		selectedProjects: []
 	};
 
-	listItemProperties = {
-		margin: "small",
-		pad: "small"
-	};
+	subheading: string =
+		"Sie können mit CTRL + Mausclick mehrere Projekte auswählen.";
 
 	onSelect = (selected: ?number | number[], project: Project) => {
 		const foundProject = this.props.projects.find(
 			p => p.projectId === project.projectId
 		);
 		let selectedRooms: Room[];
+		const selectedConst = selected;
 		if (foundProject) {
-			if (typeof selected === "number") {
-				selectedRooms = [foundProject.rooms[selected]];
+			if (typeof selectedConst === "number") {
+				selectedRooms = [foundProject.rooms[selectedConst]];
 			} else {
 				selectedRooms = foundProject.rooms.filter(
-					(r, index) => (selected ? (selected: any).includes(index) : false)
+					(r, index) => (selectedConst ? selectedConst.includes(index) : false)
 				);
 			}
 
@@ -68,6 +66,10 @@ export default class SelectRoomsStep extends React.Component<StepProps, State> {
 		}
 	};
 
+	get isValidState() {
+		return this.state.selectedProjects.length > 0;
+	}
+
 	static getDerivedStateFromProps(nextProps: StepProps, prevState: State) {
 		return {
 			returnData: nextProps.projects,
@@ -77,23 +79,25 @@ export default class SelectRoomsStep extends React.Component<StepProps, State> {
 
 	render() {
 		const projects = this.props.projects;
+		const onSubmit = this.isValidState
+			? () => this.props.onNext(this.state.selectedProjects)
+			: null;
+
 		return (
 			<WizardStep
 				heading="Schritt 2: Wählen Sie die Räume aus"
-				onNext={() => this.props.onNext(this.state.selectedProjects)}
+				subheading={this.subheading}
+				onSubmit={onSubmit}
 			>
 				{projects &&
 					projects.map(p => (
-						<Section pad="none" key={p.projectId}>
-							<Header margin="none" pad="none" size="small">
-								<Heading tag="h4" strong>
-									{p.name}
-								</Heading>
-							</Header>
+						<Section pad={{ vertical: "small" }} key={p.projectId}>
+							<Heading tag="h4" strong>
+								{p.name}
+							</Heading>
 							<Box>
 								<ItemsList
 									ItemRenderer={RoomItemRenderer}
-									listItemProperties={this.listItemProperties}
 									items={p.rooms}
 									keyFunc={item => item.roomId}
 									selectable={"multiple"}
@@ -109,5 +113,9 @@ export default class SelectRoomsStep extends React.Component<StepProps, State> {
 }
 
 function RoomItemRenderer({ item }: { item: Room }) {
-	return item.name;
+	return (
+		<Heading className="custom-list-anchor" tag="h4">
+			{item.name}
+		</Heading>
+	);
 }

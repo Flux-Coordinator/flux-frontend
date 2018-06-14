@@ -10,7 +10,11 @@ describe("<Projects />", () => {
 	it("should render", () => {
 		mount(
 			<MemoryRouter>
-				<Projects loading={false} projects={DataGenerator.createProjects(10)} />
+				<Projects
+					loading={false}
+					projects={DataGenerator.createProjects(10)}
+					onDeleteProject={() => {}}
+				/>
 			</MemoryRouter>
 		);
 	});

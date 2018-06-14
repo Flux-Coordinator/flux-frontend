@@ -1,6 +1,7 @@
 // @flow
 import * as React from "react";
 import { shallow } from "enzyme";
+import { MemoryRouter, Route } from "react-router";
 
 import Measurement from "./../../models/Measurement";
 import Room from "./../../models/Room";
@@ -11,10 +12,10 @@ describe("<MeasurementContainer />", () => {
 		const measurement = new Measurement(
 			1,
 			"Test Measurement",
-			new Date(),
-			new Date(),
-			"READY",
-			[]
+			"Test description",
+			1650,
+			300,
+			0.15
 		);
 		const room = new Room(
 			"Test Room",
@@ -22,7 +23,11 @@ describe("<MeasurementContainer />", () => {
 			([measurement]: Measurement[])
 		);
 		const wrapper = shallow(
-			<MeasurementContainer measurement={measurement} room={room} />
+			<MemoryRouter>
+				<Route
+					component={props => <MeasurementContainer room={room} {...props} />}
+				/>
+			</MemoryRouter>
 		);
 		expect(wrapper).toHaveLength(1);
 	});

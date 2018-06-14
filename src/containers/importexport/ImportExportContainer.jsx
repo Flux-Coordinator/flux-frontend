@@ -1,27 +1,33 @@
 // @flow
 import * as React from "react";
-import axios, { CancelToken } from "axios";
+import axios, { CancelToken, CancelTokenSource } from "axios";
 import ContentBox from "../../components/contentBox/ContentBox";
 
 import ImportComponent from "../../components/importexport/Import";
 import ExportComponent from "../../components/importexport/Export";
+import { ToastContext } from "./../../components/toast/ToastContext";
+
+import type { ToastMetadata } from "./../../components/toast/Toast";
 
 type Props = {};
-type Status = {
-	showWizard: boolean
+type State = {
+	showWizard: boolean,
+	isLoading: boolean
 };
 
 export default class ImportExportContainer extends React.Component<
 	Props,
-	Status
+	State
 > {
-	source: any = CancelToken.source();
+	source: CancelTokenSource = CancelToken.source();
 	state = {
-		showWizard: false
+		showWizard: false,
+		isLoading: false
 	};
 
-	uploadFile = (file: ?File) => {
+	uploadFile = (file: ?File, showToast: ToastMetadata => void) => {
 		if (file) {
+			this.setState({ isLoading: true });
 			const reader = new FileReader();
 			reader.onload = () => {
 				const fileAsBinaryString = reader.result;
@@ -30,10 +36,22 @@ export default class ImportExportContainer extends React.Component<
 						headers: { "Content-Type": "application/json" }
 					})
 					.then(response => {
-						console.log(response);
+						this.setState({ isLoading: false });
+						if (showToast) {
+							showToast({
+								status: "ok",
+								children: response.data
+							});
+						}
 					})
 					.catch(error => {
-						console.log(error);
+						this.setState({ isLoading: false });
+						if (showToast) {
+							showToast({
+								status: "critical",
+								children: error.data
+							});
+						}
 					});
 			};
 			reader.readAsText(file, "utf-8");
@@ -42,10 +60,17 @@ export default class ImportExportContainer extends React.Component<
 
 	render() {
 		return (
-			<ContentBox heading="Import / Export">
-				<ImportComponent onUpload={this.uploadFile} />
-				<ExportComponent />
-			</ContentBox>
+			<ToastContext.Consumer>
+				{(showToast: any) => (
+					<ContentBox heading="Import / Export">
+						<ImportComponent
+							onUpload={file => this.uploadFile(file, showToast)}
+							isLoading={this.state.isLoading}
+						/>
+						<ExportComponent />
+					</ContentBox>
+				)}
+			</ToastContext.Consumer>
 		);
 	}
 }

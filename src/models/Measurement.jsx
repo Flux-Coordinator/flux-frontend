@@ -1,51 +1,66 @@
 // @flow
 import Reading from "./Reading";
 import Anchor from "./Anchor";
+import Transformation from "./Transformation";
 import type { MeasurementState } from "./../types/MeasurementState";
 
 type ConstructorType = {
 	measurementId: number,
+	name: string,
 	description: string,
-	startDate: Date,
-	endDate: Date,
+	startDate: ?Date,
+	endDate: ?Date,
 	measurementState: MeasurementState,
+	xOffset: number,
+	yOffset: number,
+	scaleFactor: number,
+	creator?: string,
 	readings?: Reading[],
-	anchorPositions?: Anchor[]
+	anchorPositions?: Anchor[],
+	roomId: number,
+	projectId: number
 };
 
 export default class Measurement {
-	measurementId: number;
+	measurementId: ?number;
+	name: string;
 	description: string;
-	startDate: Date;
-	endDate: Date;
-	state: MeasurementState;
+	startDate: ?Date;
+	endDate: ?Date;
+	measurementState: MeasurementState;
+	transformation: Transformation;
+	creator: string;
 	readings: Reading[];
 	anchors: Anchor[];
+	roomId: ?number;
+	projectId: ?number;
 
 	constructor(
-		measurementId: number,
+		measurementId?: number,
+		name: string,
 		description: string,
-		startDate: Date,
-		endDate: Date,
-		state: MeasurementState,
-		readings?: Reading[],
-		anchors?: Anchor[]
+		xOffset: number,
+		yOffset: number,
+		scaleFactor: number = 1.0,
+		startDate?: ?Date = null,
+		endDate?: ?Date = null,
+		measurementState?: MeasurementState = "READY",
+		creator?: string = "",
+		readings?: Reading[] = [],
+		anchors?: Anchor[] = [],
+		roomId?: number,
+		projectId?: number
 	) {
 		this.measurementId = measurementId;
+		this.name = name;
 		this.description = description;
-		this.state = state;
-
-		if (readings) {
-			this.readings = readings;
-		} else {
-			this.readings = [];
-		}
-
-		if (anchors) {
-			this.anchors = anchors;
-		} else {
-			this.anchors = [];
-		}
+		this.measurementState = measurementState;
+		this.transformation = new Transformation(xOffset, yOffset, scaleFactor);
+		this.creator = creator;
+		this.readings = readings;
+		this.anchors = anchors;
+		this.roomId = roomId;
+		this.projectId = projectId;
 
 		if (typeof startDate === "number" || typeof startDate === "string") {
 			this.startDate = new Date(startDate);
@@ -62,17 +77,24 @@ export default class Measurement {
 
 	static fromObject({
 		measurementId,
+		name,
 		description,
 		startDate,
 		endDate,
 		measurementState,
+		xOffset,
+		yOffset,
+		scaleFactor,
+		creator,
 		readings,
-		anchorPositions
+		anchorPositions,
+		roomId,
+		projectId
 	}: ConstructorType) {
 		const typedReadings: Reading[] = [];
 		if (readings != null) {
 			readings.forEach(r => {
-				typedReadings.push(Reading.fromObject(r));
+				typedReadings.push(Reading.fromObject((r: any)));
 			});
 		}
 
@@ -93,12 +115,31 @@ export default class Measurement {
 
 		return new Measurement(
 			measurementId,
+			name,
 			description,
+			xOffset,
+			yOffset,
+			scaleFactor,
 			startDate,
 			endDate,
 			measurementState,
+			creator,
 			typedReadings,
-			typedAnchors
+			typedAnchors,
+			roomId,
+			projectId
 		);
 	}
+
+	toDto = () => {
+		const anchorPositions = this.anchors.map(a => a.toAnchorPositionObject());
+		const readingDtos = this.readings.map(r => r.toDTO());
+		const exportMeasurement = Object.assign({}, this, {
+			anchorPositions,
+			readings: readingDtos,
+			...this.transformation
+		});
+		exportMeasurement.anchors = undefined;
+		return exportMeasurement;
+	};
 }

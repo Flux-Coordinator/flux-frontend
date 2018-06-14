@@ -2,17 +2,13 @@
 
 export type ConfigObject = {
 	container?: ?Element | Text,
+	absolute?: boolean,
 	radius?: number,
 	maxOpacity?: number,
 	minOpacity?: number,
 	opacity?: number,
 	blur?: number,
 	gradient?: Object
-};
-
-export type HeatmapModes = {
-	showCoverage: boolean,
-	showAnchors: boolean
 };
 
 export type Container = {
@@ -22,3 +18,11 @@ export type Container = {
 	originalWidth: number,
 	loaded: boolean
 };
+
+const heatmapModes = {
+	DEFAULT: "DEFAULT",
+	COVERAGE: "COVERAGE",
+	ANCHORS: "ANCHORS"
+};
+
+export type HeatmapMode = $Keys<typeof heatmapModes>;
