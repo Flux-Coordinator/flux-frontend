@@ -30,6 +30,9 @@ export default class SelectMeasurementsStep extends React.Component<
 		projects: []
 	};
 
+	subheading: string =
+		"Sie können mit CTRL + Mausclick mehrere Projekte auswählen.";
+
 	getMeasurementsOfRoom = (
 		data: Project[],
 		projectId: ?number,
@@ -122,6 +125,7 @@ export default class SelectMeasurementsStep extends React.Component<
 		return (
 			<WizardStep
 				heading="Schritt 3: Wählen Sie die Messungen aus"
+				subheading={this.subheading}
 				onSubmit={onSubmit}
 				isLastStep
 			>

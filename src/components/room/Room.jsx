@@ -1,18 +1,16 @@
 // @flow
 import * as React from "react";
-import Heading from "grommet/components/Heading";
 import Section from "grommet/components/Section";
-import Article from "grommet/components/Article";
-import Paragraph from "grommet/components/Paragraph";
 // eslint-disable-next-line
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import Measurement from "../../models/Measurement";
-import RoomModel from "../../models/Room";
+import ContentBox from "../contentBox/ContentBox";
 import ItemsList from "../list/ItemsList";
 import ItemListHeader from "./../list/ItemListHeader";
 import MeasurementContainer from "../../containers/measurements/MeasurementContainer";
 import AnchorMeasurementItemRenderer from "../measurements/AnchorMeasurementItemRenderer";
+import RoomModel from "../../models/Room";
+import Measurement from "../../models/Measurement";
 
 type Props = {
 	match: any,
@@ -22,15 +20,7 @@ type Props = {
 
 export default function Room({ match, room, onDeleteMeasurement }: Props) {
 	return (
-		<Article
-			pad={{ horizontal: "medium", vertical: "medium", between: "medium" }}
-		>
-			<Section pad="none">
-				<Heading tag="h2" margin="none" pad="medium">
-					{room.name}
-				</Heading>
-				<Paragraph margin="none">{room.description}</Paragraph>
-			</Section>
+		<ContentBox heading={room.name} subheading={room.description}>
 			<Route
 				path={`${match.url}/measurements/:measurementId`}
 				component={({ match }) => (
@@ -54,7 +44,7 @@ export default function Room({ match, room, onDeleteMeasurement }: Props) {
 					)}
 				/>
 			</Section>
-		</Article>
+		</ContentBox>
 	);
 }
 
