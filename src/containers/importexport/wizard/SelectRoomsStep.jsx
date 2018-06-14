@@ -24,10 +24,8 @@ export default class SelectRoomsStep extends React.Component<StepProps, State> {
 		selectedProjects: []
 	};
 
-	listItemProperties = {
-		margin: "small",
-		pad: "small"
-	};
+	subheading: string =
+		"Sie können mit CTRL + Mausclick mehrere Projekte auswählen.";
 
 	onSelect = (selected: ?number | number[], project: Project) => {
 		const foundProject = this.props.projects.find(
@@ -88,6 +86,7 @@ export default class SelectRoomsStep extends React.Component<StepProps, State> {
 		return (
 			<WizardStep
 				heading="Schritt 2: Wählen Sie die Räume aus"
+				subheading={this.subheading}
 				onSubmit={onSubmit}
 			>
 				{projects &&
